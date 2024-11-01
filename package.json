@@ -12,6 +12,7 @@
     "@vkontakte/vk-bridge": "^2.9.0",
     "axios": "^1.7.7",
     "core-js": "^3.33.2",
+    "flowbite": "^2.5.2",
     "vue": "^3.2.13",
     "vue-router": "^4.2.4"
   },
