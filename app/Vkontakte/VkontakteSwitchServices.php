@@ -12,7 +12,6 @@ class VkontakteSwitchServices
 {
     public function switchData(array $data): void
     {
-        Log::info('Vkontakte data 1: ');
         switch ($data['type']) {
             case 'like_remove':
                 (new VkontakteLikeMethod())->removeLike($data);

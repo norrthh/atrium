@@ -66,7 +66,7 @@ class VkontakteEventsServices
       }
    }
 
-   private function uploadPhoto(string $imagePath)
+   public function uploadPhoto(string $imagePath)
    {
       $client = new Client();
 

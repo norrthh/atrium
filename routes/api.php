@@ -51,4 +51,5 @@ Route::prefix('event')->group(function () {
 
 Route::prefix('vkontakte')->group(function () {
    Route::post('confirm', [VkontakteConfirmationController::class, 'confirm']);
+   Route::post('korobka', [VkontakteConfirmationController::class, 'vkontakteKorobka']);
 });
