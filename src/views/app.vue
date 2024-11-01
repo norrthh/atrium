@@ -424,7 +424,7 @@ onMounted(() => {
                                 <div class="uppercaseflex gap-3 text-lg flex">
                                     <p class="opacity-50">ВАШ БАЛАНС:</p>
                                     <p class="flex items-center gap-2"><img src="/ayazik/donate.svg" alt=""
-                                                                            class="h-6">{{ user.coin }}</p>
+                                                                            class="h-6">{{ user }}</p>
                                 </div>
                             </div>
                         </div>
