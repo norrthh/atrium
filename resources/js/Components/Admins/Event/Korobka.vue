@@ -42,8 +42,10 @@ let data = useForm({
 });
 
 // Функция добавления блока
+let nextId = 1; // Инициализация следующего ID
+
 function addAttempt() {
-    data.attempts.push({ state: '', count: '' });
+    data.attempts.push({ id: nextId++, state: '', count: '' });
 }
 
 // Функция загрузки файла

@@ -23,7 +23,7 @@ class CoinsController extends Controller
         ]);
     }
 
-    public function getCoins(CoinServices $services): void
+    public function getCoins(CoinServices $services)
     {
         if ($services->getTime() == 'now') {
             UserCoins::query()->create([
@@ -34,6 +34,8 @@ class CoinsController extends Controller
             User::query()->where('id', auth()->user()->id)->update([
                 'coin' => $services->getCoin() + auth()->user()->coin
             ]);
+
+            return response()->json(['coin' => $services->getCoin()]);
         }
     }
 }

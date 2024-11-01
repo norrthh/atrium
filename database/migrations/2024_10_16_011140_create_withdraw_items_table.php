@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('icon');
             $table->string('price');
             $table->string('type');
+            $table->string('typeView');
             $table->timestamps();
         });
 

@@ -11,6 +11,7 @@ Route::get('/', function () {
     return Inertia::render('app');
 });
 
+Route::get('/test', [\App\Services\Event\EventKorobkaServices::class, 'vkontakte']);
 
 Route::get('login', function () {
     return response()->json(['error' => 'Unauthorized'], 401);

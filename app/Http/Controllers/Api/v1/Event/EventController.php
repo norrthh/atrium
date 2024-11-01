@@ -10,7 +10,6 @@ class EventController extends Controller
 {
     public function korobka(EventKorobkaServices $services, Request $request)
     {
-        return $services->create($request->all());
-        return response()->json(['success' => true]);
+        $services->create($request->all());
     }
 }

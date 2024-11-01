@@ -12,13 +12,14 @@ use App\Models\Event;
 
 class EventServices
 {
-    public function store(int $eventID, int $type, int $typeEvent, string $message): void
+    public function store(int $eventID, int $type, int $typeEvent, string $message, $post_id = null): void
     {
         Event::query()->create([
             'event_id' => $eventID,
             'type' => $type,
             'eventType' => $typeEvent,
-            'postMessage' => $message
+            'postMessage' => $message,
+            'post_id' => $post_id
         ]);
     }
 }
