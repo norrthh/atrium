@@ -8,18 +8,18 @@ namespace App\Services;
  *
  * */
 
+use App\Core\Method\VkontakteMethod;
 use App\Models\Event;
 
 class EventServices
 {
    public function eventVkontakte(array $data, string $type): void
    {
-      $postMessage = $data['message']['text'];
-      $data[] = [
-         'social_type' => $type,
-         'postMessage' => $postMessage,
-      ];
+      $postMessage = str_replace('{twist_word}', $data['word'], $data['text']);
 
+      $data['social_type'] = $type;
+      $data['postMessage'] = $postMessage;
+      $data['post_id'] = (new VkontakteMethod())->sendWallMessage($data['bg']['postImage'], $postMessage)['response']['post_id'];
       $this->store($data);
    }
 

@@ -10,21 +10,31 @@ use App\Models\EventSocialLogs;
 use App\Models\EventUsers;
 use Illuminate\Support\Carbon;
 
+/*
+ *  post_id = $data['object']['post_id']
+ *  user_id = $data['object']['from_id']
+ *  comment_id = $data['object']['id']
+ *  $sendMessageUser = $data['object']['text']
+ *
+ * */
+
 class EventOne extends EventsServices
 {
-   public function event(array $data, SocialMethod $socialMethod): void
+   public function event($post_id, $user_id, $comment_id, $sendMessageUser, SocialMethod $socialMethod): void
    {
-      $findEvent = Event::query()->where('post_id', $data['object']['post_id'])->first();
+      $findEvent = Event::query()->where('post_id', $post_id)->first();
 
       if ($findEvent) {
-         $eventUser = EventUsers::query()->where([['user_id', $data['object']['from_id']], ['event_id', $findEvent->id]])->first();
+         $eventUser = EventUsers::query()->where([['user_id', $user_id], ['event_id', $findEvent->id]])->first();
 
-         if ($eventUser && $eventUser->countAttempt > $findEvent->countAttempt) {
-            $socialMethod->replyWallComment($data['object']['post_id'], Message::getMessage('event_limit_attempt'), $data['object']['id']);
+         $socialMethod->sendMessage($user_id, $eventUser->countAttempt);
+
+         if ($eventUser && $eventUser->countAttempt <= 0) {
+            $socialMethod->replyWallComment($post_id, Message::getMessage('event_limit_attempt'), $comment_id);
             die();
          } elseif (!$eventUser) {
             EventUsers::query()->create([
-               'user_id' => $data['object']['from_id'],
+               'user_id' => $user_id,
                'event_id' => $findEvent->id,
                'countAttempt' => $findEvent->countAttempt - 1
             ]);
@@ -34,50 +44,49 @@ class EventOne extends EventsServices
             ]);
          }
 
-         if (count($findEvent->attempts) > EventPrize::query()->where('event_id', $data['object']['post_id'])->count()) {
-            if ($data['object']['text'] == $findEvent->word) {
-
-               $lastMessage = EventSocialLogs::query()->where([['post_id', $data['object']['post_id']]])->orderBy('id', 'desc')->first();
+         if (count($findEvent->attempts) > EventPrize::query()->where('event_id', $post_id)->count()) {
+            if ($sendMessageUser == $findEvent->word) {
+               $lastMessage = EventSocialLogs::query()->where([['post_id', $post_id]])->orderBy('id', 'desc')->first();
 
                if ($lastMessage) {
                   $lastCollected = Carbon::parse($lastMessage->created_at)->setTimezone('Europe/Moscow');
                   $now = \Carbon\Carbon::now('Europe/Moscow');
 
                   if ($lastCollected->diffInSeconds($now) < $findEvent->timeForAttempt) {
-                     $socialMethod->replyWallComment($data['object']['post_id'], Message::getMessage('event_last_message', ['timeForAttempt' => $findEvent->timeForAttempt]), $data['object']['id']);
+                     $socialMethod->replyWallComment($post_id, Message::getMessage('event_last_message', ['timeForAttempt' => $findEvent->timeForAttempt]), $comment_id);
                      die();
                   }
                }
 
-               $this->logUser($data['object']['from_id'], $data['object']['post_id'], $findEvent->id);
+               $this->logUser($user_id, $post_id, $findEvent->id);
 
-               if ($findEvent->subscribe and !$socialMethod->checkSubscriptionGroup($data['object']['from_id'])) {
-                  $socialMethod->replyWallComment($data['object']['post_id'], Message::getMessage('event_subscription', ['type' => 'группу']), $data['object']['id']);
+               if ($findEvent->subscribe and !$socialMethod->checkSubscriptionGroup($user_id)) {
+                  $socialMethod->replyWallComment($post_id, Message::getMessage('event_subscription', ['type' => 'группу']), $comment_id);
                   die();
                }
 
-               if ($findEvent->subscribe_mailing and !$socialMethod->checkSubscriptionMailing($data['object']['from_id'])) {
-                  $socialMethod->replyWallComment($data['object']['post_id'], Message::getMessage('event_subscription', ['type' => 'группу']), $data['object']['id']);
+               if ($findEvent->subscribe_mailing and !$socialMethod->checkSubscriptionMailing($user_id)) {
+                  $socialMethod->replyWallComment($post_id, Message::getMessage('event_subscription', ['type' => 'группу']), $comment_id);
                   die();
                }
 
-               if (EventSocialLogs::query()->where([['post_id', $data['object']['post_id']]])->count() >= $findEvent->countMessage + 1) {
-                  if ($this->calculatePrize(EventSocialLogs::query()->where('post_id', $data['object']['post_id'])->count(), $findEvent->countAttempt)) {
-                     if ($this->winPrize($data['object']['from_id'], $data['object']['post_id'], $findEvent->attempts, $socialMethod)) {
-                        $socialMethod->replyWallComment($data['object']['post_id'], Message::getMessage('event_win_prize'), $data['object']['id'], $findEvent->bg['successBackground']);
+               if (EventSocialLogs::query()->where([['post_id', $post_id]])->count() >= $findEvent->countMessage + 1) {
+                  if ($this->calculatePrize(EventSocialLogs::query()->where('post_id', $post_id)->count(), $findEvent->countAttempt)) {
+                     if ($this->winPrize($user_id, $post_id, $findEvent->attempts, $socialMethod)) {
+                        $socialMethod->replyWallComment($post_id, Message::getMessage('event_win_prize'), $comment_id, $findEvent->bg['successBackground']);
                      } else {
-                        $socialMethod->replyWallComment($data['object']['post_id'], Message::getMessage('event_lose'), $data['object']['id']);
+                        $socialMethod->replyWallComment($post_id, Message::getMessage('event_lose'), $comment_id);
                      }
                   } else {
-                     $socialMethod->replyWallComment($data['object']['post_id'], Message::getMessage('event_lose'), $data['object']['id']);
+                     $socialMethod->replyWallComment($post_id, Message::getMessage('event_lose'), $comment_id);
                   }
                } else {
-                  $socialMethod->replyWallComment($data['object']['post_id'], Message::getMessage('event_lose'), $data['object']['id']);
+                  $socialMethod->replyWallComment($post_id, Message::getMessage('event_lose'), $comment_id);
                }
             }
          } else {
-            $socialMethod->replyWallComment($data['object']['post_id'], Message::getMessage('event_lose'), $data['object']['id']);
-            $socialMethod->closeWallComments($data['object']['post_id']);
+            $socialMethod->replyWallComment($post_id, Message::getMessage('event_lose'), $comment_id);
+            $socialMethod->closeWallComments($post_id);
          }
       }
    }

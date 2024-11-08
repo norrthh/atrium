@@ -9,7 +9,7 @@ class Event extends Model
     protected $fillable = [
        'post_id',
        'social_type',
-       'event_id', 
+       'event_id',
        'eventType',
        'postMessage',
        'word',
@@ -25,6 +25,14 @@ class Event extends Model
        'uploadStatus',
        'countMessage',
     ];
+
+   protected $casts = [
+      'bg' => 'array',
+      'cumebackPlayer' => 'array',
+      'states' => 'array',
+      'attempts' => 'array',
+      'uploadStatus' => 'array',
+   ];
 
     public function korobka()
     {

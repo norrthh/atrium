@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Storage;
 
 class EventsServices
 {
-   public function events(array $data): void
+   public function events($post_id, $user_id, $comment_id, $sendMessageUser, SocialMethod $socialMethod): void
    {
-      $findEvent = Event::query()->where('post_id', $data['object']['post_id'])->first();
+      $findEvent = Event::query()->where('post_id', $post_id)->first();
       if ($findEvent) {
          switch ($findEvent->eventType) {
             case 1:
-               (new EventOne())->event($data);
+               (new EventOne())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod);
                break;
             default:
                break;

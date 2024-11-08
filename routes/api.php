@@ -49,6 +49,6 @@ Route::prefix('items')->group(function () {
 //});
 
 Route::prefix('vkontakte')->group(function () {
-   Route::post('confirm', [VkontakteController::class, 'confirm']);
+   Route::post('webhook', [VkontakteController::class, 'confirm']);
    Route::post('event', [VkontakteController::class, 'event']);
 });

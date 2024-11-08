@@ -14,7 +14,7 @@ return new class extends Migration {
          $table->id();
          $table->integer('user_id');
          $table->integer('countAttempt');
-         $table->integer('eventID');
+         $table->integer('event_id');
          $table->timestamps();
       });
    }

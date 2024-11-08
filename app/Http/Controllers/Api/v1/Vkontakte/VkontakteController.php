@@ -24,8 +24,7 @@ class VkontakteController extends Controller
 
    public function event(Request $request): string
    {
-      (new EventServices())->eventVkontakte($request->all(), 'vkontakte');
-
+      (new EventServices())->eventVkontakte($request->all(), 'vk');
       return 'ok';
    }
 }

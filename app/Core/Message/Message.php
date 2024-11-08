@@ -13,7 +13,6 @@ class Message
          'comment_remove' => 'С вас снято {count} монет',
          'repost_add' => 'Вам успешно начислено {count} монет',
          'prize_gift' => 'Вам выпал приз {name} количество {count} штук!',
-
          'event_limit_attempt' => 'Вы уже использовали все попытки',
          'event_last_message' => 'С момента прошлого комментария не прошло более {timeForAttempt} секунд',
          'event_subscription' => 'Для участния необходимо подписаться на {type}',
