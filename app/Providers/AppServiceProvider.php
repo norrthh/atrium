@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Vkontakte\VkontakteMethodServices;
+use App\Core\Vkontakte\VkontakteMethodCore;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
@@ -13,8 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(VkontakteMethodServices::class, function ($app) {
-            return new VkontakteMethodServices();
+        $this->app->bind(VkontakteMethodCore::class, function ($app) {
+            return new VkontakteMethodCore();
         });
     }
 

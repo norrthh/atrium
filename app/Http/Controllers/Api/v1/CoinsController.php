@@ -2,40 +2,37 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Core\Action\Coin\CoinCore;
 use App\Http\Controllers\Controller;
 use App\Models\Coins;
 use App\Models\User;
 use App\Models\UserCoins;
-use App\Services\Coins\CoinServices;
-use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class CoinsController extends Controller
 {
-    public function index(Request $request, CoinServices $services)
+    public function index(CoinCore $coinCore)
     {
         return response()->json([
             'coins' => Coins::query()->get(),
-            'status' => $services->getStatus(),
-            'time' => $services->getTime(),
-            'day' => $services->getDay(),
+            'status' => $coinCore->getStatus(),
+            'time' => $coinCore->getTime(),
+            'day' => $coinCore->getDay(),
         ]);
     }
 
-    public function getCoins(CoinServices $services)
+    public function getCoins(CoinCore $coinCore)
     {
-        if ($services->getTime() == 'now') {
+        if ($coinCore->getTime() == 'now') {
             UserCoins::query()->create([
                 'user_id' => auth()->user()->id,
-                'coin_id' => $services->getDay() ,
+                'coin_id' => $coinCore->getDay() ,
             ]);
 
             User::query()->where('id', auth()->user()->id)->update([
-                'coin' => $services->getCoin() + auth()->user()->coin
+                'coin' => $coinCore->getCoin() + auth()->user()->coin
             ]);
 
-            return response()->json(['coin' => $services->getCoin()]);
+            return response()->json(['coin' => $coinCore->getCoin()]);
         }
     }
 }

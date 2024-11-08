@@ -6,7 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $fillable = ['post_id', 'type', 'event_id', 'eventType', 'postMessage'];
+    protected $fillable = [
+       'post_id',
+       'social_type',
+       'event_id', 
+       'eventType',
+       'postMessage',
+       'word',
+       'countAttempt',
+       'bg',
+       'subscribe',
+       'subscribe_mailing',
+       'timeForAttempt',
+       'cumebackPlayer',
+       'text',
+       'states',
+       'attempts',
+       'uploadStatus',
+       'countMessage',
+    ];
 
     public function korobka()
     {

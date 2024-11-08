@@ -1,14 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\v1\ActivityUserController;
-use App\Http\Controllers\Api\v1\Authentication\AuthController;
+use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\CoinsController;
-use App\Http\Controllers\Api\v1\Coupon\CouponController;
-use App\Http\Controllers\Api\v1\Items\ItemsController;
+use App\Http\Controllers\Api\v1\CouponController;
+use App\Http\Controllers\Api\v1\ItemsController;
 use App\Http\Controllers\Api\v1\TasksController;
-use App\Http\Controllers\Api\v1\Vkontakte\VkontakteConfirmationController;
+use App\Http\Controllers\Api\v1\Vkontakte\VkontakteController;
 use App\Http\Controllers\Api\v1\WithdrawController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('auth', [AuthController::class, 'auth']);
@@ -42,14 +41,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::prefix('items')->group(function () {
    Route::post('getShop', [ItemsController::class, 'getShop']);
-   Route::post('getEvent', [ItemsController::class, 'getEvent']);
+   Route::any('getEvent', [ItemsController::class, 'getEvent']);
 });
 
-Route::prefix('event')->group(function () {
-   Route::post('/korobka', [\App\Http\Controllers\Api\v1\Event\EventController::class, 'korobka']);
-});
+//Route::prefix('event')->group(function () {
+//   Route::post('/event', [VkontakteController::class, 'event']);
+//});
 
 Route::prefix('vkontakte')->group(function () {
-   Route::post('confirm', [VkontakteConfirmationController::class, 'confirm']);
-   Route::post('korobka', [VkontakteConfirmationController::class, 'vkontakteKorobka']);
+   Route::post('confirm', [VkontakteController::class, 'confirm']);
+   Route::post('event', [VkontakteController::class, 'event']);
 });
