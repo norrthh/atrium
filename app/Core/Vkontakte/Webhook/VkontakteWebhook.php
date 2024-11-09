@@ -9,7 +9,7 @@ use App\Core\Vkontakte\Webhook\Action\VkontakteWallMethod;
 
 class VkontakteWebhook
 {
-   public function webhook(array $data): string
+   public function webhook(array $data): void
    {
       switch ($data['type']) {
          case 'like_remove':
@@ -29,7 +29,5 @@ class VkontakteWebhook
             (new VkontakteWallMethod())->repost($data);
             break;
       }
-
-      return 'ok';
    }
 }

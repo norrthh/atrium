@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('event_id');
             $table->json('prize');
+            $table->string('word')->nullable();
             $table->timestamps();
         });
     }

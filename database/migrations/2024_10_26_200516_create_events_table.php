@@ -19,8 +19,8 @@ return new class extends Migration {
          $table->integer('countAttempt'); // Количество попыток:
          $table->integer('countMessage'); // Количество попыток до выпадения приза:
          $table->json('bg'); // картинки
-         $table->enum('subscribe', ['required', 'optional']); // Подписка:
-         $table->enum('subscribe_mailing', ['required', 'optional']); //Подписка рассылка
+         $table->enum('subscribe', ['required', 'not_required']); // Подписка:
+         $table->enum('subscribe_mailing', ['required', 'not_required']); //Подписка рассылка
          $table->integer('timeForAttempt'); // Время между попытками:
          $table->json('cumebackPlayer'); // Возвращать игроков в конкурс бонусными попытками:
          $table->text('text'); // Пост в соц.сети

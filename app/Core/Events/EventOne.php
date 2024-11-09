@@ -27,11 +27,9 @@ class EventOne extends EventsServices
       if ($findEvent) {
          $eventUser = EventUsers::query()->where([['user_id', $user_id], ['event_id', $findEvent->id]])->first();
 
-         $socialMethod->sendMessage($user_id, $eventUser->countAttempt);
-
          if ($eventUser && $eventUser->countAttempt <= 0) {
             $socialMethod->replyWallComment($post_id, Message::getMessage('event_limit_attempt'), $comment_id);
-            die();
+            return ;
          } elseif (!$eventUser) {
             EventUsers::query()->create([
                'user_id' => $user_id,
@@ -50,11 +48,11 @@ class EventOne extends EventsServices
 
                if ($lastMessage) {
                   $lastCollected = Carbon::parse($lastMessage->created_at)->setTimezone('Europe/Moscow');
-                  $now = \Carbon\Carbon::now('Europe/Moscow');
+                  $now = Carbon::now('Europe/Moscow');
 
                   if ($lastCollected->diffInSeconds($now) < $findEvent->timeForAttempt) {
                      $socialMethod->replyWallComment($post_id, Message::getMessage('event_last_message', ['timeForAttempt' => $findEvent->timeForAttempt]), $comment_id);
-                     die();
+                     return ;
                   }
                }
 
@@ -62,12 +60,12 @@ class EventOne extends EventsServices
 
                if ($findEvent->subscribe and !$socialMethod->checkSubscriptionGroup($user_id)) {
                   $socialMethod->replyWallComment($post_id, Message::getMessage('event_subscription', ['type' => 'группу']), $comment_id);
-                  die();
+                  return ;
                }
 
                if ($findEvent->subscribe_mailing and !$socialMethod->checkSubscriptionMailing($user_id)) {
                   $socialMethod->replyWallComment($post_id, Message::getMessage('event_subscription', ['type' => 'группу']), $comment_id);
-                  die();
+                  return ;
                }
 
                if (EventSocialLogs::query()->where([['post_id', $post_id]])->count() >= $findEvent->countMessage + 1) {

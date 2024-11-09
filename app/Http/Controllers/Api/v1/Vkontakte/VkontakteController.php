@@ -19,7 +19,9 @@ class VkontakteController extends Controller
          return env('VKONTAKTE_CONFIRM');
       }
 
-      return $switchServices->webhook($request->all());
+      $switchServices->webhook($request->all());
+
+      return 'ok';
    }
 
    public function event(Request $request): string

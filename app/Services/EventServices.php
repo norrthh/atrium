@@ -15,6 +15,20 @@ class EventServices
 {
    public function eventVkontakte(array $data, string $type): void
    {
+      switch ($data['type']) {
+         case 4:
+            $word = '';
+
+            foreach ($data['attempts'] as $index => $item) {
+               $word .= ($index > 0 ? ', ' : '') . $item['word'];
+            }
+
+            $data['word'] = $word;
+            break;
+         default:
+            break;
+      }
+
       $postMessage = str_replace('{twist_word}', $data['word'], $data['text']);
 
       $data['social_type'] = $type;

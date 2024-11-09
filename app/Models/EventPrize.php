@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class EventPrize extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'event_id',
-        'prize'
-    ];
+   protected $fillable = [
+      'user_id',
+      'event_id',
+      'prize',
+      'word'
+   ];
 
-    protected $casts = [
-        'prize' => 'array',
-    ];
+   protected $casts = [
+      'prize' => 'array',
+   ];
 }

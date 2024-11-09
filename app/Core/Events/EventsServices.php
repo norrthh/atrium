@@ -20,11 +20,15 @@ class EventsServices
             case 1:
                (new EventOne())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod);
                break;
+            case 4:
+               (new EventFour())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod);
+               break;
             default:
                break;
          }
       }
    }
+
    public function logUser(int $userID, int $postID, int $eventID): void
    {
       EventSocialLogs::query()->create([
@@ -33,6 +37,7 @@ class EventsServices
          'event_id' => $eventID
       ]);
    }
+
    public function calculatePrize(int $totalComments, int $baseThreshold): bool
    {
       $prizeChances = [
@@ -59,12 +64,26 @@ class EventsServices
 
       return mt_rand() / mt_getrandmax() < $prizeChance;
    }
-   public function winPrize(int $userID, int $eventID, array $prizes, SocialMethod $socialMethod): bool
+
+   public function winPrize(int $userID, int $eventID, array $prizes, SocialMethod $socialMethod, string $word = null): bool
    {
       $prize = [];
 
       foreach ($prizes as $item) {
-         if (!EventPrize::query()->where('user_id', $userID)->where('event_id', $eventID)->whereJsonContains('prize', $item)->first()) {
+         if ($word) {
+            if (!EventPrize::query()->where([['event_id', $eventID], ['user_id', $userID], ['word', $word]])->whereJsonContains('prize', $item)->first()) {
+               $prize = [
+                  'user_id' => $userID,
+                  'event_id' => $eventID,
+                  'prize' => $item,
+                  'word' => $word
+               ];
+
+               $socialMethod->sendMessage($userID, Message::getMessage('prize_gift', ['name' => $item['name'], 'count' => $item['count'] ?? 1]));
+               break;
+            }
+         }
+         elseif (!EventPrize::query()->where('user_id', $userID)->where('event_id', $eventID)->whereJsonContains('prize', $item)->first()) {
             $prize = [
                'user_id' => $userID,
                'event_id' => $eventID,
@@ -82,5 +101,10 @@ class EventsServices
       }
 
       return false;
+   }
+
+   public function containsWord($words, $word): bool
+   {
+      return in_array($word, array_map('trim', explode(',', $words)));
    }
 }
