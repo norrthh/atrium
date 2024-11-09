@@ -21,6 +21,14 @@ let data = ref({
         attempt: '',
         count: ''
     },
+    like: {
+        status: '',
+        count: ''
+    },
+    repost: {
+        status: '',
+        count: ''
+    },
     text: '',
     states: [],
     attempts: [], // массив для хранения динамически добавляемых блоков
@@ -29,18 +37,21 @@ let data = ref({
         postImage: 'Ожидание загрузки файла',
         successBackground: 'Ожидание загрузки файла',
         failBackground: 'Ожидание загрузки файла'
-    }
+    },
+    type: 1
 });
 
 let shopItems = () => {
+    console.log(300)
     axios.post('http://127.0.0.1:8000/api/items/getEvent').then(res => {
         data.value.states = res.data
     })
 }
+
 shopItems()
 
-// Функция добавления блока
-let nextId = 1; // Инициализация следующего ID
+
+let nextId = 1;
 
 function addAttempt() {
     data.value.attempts.push({id: nextId++, name: '', count: ''});
@@ -89,7 +100,6 @@ let createEvent = () => {
 
             <!-- Динамически добавляемые блоки -->
             <div v-for="(attempt, index) in data.attempts" :key="index" class="selectBlock">
-                {{ attempt }}
                 <label for="states" class="sr-only">Выберите приз</label>
                 <select v-model="attempt.name"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-lg p-2.5">
@@ -120,6 +130,36 @@ let createEvent = () => {
 
             <p class="mini-title">Правила конкурса:</p>
             <input-z label="Количество попыток:" placeholder="Например, 3" v-model="data.countAttempt"/>
+
+            <div>
+                <div class="selectBlock">
+                    <p class="p">Репост:</p>
+                    <select v-model="data.repost.status"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-lg border-s-gray-100 dark:border-s-gray-700 border-s-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="1">ДАЕТ ДОПОЛНИТЕЛЬНЫЕ ПОПЫТКИ</option>
+                        <option value="0">НЕ ДАЕТ ДОПОЛНИТЕЛЬНЫЕ ПОПЫТКИ</option>
+                    </select>
+                </div>
+
+                <div v-if="data.repost.status === '1'">
+                    <input-z placeholder="укажите попытки за репост" v-model="data.repost.count"/>
+                </div>
+            </div>
+
+            <div>
+                <div class="selectBlock">
+                    <p class="p">Лайк:</p>
+                    <select v-model="data.like.status"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-lg border-s-gray-100 dark:border-s-gray-700 border-s-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="1">ДАЕТ ДОПОЛНИТЕЛЬНЫЕ ПОПЫТКИ</option>
+                        <option value="0">НЕ ДАЕТ ДОПОЛНИТЕЛЬНЫЕ ПОПЫТКИ</option>
+                    </select>
+                </div>
+
+                <div v-if="data.like.status === '1'">
+                    <input-z placeholder="укажите попытки за лайк" v-model="data.like.count"/>
+                </div>
+            </div>
 
             <div class="selectBlock">
                 <p class="p">Подписка:</p>
