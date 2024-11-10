@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  *
  * */
 
-class EventOne extends EventsServices
+class EventTwo extends EventsServices
 {
    public function event($post_id, $user_id, $comment_id, $sendMessageUser, SocialMethod $socialMethod): void
    {

@@ -11,7 +11,7 @@ use App\Models\EventUsers;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
-class EventFour extends EventsServices
+class EventThree extends EventsServices
 {
    public function event($post_id, $user_id, $comment_id, $sendMessageUser, SocialMethod $socialMethod): void
    {

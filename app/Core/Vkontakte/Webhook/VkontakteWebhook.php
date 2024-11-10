@@ -6,11 +6,19 @@ use App\Core\Events\EventsServices;
 use App\Core\Method\VkontakteMethod;
 use App\Core\Vkontakte\Webhook\Action\VkontakteLikeMethod;
 use App\Core\Vkontakte\Webhook\Action\VkontakteWallMethod;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class VkontakteWebhook
 {
    public function webhook(array $data): void
    {
+      Log::info('idinahio');
+      if ($data['object']['from_id'] < 0) {
+         return;
+      }
+      Log::info('idinahio2');
+
       switch ($data['type']) {
          case 'like_remove':
             (new VkontakteLikeMethod())->removeLike($data);

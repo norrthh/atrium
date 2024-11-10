@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Event\EventKorobkaServices;
 use App\Services\EventServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class VkontakteController extends Controller
@@ -20,7 +21,6 @@ class VkontakteController extends Controller
       }
 
       $switchServices->webhook($request->all());
-
       return 'ok';
    }
 

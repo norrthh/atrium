@@ -13,19 +13,19 @@ return new class extends Migration {
       Schema::create('events', function (Blueprint $table) {
          $table->id();
          $table->integer('post_id')->nullable();
-         $table->enum('social_type', ['telegram', 'vk']);
-         $table->integer('eventType');
-         $table->string('word');
-         $table->integer('countAttempt'); // Количество попыток:
-         $table->integer('countMessage'); // Количество попыток до выпадения приза:
-         $table->json('bg'); // картинки
-         $table->enum('subscribe', ['required', 'not_required']); // Подписка:
-         $table->enum('subscribe_mailing', ['required', 'not_required']); //Подписка рассылка
-         $table->integer('timeForAttempt'); // Время между попытками:
-         $table->json('cumebackPlayer'); // Возвращать игроков в конкурс бонусными попытками:
-         $table->text('text'); // Пост в соц.сети
-         $table->json('states'); // призы
-         $table->json('attempts'); // призы
+         $table->enum('social_type', ['telegram', 'vk'])->nullable();
+         $table->integer('eventType')->nullable();
+         $table->string('word')->nullable();
+         $table->integer('countAttempt')->nullable(); // Количество попыток:
+         $table->integer('countMessage')->nullable(); // Количество попыток до выпадения приза:
+         $table->json('bg')->nullable(); // картинки
+         $table->enum('subscribe', ['required', 'not_required'])->nullable(); // Подписка:
+         $table->enum('subscribe_mailing', ['required', 'not_required'])->nullable(); //Подписка рассылка
+         $table->integer('timeForAttempt')->nullable(); // Время между попытками:
+         $table->json('cumebackPlayer')->nullable(); // Возвращать игроков в конкурс бонусными попытками:
+         $table->text('text')->nullable(); // Пост в соц.сети
+         $table->json('states')->nullable(); // призы
+         $table->json('attempts')->nullable(); // призы
          $table->text('postMessage')->nullable();
          $table->integer('status')->default(0);
          $table->timestamps();

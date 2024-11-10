@@ -124,7 +124,7 @@ class VkontakteMethod implements SocialMethod
                'post_id' => $postId,
                'message' => $message,
                'reply_to_comment' => $commentId,
-               'attachments' => $this->uploadPhoto($image),
+               'attachments' => $image ? $this->uploadPhoto($image) : null,
                'access_token' => env('VKONTAKTE_TOKEN'),
                'v' => env('VKONTAKTE_VERSION'),
             ],

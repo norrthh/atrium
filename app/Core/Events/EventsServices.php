@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\EventPrize;
 use App\Models\EventSocialLogs;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class EventsServices
@@ -19,6 +20,12 @@ class EventsServices
          switch ($findEvent->eventType) {
             case 1:
                (new EventOne())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod);
+               break;
+            case 2:
+               (new EventTwo())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod);
+               break;
+            case 3:
+               (new EventThree())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod);
                break;
             case 4:
                (new EventFour())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod);
