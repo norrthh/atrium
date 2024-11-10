@@ -79,7 +79,7 @@ async function uploadFile(event, type) {
 }
 
 let createEvent = () => {
-    axios.post('http://127.0.0.1:8000/api/vkontakte/korobka', data.value).then(res => {
+    axios.post('http://127.0.0.1:8000/api/vkontakte/event', data.value).then(res => {
         console.log(res)
     });
 }
