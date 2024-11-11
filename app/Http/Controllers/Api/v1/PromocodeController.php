@@ -13,53 +13,53 @@ class PromocodeController extends Controller
 {
    public function activate(Request $request)
    {
-      $eventPromocode = EventPromocode::query()->where('code', $request->get('coupon'))->first();
-      if ($eventPromocode) {
-         if ($eventPromocode->count_prize > $eventPromocode->count_used) {
-            if (!EventPromocodeActivate::query()->where([['event_promocodes_id', $eventPromocode->id], ['user_id', auth()->user()->id]])->first()) {
-               (new EventsServices())->giveItemUser(
-                  user_id: auth()->user()->id,
-                  event_id: $eventPromocode->event_id,
-                  item_id: $eventPromocode->prize_id,
-                  count: $eventPromocode->count,
-                  actionText: 'Активация промокода',
-               );
+      $eventPromocodes = EventPromocode::query()
+         ->where('code', $request->get('coupon'))
+         ->whereColumn('count_prize', '>', 'count_used')
+         ->get();
 
-               EventPromocodeActivate::query()->create([
-                  'event_promocodes_id' => $eventPromocode->id,
-                  'user_id' => auth()->user()->id
-               ]);
+      $availablePromocodes = $eventPromocodes->filter(function ($promocode) {
+         return !EventPromocodeActivate::query()->where([
+            ['event_promocodes_id', $promocode->id],
+            ['user_id', auth()->user()->id]
+         ])->exists();
+      });
 
-               EventPromocode::query()->where('id', $eventPromocode->id)->update([
-                  'count_used' => $eventPromocode->count_used + 1
-               ]);
+      if ($availablePromocodes->isNotEmpty()) {
+         $eventPromocode = $availablePromocodes->first();
 
-               if ($eventPromocode->count_used + 1 == $eventPromocode->count_prize) {
-                  EventPromocode::query()->where('id', $eventPromocode->id)->update([
-                     'status' => 1
-                  ]);
-               }
+         (new EventsServices())->giveItemUser(
+            user_id: auth()->user()->id,
+            event_id: $eventPromocode->event_id,
+            item_id: $eventPromocode->prize_id,
+            count: $eventPromocode->count,
+            actionText: 'Активация промокода',
+         );
 
-               return response()->json([
-                  'message' => 'Промокод активирован',
-               ]);
-            } else {
-               return response()->json([
-                  'message' => 'Вы уже активировали промокод',
-                  'status' => 404
-               ]);
-            }
-         } else {
-            return response()->json([
-               'message' => 'Количество активации у промокода исчерпано',
-               'status' => 404
-            ]);
+         EventPromocodeActivate::query()->create([
+            'event_promocodes_id' => $eventPromocode->id,
+            'user_id' => auth()->user()->id
+         ]);
+
+         $eventPromocode->update([
+            'count_used' => $eventPromocode->count_used + 1
+         ]);
+
+         // Обновляем статус, если лимит исчерпан
+         if ($eventPromocode->count_used + 1 == $eventPromocode->count_prize) {
+            $eventPromocode->update(['status' => 1]);
          }
+
+         return response()->json([
+            'message' => 'Промокод активирован',
+            'status' => 200
+         ]);
       } else {
          return response()->json([
-            'message' => 'Промокод не найден',
+            'message' => 'Доступные промокоды не найдены или уже активированы вами',
             'status' => 404
          ]);
       }
+
    }
 }

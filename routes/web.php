@@ -26,6 +26,6 @@ Route::post('/upload', function (Request $request) {
    return response()->json(['error' => 'File not uploaded'], 400);
 });
 
-Route::get('test', function () {
-   (new \App\Core\Events\EventsServices())->test((new \App\Core\Method\VkontakteMethod()));
+Route::get('test', function (Request $request) {
+   Storage::put('test.json', print_r($request->all(), 1));
 });
