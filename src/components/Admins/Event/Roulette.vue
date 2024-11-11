@@ -43,7 +43,7 @@ let data = ref({
 
 let shopItems = () => {
     console.log(300)
-    axios.post('http://127.0.0.1:8000/api/items/getEvent').then(res => {
+    axios.post('https://api.atrium-bot.ru/api/items/getEvent').then(res => {
         data.value.states = res.data
     })
 }
@@ -65,7 +65,7 @@ async function uploadFile(event, type) {
     formData.append('file', event.target.files[0]);
 
     try {
-        const response = await axios.post('http://127.0.0.1:8000/upload', formData, {
+        const response = await axios.post('https://api.atrium-bot.ru/upload', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -79,7 +79,7 @@ async function uploadFile(event, type) {
 }
 
 let createEvent = () => {
-    axios.post('http://127.0.0.1:8000/api/vkontakte/event', data.value).then(res => {
+    axios.post('https://api.atrium-bot.ru/api/vkontakte/event', data.value).then(res => {
         console.log(res)
     });
 }

@@ -148,7 +148,7 @@ const changePage = (page) => {
         loadedPage.value = false
 
         if (!activity.value) {
-            axios.post('http://127.0.0.1:8000/api/activity/now', {}, {
+            axios.post('https://api.atrium-bot.ru/api/activity/now', {}, {
                 headers: {
                     'Authorization': 'Bearer ' + bearer_token.value
                 }
@@ -165,7 +165,7 @@ const changePage = (page) => {
         loadedPage.value = false
 
         if (!lastActivity.value) {
-            axios.post('http://127.0.0.1:8000/api/activity/last', {}, {
+            axios.post('https://api.atrium-bot.ru/api/activity/last', {}, {
                 headers: {
                     'Authorization': 'Bearer ' + bearer_token.value
                 }
@@ -182,7 +182,7 @@ const changePage = (page) => {
         loadedPage.value = false
 
         if (!bonus.value) {
-            axios.post('http://127.0.0.1:8000/api/bonus/coins', {}, {
+            axios.post('https://api.atrium-bot.ru/api/bonus/coins', {}, {
                 headers: {
                     'Authorization': 'Bearer ' + bearer_token.value
                 }
@@ -200,7 +200,7 @@ const changePage = (page) => {
         loadedPage.value = false
 
         if (!tasks.value) {
-            axios.post('http://127.0.0.1:8000/api/tasks', {}, {
+            axios.post('https://api.atrium-bot.ru/api/tasks', {}, {
                 headers: {
                     'Authorization': 'Bearer ' + bearer_token.value
                 }
@@ -216,7 +216,7 @@ const changePage = (page) => {
     if (page === 'withdraw') {
         loadedPage.value = false
 
-        axios.post('http://127.0.0.1:8000/api/withdraw/all', {}, {
+        axios.post('https://api.atrium-bot.ru/api/withdraw/all', {}, {
             headers: {
                 'Authorization': 'Bearer ' + bearer_token.value
             }
@@ -229,7 +229,7 @@ const changePage = (page) => {
     if (page === 'withdraw_me') {
         loadedPage.value = false
 
-        axios.post('http://127.0.0.1:8000/api/withdraw/me', {}, {
+        axios.post('https://api.atrium-bot.ru/api/withdraw/me', {}, {
             headers: {
                 'Authorization': 'Bearer ' + bearer_token.value
             }
@@ -245,7 +245,7 @@ const changePage = (page) => {
         isShop.value = true
         loadedPage.value = false
 
-        axios.post('http://127.0.0.1:8000/api/items/getShop', {
+        axios.post('https://api.atrium-bot.ru/api/items/getShop', {
             'type': 'car'
         }, {
             headers: {
@@ -261,7 +261,7 @@ const changePage = (page) => {
         isShop.value = true
         loadedPage.value = false
 
-        axios.post('http://127.0.0.1:8000/api/items/getShop', {
+        axios.post('https://api.atrium-bot.ru/api/items/getShop', {
             'type': 'skin'
         }, {
             headers: {
@@ -277,7 +277,7 @@ const changePage = (page) => {
         isShop.value = true
         loadedPage.value = false
 
-        axios.post('http://127.0.0.1:8000/api/items/getShop', {
+        axios.post('https://api.atrium-bot.ru/api/items/getShop', {
             'type': 'aks'
         }, {
             headers: {
@@ -292,7 +292,7 @@ const changePage = (page) => {
     if (page === 'unique_value') {
         isShop.value = true
         loadedPage.value = false
-        axios.post('http://127.0.0.1:8000/api/items/getShop', {
+        axios.post('https://api.atrium-bot.ru/api/items/getShop', {
             'type': 'unique'
         }, {
             headers: {
@@ -309,7 +309,7 @@ const changeBonusType = (bonusType) => {
     selectedBonusType.value = bonusType;
 };
 const getBonusActivity = (bonus) => {
-    axios.post('http://127.0.0.1:8000/api/bonus/getCoins', {}, {
+    axios.post('https://api.atrium-bot.ru/api/bonus/getCoins', {}, {
         headers: {
             'Authorization': 'Bearer ' + bearer_token.value
         }
@@ -397,7 +397,7 @@ const showCoupon = () => {
 
 const buttonCoupon = () => {
     responseCoupon.value = {}
-    axios.post('http://127.0.0.1:8000/api/promocode/activate', {
+    axios.post('https://api.atrium-bot.ru/api/promocode/activate', {
         'coupon': inputCoupon.value
     }, {
         headers: {
@@ -454,7 +454,7 @@ onMounted(() => {
     bridge.send('VKWebAppGetUserInfo').then(res => {
         userProfile.value = res
 
-        axios.post('http://127.0.0.1:8000/api/auth', {
+        axios.post('https://api.atrium-bot.ru/api/auth', {
             'vkontakte_id': res.id,
             'avatar': res.photo_base
         }).then(res => {
@@ -492,7 +492,7 @@ onMounted(() => {
             "is_closed": false
         })
 
-        axios.post('http://127.0.0.1:8000/api/auth', {
+        axios.post('https://api.atrium-bot.ru/api/auth', {
             'vkontakte_id': userProfile.value.id,
             'avatar': userProfile.value.photo_base
         }).then(res => {
