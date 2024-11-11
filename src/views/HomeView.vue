@@ -148,7 +148,7 @@ const changePage = (page) => {
         loadedPage.value = false
 
         if (!activity.value) {
-            axios.post('https://bot2.vdomeomsk.ru/api/activity/now', {}, {
+            axios.post('http://127.0.0.1:8000/api/activity/now', {}, {
                 headers: {
                     'Authorization': 'Bearer ' + bearer_token.value
                 }
@@ -165,7 +165,7 @@ const changePage = (page) => {
         loadedPage.value = false
 
         if (!lastActivity.value) {
-            axios.post('https://bot2.vdomeomsk.ru/api/activity/last', {}, {
+            axios.post('http://127.0.0.1:8000/api/activity/last', {}, {
                 headers: {
                     'Authorization': 'Bearer ' + bearer_token.value
                 }
@@ -182,7 +182,7 @@ const changePage = (page) => {
         loadedPage.value = false
 
         if (!bonus.value) {
-            axios.post('https://bot2.vdomeomsk.ru/api/bonus/coins', {}, {
+            axios.post('http://127.0.0.1:8000/api/bonus/coins', {}, {
                 headers: {
                     'Authorization': 'Bearer ' + bearer_token.value
                 }
@@ -200,7 +200,7 @@ const changePage = (page) => {
         loadedPage.value = false
 
         if (!tasks.value) {
-            axios.post('https://bot2.vdomeomsk.ru/api/tasks', {}, {
+            axios.post('http://127.0.0.1:8000/api/tasks', {}, {
                 headers: {
                     'Authorization': 'Bearer ' + bearer_token.value
                 }
@@ -216,7 +216,7 @@ const changePage = (page) => {
     if (page === 'withdraw') {
         loadedPage.value = false
 
-        axios.post('https://bot2.vdomeomsk.ru/api/withdraw/all', {}, {
+        axios.post('http://127.0.0.1:8000/api/withdraw/all', {}, {
             headers: {
                 'Authorization': 'Bearer ' + bearer_token.value
             }
@@ -229,7 +229,7 @@ const changePage = (page) => {
     if (page === 'withdraw_me') {
         loadedPage.value = false
 
-        axios.post('https://bot2.vdomeomsk.ru/api/withdraw/me', {}, {
+        axios.post('http://127.0.0.1:8000/api/withdraw/me', {}, {
             headers: {
                 'Authorization': 'Bearer ' + bearer_token.value
             }
@@ -309,7 +309,7 @@ const changeBonusType = (bonusType) => {
     selectedBonusType.value = bonusType;
 };
 const getBonusActivity = (bonus) => {
-    axios.post('https://bot2.vdomeomsk.ru/api/bonus/getCoins', {}, {
+    axios.post('http://127.0.0.1:8000/api/bonus/getCoins', {}, {
         headers: {
             'Authorization': 'Bearer ' + bearer_token.value
         }
@@ -385,11 +385,11 @@ let inputCoupon = ref(),
     isCoupon = ref(false);
 
 const showCoupon = () => {
-    document.body.setAttribute("style", "overflow: hidden;");
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth' // Плавная прокрутка
-    });
+    // document.body.setAttribute("style", "overflow: hidden;");
+    // window.scrollTo({
+    //     top: 0,
+    //     behavior: 'smooth' // Плавная прокрутка
+    // });
 
     responseCoupon.value = {}
     isCoupon.value = true
@@ -397,14 +397,13 @@ const showCoupon = () => {
 
 const buttonCoupon = () => {
     responseCoupon.value = {}
-    axios.post('https://bot2.vdomeomsk.ru/api/coupons/insert', {
+    axios.post('http://127.0.0.1:8000/api/promocode/activate', {
         'coupon': inputCoupon.value
     }, {
         headers: {
             'Authorization': 'Bearer ' + bearer_token.value
         }
     }).then(res => {
-        console.log(res.data)
         responseCoupon.value = res.data
     })
 }
@@ -437,7 +436,11 @@ let isBoust = ref(false)
 let isShop = ref(false)
 
 let boustModal = () => {
-    document.body.setAttribute("style", "overflow: hidden;");
+    // window.scrollTo({
+    //     top: 0,
+    //     behavior: 'smooth' // Плавная прокрутка
+    // });
+    // document.body.setAttribute("style", "overflow: hidden;");
     isBoust.value = true
 }
 
@@ -451,7 +454,7 @@ onMounted(() => {
     bridge.send('VKWebAppGetUserInfo').then(res => {
         userProfile.value = res
 
-        axios.post('https://bot2.vdomeomsk.ru/api/auth', {
+        axios.post('http://127.0.0.1:8000/api/auth', {
             'vkontakte_id': res.id,
             'avatar': res.photo_base
         }).then(res => {
@@ -489,7 +492,7 @@ onMounted(() => {
             "is_closed": false
         })
 
-        axios.post('https://bot2.vdomeomsk.ru/api/auth', {
+        axios.post('http://127.0.0.1:8000/api/auth', {
             'vkontakte_id': userProfile.value.id,
             'avatar': userProfile.value.photo_base
         }).then(res => {
@@ -1060,11 +1063,11 @@ onMounted(() => {
 
                     <div class="modal-input">
                         <p>Введите ваш промокод</p>
-                        <input type="text" id="large-input" placeholder="Например, 1aA2-3bB4" v-model="inputCoupon">
+                        <input type="text" id="large-input" :style="{'border': responseCoupon.status && responseCoupon.status == 200 ? '1px solid green' : responseCoupon.status ? '1px solid #EA3F3F' : ''}" placeholder="Например, 1aA2-3bB4" v-model="inputCoupon">
                     </div>
 
-                    <p class="text-red-500" v-if="!responseCoupon.status">{{ responseCoupon.message }}</p>
-                    <p class="text-green-500" v-else>{{ responseCoupon.message }}</p>
+                    <p class="text-[#EA3F3F]" style="font-weight: 700; font-size: 14px;" v-if="responseCoupon.status != 200">{{ responseCoupon.message }}</p>
+                    <p class="text-green-500" style="font-weight: 700; font-size: 14px;" v-else>{{ responseCoupon.message }}</p>
 
                     <button
                             @click="buttonCoupon"

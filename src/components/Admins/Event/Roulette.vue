@@ -103,7 +103,7 @@ let createEvent = () => {
                 <label for="states" class="sr-only">Выберите приз</label>
                 <select v-model="attempt.name"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-lg p-2.5">
-                    <option v-for="state in data.states" :key="state.id" :value="state.name">{{ state.name }}</option>
+                    <option v-for="state in data.states" :key="state.id" :value="state">{{ state.name }}</option>
                 </select>
                 <input-z placeholder="Количество, например, 30" label="" v-model="attempt.count"/>
             </div>

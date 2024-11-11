@@ -11,7 +11,8 @@ import { defineProps, defineEmits, ref, watch } from 'vue';
 const props = defineProps({
     label: String,
     placeholder: String,
-    modelValue: String
+    modelValue: String,
+    inputZ: String
 });
 
 const emit = defineEmits(['update:modelValue']);

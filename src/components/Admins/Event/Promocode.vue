@@ -55,7 +55,7 @@ shopItems()
 let nextId = 1;
 
 function addAttempt() {
-    data.value.attempts.push({id: nextId++, name: '', count: '', promcoode: '', 'countActivatePromocode': ''});
+    data.value.attempts.push({id: nextId++, name: '', count: '', promcoode: '', 'countActivatePromocode': '', prize_id: ''});
 }
 
 // Функция загрузки файла
@@ -99,7 +99,7 @@ let createEvent = () => {
                     <p class="p">Тип активации:</p>
                     <select v-model="data.typeActivate"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-lg border-s-gray-100 dark:border-s-gray-700 border-s-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="1">Игроĸи должны либо написать название промокода в ĸомментарии</option>
+                        <option value="1">Игроĸи должны написать название промокода в ĸомментарии</option>
                         <option value="2">Любой игрок, который напишет что угодно в коментарий</option>
                         <option value="3">В приложение</option>
                     </select>
@@ -107,18 +107,22 @@ let createEvent = () => {
             </div>
 
             <div v-if="data.typeActivate">
+
+                <input-z v-if="data.typeActivate == 2" placeholder="Например, 30" label="Количество попыток до выпадения приза:"
+                         v-model="data.countMessage"/>
+
                 <p class="mini-title">Настройка призов:</p>
 
                 <!-- Динамически добавляемые блоки -->
-                <div v-for="(attempt, index) in data.attempts" :key="index" class="selectBlock">
+                <div v-for="(attempt, index) in data.attempts" :key="index" class="selectBlock mt-3">
                     <label for="states" class="sr-only">Выберите приз</label>
                     <select v-model="attempt.name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-lg p-2.5">
-                        <option v-for="state in data.states" :key="state.id" :value="state.name">{{ state.name }}</option>
+                        <option v-for="state in data.states" :key="state.id" :value="state">{{ state.name }}</option>
                     </select>
                     <input-z placeholder="Количество, например, 30" label="" v-model="attempt.count"/>
-                    <input-z placeholder="Количество активации, например, 30" label="" v-model="attempt.count"/>
-                    <input-z v-if="data.typeActivate == 1 || data.typeActivate == 3" placeholder="Название промокода" label="" v-model="attempt.count" />
+                    <input-z placeholder="Количество активации, например, 30" label="" v-model="attempt.countActivatePromocode"/>
+                    <input-z v-if="data.typeActivate == 1" placeholder="Название промокода" label="" v-model="attempt.promcoode"/>
                 </div>
 
                 <button @click="addAttempt"
@@ -126,35 +130,21 @@ let createEvent = () => {
                     <p class="text-lg font-black text-center uppercase">добавить приз</p>
                 </button>
 
-                <div v-if="data.typeActivate == 1">
-                    <p class="mini-title">Настройка игры:</p>
+                <p class="mini-title">Настройка игры:</p>
 
-                    <div>
-                        <div class="selectBlock">
-                            <p class="p">Репост</p>
-                            <select v-model="data.repost.status"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-lg border-s-gray-100 dark:border-s-gray-700 border-s-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option value="1">ДАЕТ ДОПОЛНИТЕЛЬНЫЕ ПОПЫТКИ</option>
-                                <option value="0">НЕ ДАЕТ ДОПОЛНИТЕЛЬНЫЕ ПОПЫТКИ</option>
-                            </select>
-                        </div>
-
-                        <div v-if="data.repost.status === '1'">
-                            <input-z placeholder="укажите попытки за репост" v-model="data.repost.count"/>
-                        </div>
+                <!-- Поля для загрузки файлов с отображением статуса загрузки -->
+                <div>
+                    <p class="p">Настройка фона победы:</p>
+                    <div class="flex items-center justify-center w-full">
+                        <label class="flex flex-col items-center justify-center w-full h-64 rounded-lg cursor-pointer"
+                               style="border: 1.61px solid #FFFFFF8F">
+                            <input type="file" @change="e => uploadFile(e, 'successBackground')" class="hidden"/>
+                            <p class="text-white">{{ data.uploadStatus.successBackground }}</p>
+                        </label>
                     </div>
+                </div>
 
-                    <!-- Поля для загрузки файлов с отображением статуса загрузки -->
-                    <div>
-                        <p class="p">Настройка фона победы:</p>
-                        <div class="flex items-center justify-center w-full">
-                            <label class="flex flex-col items-center justify-center w-full h-64 rounded-lg cursor-pointer"
-                                   style="border: 1.61px solid #FFFFFF8F">
-                                <input type="file" @change="e => uploadFile(e, 'successBackground')" class="hidden"/>
-                                <p class="text-white">{{ data.uploadStatus.successBackground }}</p>
-                            </label>
-                        </div>
-                    </div>
+                <div v-if="data.typeActivate == 1 || data.typeActivate == 2">
 
                     <p class="mini-title">Правила конкурса:</p>
                     <input-z label="Количество попыток:" placeholder="Например, 3" v-model="data.countAttempt"/>
