@@ -6,25 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $fillable = [
-       'post_id',
-       'social_type',
-       'event_id',
-       'eventType',
-       'postMessage',
-       'word',
-       'countAttempt',
-       'bg',
-       'subscribe',
-       'subscribe_mailing',
-       'timeForAttempt',
-       'cumebackPlayer',
-       'text',
-       'states',
-       'attempts',
-       'uploadStatus',
-       'countMessage',
-    ];
+   protected $fillable = [
+      'post_id',
+      'social_type',
+      'event_id',
+      'eventType',
+      'postMessage',
+      'word',
+      'countAttempt',
+      'bg',
+      'subscribe',
+      'subscribe_mailing',
+      'timeForAttempt',
+      'cumebackPlayer',
+      'text',
+      'status',
+      'states',
+      'attempts',
+      'uploadStatus',
+      'countMessage',
+      'like',
+      'repost'
+   ];
 
    protected $casts = [
       'bg' => 'array',
@@ -32,10 +35,8 @@ class Event extends Model
       'states' => 'array',
       'attempts' => 'array',
       'uploadStatus' => 'array',
+      'like' => 'array',
+      'repost' => 'array',
    ];
 
-    public function korobka()
-    {
-        return $this->hasOne(EventKorobka::class, 'id', 'event_id');
-    }
 }

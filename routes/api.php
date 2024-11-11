@@ -34,8 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
       Route::post('/all', [WithdrawController::class, 'allWithdraw']);
    });
 
-   Route::prefix('coupons')->group(function () {
-      Route::post('/insert', [CouponController::class, 'insert']);
+   Route::prefix('promocode')->group(function () {
+      Route::post('/activate', [\App\Http\Controllers\Api\v1\PromocodeController::class, 'activate']);
    });
 });
 

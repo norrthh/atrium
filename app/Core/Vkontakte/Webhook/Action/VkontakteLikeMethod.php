@@ -6,6 +6,7 @@ use App\Core\Action\Coin\CoinInfoCore;
 use App\Core\Action\UserCore;
 use App\Core\Message\Message;
 use App\Core\Method\VkontakteMethod;
+use App\Core\Vkontakte\Webhook\EventServices;
 
 class VkontakteLikeMethod extends UserCore
 {

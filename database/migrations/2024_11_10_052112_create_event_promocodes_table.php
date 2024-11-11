@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('count')->nullable();
             $table->integer('count_used')->nullable();
             $table->integer('count_prize')->nullable();
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }

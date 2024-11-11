@@ -69,7 +69,6 @@ class VkontakteMethod implements SocialMethod
       ]);
 
       $uploadedPhoto = json_decode($photoResponse->getBody(), true);
-
       $saveResponse = $client->post('https://api.vk.com/method/photos.saveWallPhoto', [
          'form_params' => [
             'owner_id' => '-' . env('VKONTAKTE_GROUP_ID'),

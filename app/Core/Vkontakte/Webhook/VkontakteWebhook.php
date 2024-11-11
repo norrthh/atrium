@@ -13,11 +13,9 @@ class VkontakteWebhook
 {
    public function webhook(array $data): void
    {
-      Log::info('idinahio');
-      if ($data['object']['from_id'] < 0) {
+      if (isset($data['object']['from_id']) < 0) {
          return;
       }
-      Log::info('idinahio2');
 
       switch ($data['type']) {
          case 'like_remove':
@@ -25,6 +23,7 @@ class VkontakteWebhook
             break;
          case 'like_add':
             (new VkontakteLikeMethod())->addLike($data);
+            (new EventServices())->addAttempt($data['object']['liker_id'], $data['object']['object_id'], 1, new VkontakteMethod());
             break;
          case 'wall_reply_new':
             (new VkontakteWallMethod())->addComment($data);
@@ -35,6 +34,7 @@ class VkontakteWebhook
             break;
          case 'wall_repost':
             (new VkontakteWallMethod())->repost($data);
+            (new EventServices())->addAttempt($data['object']['from_id'], $data['object']['id'], 2, new VkontakteMethod());
             break;
       }
    }

@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class EventPrize extends Model
 {
    protected $fillable = [
-      'user_id',
       'event_id',
-      'prize',
-      'word'
+      'withdraw_items_id',
+      'count_prize',
+      'word',
+      'status'
    ];
 
    protected $casts = [

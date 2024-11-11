@@ -7,7 +7,13 @@ use App\Core\Method\SocialMethod;
 use App\Models\Event;
 use App\Models\EventPrize;
 use App\Models\EventSocialLogs;
+use App\Models\EventUsers;
+use App\Models\User;
+use App\Models\UserLogItems;
+use App\Models\WithdrawItems;
+use App\Models\WithdrawUsers;
 use GuzzleHttp\Client;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,16 +25,19 @@ class EventsServices
       if ($findEvent) {
          switch ($findEvent->eventType) {
             case 1:
-               (new EventOne())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod);
+               (new EventOne())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, 1);
                break;
             case 2:
-               (new EventTwo())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod);
+               (new EventTwo())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, 1);
                break;
             case 3:
-               (new EventThree())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod);
+               (new EventThree())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, 1);
                break;
             case 4:
-               (new EventFour())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod);
+               (new EventFour())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, 1);
+               break;
+            case 5:
+               (new EventFive())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, 1);
                break;
             default:
                break;
@@ -72,38 +81,13 @@ class EventsServices
       return mt_rand() / mt_getrandmax() < $prizeChance;
    }
 
-   public function winPrize(int $userID, int $eventID, array $prizes, SocialMethod $socialMethod, string $word = null): bool
+   public function winPrize(int $userID, int $event_id, array $prizes, SocialMethod $socialMethod, string $word, $typeSocial): bool
    {
-      $prize = [];
+      $findPrize = EventPrize::query()->where([['event_id', $event_id], ['status', 0], ['word', $word]])->first();
 
-      foreach ($prizes as $item) {
-         if ($word) {
-            if (!EventPrize::query()->where([['event_id', $eventID], ['user_id', $userID], ['word', $word]])->whereJsonContains('prize', $item)->first()) {
-               $prize = [
-                  'user_id' => $userID,
-                  'event_id' => $eventID,
-                  'prize' => $item,
-                  'word' => $word
-               ];
-
-               $socialMethod->sendMessage($userID, Message::getMessage('prize_gift', ['name' => $item['name'], 'count' => $item['count'] ?? 1]));
-               break;
-            }
-         }
-         elseif (!EventPrize::query()->where('user_id', $userID)->where('event_id', $eventID)->whereJsonContains('prize', $item)->first()) {
-            $prize = [
-               'user_id' => $userID,
-               'event_id' => $eventID,
-               'prize' => $item
-            ];
-
-            $socialMethod->sendMessage($userID, Message::getMessage('prize_gift', ['name' => $item['name'], 'count' => $item['count'] ?? 1]));
-            break;
-         }
-      }
-
-      if (count($prize) > 0) {
-         EventPrize::query()->create($prize);
+      if ($findPrize) {
+         $this->giveItemUser($userID, $event_id, $findPrize->withdraw_items_id, $findPrize->count_prize, 'Победитель мероприятия', $socialMethod, $typeSocial);
+         EventPrize::query()->where('id', $findPrize->id)->update(['status' => 1]);
          return true;
       }
 
@@ -113,5 +97,84 @@ class EventsServices
    public function containsWord($words, $word): bool
    {
       return in_array($word, array_map('trim', explode(',', $words)));
+   }
+
+   public function giveItemUser($user_id, int $event_id, int $item_id, int $count, string $actionText, SocialMethod $socialMethod = null, $type = null): void
+   {
+      WithdrawUsers::query()->create([
+         'user_id' => $user_id,
+         'withdraw_items_id' => $item_id,
+         'count' => $count,
+         'status' => 0
+      ]);
+
+      if ($type) {
+         $user = User::query()->where('id', $user_id)->first();
+         $withdraw = WithdrawItems::query()->where('id', $item_id)->first();
+
+         $socialMethod->sendMessage(($type == 1 ? $user->vkontakte_id : $user->telegram_id), Message::getMessage('prize_gift', ['name' => $withdraw->name, 'count' => $count]));
+      }
+
+      UserLogItems::query()->create([
+         'user_id' => $user_id,
+         'event_id' => $event_id,
+         'withdraw_items_id' => $item_id,
+         'count' => $count,
+         'action' => $actionText
+      ]);
+   }
+
+   public function checkLastMessage(int $post_id, Event $event, int $comment_id, SocialMethod $socialMethod): bool
+   {
+      $lastMessage = EventSocialLogs::query()->where([['post_id', $post_id]])->orderBy('id', 'desc')->first();
+
+      if ($lastMessage) {
+         $lastCollected = Carbon::parse($lastMessage->created_at)->setTimezone('Europe/Moscow');
+         $now = Carbon::now('Europe/Moscow');
+
+         if ($lastCollected->diffInSeconds($now) < $event->timeForAttempt) {
+            $socialMethod->replyWallComment($post_id, Message::getMessage('event_last_message', ['timeForAttempt' => $event->timeForAttempt]), $comment_id);
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   public function checkMailing(int $user_id, Event $event, int $post_id, int $comment_id, SocialMethod $socialMethod): bool
+   {
+      if ($event->subscribe and !$socialMethod->checkSubscriptionGroup($user_id)) {
+         $socialMethod->replyWallComment($post_id, Message::getMessage('event_subscription', ['type' => 'группу']), $comment_id);
+         return false;
+      }
+
+      if ($event->subscribe_mailing and !$socialMethod->checkSubscriptionMailing($user_id)) {
+         $socialMethod->replyWallComment($post_id, Message::getMessage('event_subscription', ['type' => 'группу']), $comment_id);
+         return false;
+      }
+
+      return true;
+   }
+
+   public function checkAttempt(int $user_id, Event $event, int $post_id, int $comment_id, SocialMethod $socialMethod): bool
+   {
+      $eventUser = EventUsers::query()->where([['user_id', $user_id], ['event_id', $event->id]])->first();
+
+      if ($eventUser && $eventUser->countAttempt <= 0) {
+         $socialMethod->replyWallComment($post_id, Message::getMessage('event_limit_attempt'), $comment_id);
+         return false;
+      } elseif (!$eventUser) {
+         EventUsers::query()->create([
+            'user_id' => $user_id,
+            'event_id' => $event->id,
+            'countAttempt' => $event->countAttempt - 1
+         ]);
+      } elseif ($eventUser->countAttempt < $event->countAttempt) {
+         EventUsers::query()->where('id', $eventUser->id)->update([
+            'countAttempt' => $eventUser->countAttempt - 1
+         ]);
+      }
+
+      return true;
    }
 }

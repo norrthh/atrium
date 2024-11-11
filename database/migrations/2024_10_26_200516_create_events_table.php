@@ -26,6 +26,8 @@ return new class extends Migration {
          $table->text('text')->nullable(); // Пост в соц.сети
          $table->json('states')->nullable(); // призы
          $table->json('attempts')->nullable(); // призы
+         $table->json('like')->nullable(); // призы
+         $table->json('repost')->nullable(); // призы
          $table->text('postMessage')->nullable();
          $table->integer('status')->default(0);
          $table->timestamps();

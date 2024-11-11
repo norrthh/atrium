@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('withdraw_items_id')->constrained('withdraw_items')->cascadeOnDelete();
+            $table->integer('count');
             $table->integer('status')->default(0);
             $table->timestamps();
         });
