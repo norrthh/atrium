@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vkontakte/vk-bridge": "^2.9.0",
+    "@vkontakte/vk-miniapps-deploy": "^0.1.8",
     "axios": "^1.7.7",
     "core-js": "^3.33.2",
     "flowbite": "^2.5.2",

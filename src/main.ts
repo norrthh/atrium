@@ -6,5 +6,4 @@ import './index.css'
 import 'flowbite';
 // Init VK  Mini App
 bridge.send('VKWebAppInit');
-
 createApp(App).use(router).mount('#app');
