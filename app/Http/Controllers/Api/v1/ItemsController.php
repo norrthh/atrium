@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Models\WithdrawItems;
+use App\Models\Items\Items;
+use App\Models\Withdrawl\WithdrawItems;
 use Illuminate\Http\Request;
 
 class ItemsController extends Controller
@@ -19,6 +20,6 @@ class ItemsController extends Controller
 
    public function getEvent()
    {
-      return WithdrawItems::query()->where([['typeView', 1]])->orWhere([['typeView', 3]])->get();
+      return Items::query()->get();
    }
 }

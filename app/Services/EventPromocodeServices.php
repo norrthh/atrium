@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Event;
-use App\Models\EventPromocode;
+use App\Models\Event\Event;
+use App\Models\Event\EventPromocode;
 
 class EventPromocodeServices
 {
@@ -26,5 +26,18 @@ class EventPromocodeServices
          'count_prize' => $count_activate,
          'count_used' => 0
       ]);
+   }
+
+   public function create(array $data)
+   {
+      if ($data['typeCreate'] == 1) {
+         $postMessage = str_replace('{twist_word}', $data['word'], $data['text']);
+
+      }
+   }
+
+   protected function storeItem()
+   {
+
    }
 }

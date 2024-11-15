@@ -2,7 +2,7 @@
 
 namespace App\Telegraph\Event;
 
-use App\Models\Event;
+use App\Models\Event\Event;
 use App\Models\LogMessage;
 use App\Services\LogServices;
 use DefStudio\Telegraph\Handlers\WebhookHandler;

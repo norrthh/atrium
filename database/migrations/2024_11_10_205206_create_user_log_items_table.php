@@ -14,7 +14,7 @@ return new class extends Migration {
          $table->id();
          $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
          $table->foreignId('event_id')->constrained('events')->cascadeOnDelete();
-         $table->foreignId('withdraw_items_id')->constrained('withdraw_items')->cascadeOnDelete();
+         $table->foreignId('items_id')->constrained('items')->cascadeOnDelete();;
          $table->integer('count');
          $table->text('action');
          $table->timestamps();

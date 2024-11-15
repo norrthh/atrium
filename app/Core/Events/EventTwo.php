@@ -4,12 +4,10 @@ namespace App\Core\Events;
 
 use App\Core\Message\Message;
 use App\Core\Method\SocialMethod;
-use App\Models\Event;
-use App\Models\EventPrize;
-use App\Models\EventSocialLogs;
-use App\Models\EventUsers;
-use App\Models\User;
-use Illuminate\Support\Carbon;
+use App\Models\Event\Event;
+use App\Models\Event\EventPrize;
+use App\Models\Event\EventSocialLogs;
+use App\Models\User\User;
 
 /*
  *  post_id = $data['object']['post_id']

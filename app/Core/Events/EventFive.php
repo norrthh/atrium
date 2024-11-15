@@ -4,11 +4,10 @@ namespace App\Core\Events;
 
 use App\Core\Message\Message;
 use App\Core\Method\SocialMethod;
-use App\Models\Event;
-use App\Models\EventPromocode;
-use App\Models\EventSocialLogs;
-use App\Models\User;
-use Illuminate\Support\Facades\Log;
+use App\Models\Event\Event;
+use App\Models\Event\EventPromocode;
+use App\Models\Event\EventSocialLogs;
+use App\Models\User\User;
 
 /*
  *  status -

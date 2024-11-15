@@ -3,8 +3,8 @@
 namespace App\Core\Action;
 
 use App\Core\Action\Coin\CoinInfoCore;
-use App\Models\User;
-use App\Models\UserLogMethod;
+use App\Models\User\User;
+use App\Models\User\UserLogMethod;
 
 class UserCore
 {

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Core\Events\EventsServices;
-use App\Core\Method\VkontakteMethod;
 use App\Http\Controllers\Controller;
-use App\Models\EventPromocode;
-use App\Models\EventPromocodeActivate;
+use App\Models\Event\EventPromocode;
+use App\Models\Event\EventPromocodeActivate;
 use Illuminate\Http\Request;
 
 class PromocodeController extends Controller

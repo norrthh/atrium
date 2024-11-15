@@ -3,7 +3,7 @@
 namespace App\Core\Action\Coin;
 
 use App\Models\Coins;
-use App\Models\UserCoins;
+use App\Models\User\UserCoins;
 use Carbon\Carbon;
 
 class CoinCore

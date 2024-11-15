@@ -4,10 +4,10 @@ namespace App\Core\Vkontakte\Webhook;
 
 use App\Core\Message\Message;
 use App\Core\Method\SocialMethod;
-use App\Models\Event;
-use App\Models\EventUserLog;
-use App\Models\EventUsers;
-use App\Models\User;
+use App\Models\Event\Event;
+use App\Models\Event\EventUserLog;
+use App\Models\Event\EventUsers;
+use App\Models\User\User;
 
 class EventServices
 {

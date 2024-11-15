@@ -4,13 +4,12 @@ namespace App\Console\Commands;
 
 use App\Core\Message\Message;
 use App\Core\Method\VkontakteMethod;
-use App\Models\Event;
-use App\Models\EventCumbackPlayer;
-use App\Models\EventPrize;
-use App\Models\EventPromocode;
-use App\Models\EventSocialLogs;
-use App\Models\EventUsers;
-use App\Models\User;
+use App\Models\Event\Event;
+use App\Models\Event\EventCumbackPlayer;
+use App\Models\Event\EventPrize;
+use App\Models\Event\EventPromocode;
+use App\Models\Event\EventUsers;
+use App\Models\User\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 

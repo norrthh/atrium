@@ -2,15 +2,9 @@
 
 namespace App\Services;
 
-/*
- *  typeEvent
- *  1 - korobka
- *
- * */
-
 use App\Core\Method\VkontakteMethod;
-use App\Models\Event;
-use App\Models\EventPrize;
+use App\Models\Event\Event;
+use App\Models\Event\EventPrize;
 
 class EventServices
 {

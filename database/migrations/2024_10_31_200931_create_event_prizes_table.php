@@ -13,7 +13,7 @@ return new class extends Migration {
       Schema::create('event_prizes', function (Blueprint $table) {
          $table->id();
          $table->foreignId('event_id')->constrained('events')->cascadeOnDelete();
-         $table->foreignId('withdraw_items_id')->constrained('withdraw_items')->cascadeOnDelete();
+         $table->foreignId('items_id')->constrained('items')->cascadeOnDelete();
          $table->integer('count_prize');
          $table->string('word')->nullable();
          $table->integer('status')->default(0);

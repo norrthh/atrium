@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\v1;
 use App\Core\Action\Coin\CoinCore;
 use App\Http\Controllers\Controller;
 use App\Models\Coins;
-use App\Models\User;
-use App\Models\UserCoins;
+use App\Models\User\User;
+use App\Models\User\UserCoins;
 
 class CoinsController extends Controller
 {

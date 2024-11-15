@@ -2,7 +2,7 @@
 
 namespace App\Telegraph;
 
-use App\Models\Event;
+use App\Models\Event\Event;
 use App\Telegraph\Event\TelegraphKorobkaHandler;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use Illuminate\Support\Stringable;

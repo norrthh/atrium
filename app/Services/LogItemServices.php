@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\UserLogItems;
+use App\Models\User\UserLogItems;
 
 class LogItemServices
 {

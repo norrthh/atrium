@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\v1\Vkontakte;
 
 use App\Core\Vkontakte\Webhook\VkontakteWebhook;
 use App\Http\Controllers\Controller;
-use App\Services\Event\EventKorobkaServices;
 use App\Services\EventServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;

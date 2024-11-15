@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\LastActivity;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 

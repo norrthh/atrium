@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Models\WithdrawItems;
-use App\Models\WithdrawUsers;
+use App\Models\Withdrawl\WithdrawItems;
+use App\Models\Withdrawl\WithdrawUsers;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
