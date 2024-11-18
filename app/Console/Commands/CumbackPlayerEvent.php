@@ -7,7 +7,6 @@ use App\Core\Method\VkontakteMethod;
 use App\Models\Event\Event;
 use App\Models\Event\EventCumbackPlayer;
 use App\Models\Event\EventPrize;
-use App\Models\Event\EventPromocode;
 use App\Models\Event\EventUsers;
 use App\Models\User\User;
 use Carbon\Carbon;
@@ -36,7 +35,6 @@ class CumbackPlayerEvent extends Command
    {
       while (true) {
          $this->filterEvent(EventPrize::query()->where('status', 0)->get());
-         $this->filterEvent(EventPromocode::query()->where('status', 0)->get());
 
          sleep(5);
       }

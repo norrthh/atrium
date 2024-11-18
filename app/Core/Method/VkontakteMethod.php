@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Storage;
 
 class VkontakteMethod implements SocialMethod
 {
-   protected string $vkKey;
-   protected string $vkVersion;
+   protected $vkKey;
+   protected $vkVersion;
 
    public function __construct()
    {

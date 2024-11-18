@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Core\Vkontakte\VkontakteMethodCore;
 use App\Facades\WithdrawUser;
 use App\Services\WithdrawUserServices;
 use Illuminate\Support\Facades\Vite;
