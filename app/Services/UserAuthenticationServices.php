@@ -28,7 +28,6 @@ class UserAuthenticationServices
       }
 
       if (!$user) {
-         $user = ['nickname' => 'dev' . rand()];
          if (isset($data['telegram_id'])) {
             $user['telegram_id'] = $data['telegram_id'];
             $user['avatar_telegram'] = $data['avatar_telegram'];
