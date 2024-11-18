@@ -7,28 +7,49 @@ use App\Models\Notification\Notification;
 use App\Models\Notification\NotificationItems;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class NotificationController extends Controller
 {
    /**
     * Display a listing of the resource.
     */
-   public function index()
+   public function index(): JsonResponse
    {
-//        return Notif
+        $lastNotification = Notification::query()->orderBy('id', 'desc')->with('item')->first();
+        $data = [];
+
+        if (!Cache::has('notification_' . $lastNotification->id . '_user_id=' . auth()->user()->id)) {
+            $data = [
+                'notification' => $lastNotification,
+                'status' => true
+            ];
+        } else {
+            $data = [
+                'status' => false
+            ];
+        }
+
+        return response()->json($data);
+   }
+
+    public function ready(): void
+    {
+        $lastNotification = Notification::query()->orderBy('id', 'desc')->where('status', 0)->first();
+        Cache::forever('notification_' . $lastNotification->id . '_user_id=' . auth()->user()->id, 1);
    }
 
    /**
     * Store a newly created resource in storage.
     */
 
-   public function store(Request $request): JsonResponse
+   public function store(Request $request)
    {
       $request->validate([
          'description' => ['required', 'string'],
          'href' => ['required', 'string'],
          'time' => ['required', 'int'],
-         'prizes' => ['required'],
+         'attempts' => ['required'],
          'image' => ['required', 'string'],
       ]);
 
@@ -41,15 +62,17 @@ class NotificationController extends Controller
          'image' => $request->get('image'),
       ]);
 
-      foreach ($request->get('prizes') as $item) {
+      foreach ($request->get('attempts') as $item) {
          NotificationItems::query()->create([
             'notification_id' => $notification->id,
-            'item_id' => $item['name']['id'],
+            'item_id' => $item['idItem'],
             'count' => $item['count'],
          ]);
       }
 
-      Notification::query()->where('id', $notificationOld->id)->delete();
+      if ($notificationOld) {
+          Notification::query()->where('id', $notificationOld->id)->delete();
+      }
 
       return response()->json([
          'message' => 'success'

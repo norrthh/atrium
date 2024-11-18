@@ -3,29 +3,33 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Withdrawl\WithdrawItems;
-use App\Models\Withdrawl\WithdrawUsers;
+use App\Http\Resources\WithdrawUserResource;
+use App\Models\Withdraw\WithdrawItems;
+use App\Models\WithdrawUsers;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class WithdrawController extends Controller
 {
-    public function withdraw(Request $request): Collection
-    {
-        $request->validate([
-            'type' => ['required', 'in:car,skin,aks,money'],
-        ]);
+   public function index()
+   {
+      return WithdrawUserResource::collection(
+         WithdrawUsers::query()
+            ->where('status', 2)
+            ->orderBy('id', 'desc')
+            ->with(['item', 'user'])
+            ->get()
+      );
+   }
 
-        return WithdrawItems::query()->where('type', $request->get('type'))->get();
-    }
-
-    public function meWithdraw(): Collection
-    {
-        return WithdrawUsers::query()->where('user_id', auth()->user()->id)->with(['item'])->get();
-    }
-
-    public function allWithdraw(): Collection
-    {
-        return WithdrawUsers::query()->with(['item', 'user'])->get();
-    }
+   public function me()
+   {
+      return WithdrawUserResource::collection(
+         WithdrawUsers::query()
+            ->where([['user_id', auth()->user()->id], ['status', '>', 1]])
+            ->orderBy('id', 'desc')
+            ->with('item')
+            ->get()
+      );
+   }
 }

@@ -6,6 +6,7 @@ use App\Core\Action\Coin\CoinInfoCore;
 use App\Core\Action\UserCore;
 use App\Core\Message\Message;
 use App\Core\Method\VkontakteMethod;
+use App\Core\Vkontakte\Webhook\EventServices;
 
 class VkontakteWallMethod extends UserCore
 {
@@ -53,6 +54,8 @@ class VkontakteWallMethod extends UserCore
                  $data['object']['from_id'],
                  Message::getMessage('repost_add', ['count' => (new CoinInfoCore())->getDataType('like')])
               );
+
+           (new EventServices())->addAttempt($data['object']['from_id'], $data['object']['id'], 2, new VkontakteMethod());
         }
     }
 }

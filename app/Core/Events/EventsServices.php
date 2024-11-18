@@ -9,9 +9,7 @@ use App\Models\Event\EventPrize;
 use App\Models\Event\EventSocialLogs;
 use App\Models\Event\EventUsers;
 use App\Models\User\User;
-use App\Models\User\UserLogItems;
-use App\Models\Withdrawl\WithdrawItems;
-use App\Models\Withdrawl\WithdrawUsers;
+use App\Models\WithdrawUsers;
 use Illuminate\Support\Carbon;
 
 class EventsServices
@@ -112,13 +110,13 @@ class EventsServices
          $socialMethod->sendMessage(($type == 1 ? $user->vkontakte_id : $user->telegram_id), Message::getMessage('prize_gift', ['name' => $withdraw->name, 'count' => $count]));
       }
 
-      UserLogItems::query()->create([
-         'user_id' => $user_id,
-         'event_id' => $event_id,
-         'withdraw_items_id' => $item_id,
-         'count' => $count,
-         'action' => $actionText
-      ]);
+//      UserLogItems::query()->create([
+//         'user_id' => $user_id,
+//         'event_id' => $event_id,
+//         'withdraw_items_id' => $item_id,
+//         'count' => $count,
+//         'action' => $actionText
+//      ]);
    }
 
    public function checkLastMessage(int $post_id, Event $event, int $comment_id, SocialMethod $socialMethod): bool

@@ -10,13 +10,10 @@ return new class extends Migration {
     */
    public function up(): void
    {
-      Schema::create('user_log_items', function (Blueprint $table) {
+      Schema::create('user_tasks', function (Blueprint $table) {
          $table->id();
          $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-         $table->foreignId('event_id')->constrained('events')->cascadeOnDelete();
-         $table->foreignId('items_id')->constrained('items')->cascadeOnDelete();;
-         $table->integer('count');
-         $table->text('action');
+         $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
          $table->timestamps();
       });
    }
@@ -26,6 +23,6 @@ return new class extends Migration {
     */
    public function down(): void
    {
-      Schema::dropIfExists('user_log_items');
+      Schema::dropIfExists('user_tasks');
    }
 };

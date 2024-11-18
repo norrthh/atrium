@@ -34,7 +34,6 @@ class VkontakteWebhook
             break;
          case 'wall_repost':
             (new VkontakteWallMethod())->repost($data);
-            (new EventServices())->addAttempt($data['object']['from_id'], $data['object']['id'], 2, new VkontakteMethod());
             break;
       }
    }

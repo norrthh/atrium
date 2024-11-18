@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+/**
+ * @property string $username_telegram
+ * @property string $username_vkontakte
+ * @property string $avatar_telegram
+ * @property int $coin
+ * @property int $bilet
+ * @property string $nickname
+ * @property int $id
+ * @property string $avatar
+ */
+class UserResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+       return [
+          'id' => $this->id,
+          'nickname' => $this->username_telegram ?: ($this->username_vkontakte ?: 'North Hemingway'),
+          'username' => $this->nickname,
+          'coin' => $this->coin,
+          'bilet' => $this->bilet ?? 0,
+          'avatar' => $this->avatar_telegram ?: ($this->avatar ?: '/ayazik/no_image.png'),
+       ];
+    }
+}

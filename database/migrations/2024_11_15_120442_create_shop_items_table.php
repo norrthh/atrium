@@ -19,6 +19,7 @@ return new class extends Migration
            $table->integer('count');
            $table->integer('countActivate')->default(0);
            $table->integer('category');
+           $table->integer('status')->default(0);
            $table->timestamps();
         });
     }

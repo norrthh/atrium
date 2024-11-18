@@ -23,4 +23,11 @@ class MailingController extends Controller
 
       return response()->json(['success' => true]);
    }
+
+   public function info()
+   {
+      return response()->json([
+         'user_mailing' => 0
+      ]);
+   }
 }

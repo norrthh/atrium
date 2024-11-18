@@ -10,12 +10,11 @@ return new class extends Migration {
     */
    public function up(): void
    {
-      Schema::create('withdraw_users', function (Blueprint $table) {
+      Schema::create('user_auctions', function (Blueprint $table) {
          $table->id();
          $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-         $table->foreignId('item_id')->constrained('items')->cascadeOnDelete();;
-         $table->integer('count');
-         $table->integer('status')->default(0);
+         $table->foreignId('auction_id')->constrained('auctions')->cascadeOnDelete();
+         $table->integer('value')->default(0);
          $table->timestamps();
       });
    }
@@ -25,6 +24,6 @@ return new class extends Migration {
     */
    public function down(): void
    {
-      Schema::dropIfExists('withdraw_users');
+      Schema::dropIfExists('user_auctions');
    }
 };

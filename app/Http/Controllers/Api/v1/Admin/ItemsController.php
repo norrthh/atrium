@@ -14,6 +14,11 @@ class ItemsController extends Controller
     */
    public function index()
    {
+      return Items::query()->where('id', '>', 2)->get();
+   }
+
+   public function all()
+   {
       return Items::query()->get();
    }
 
@@ -44,6 +49,12 @@ class ItemsController extends Controller
     */
    public function destroy(string $id)
    {
-      //
+      Items::query()->where('id', $id)->delete();
+      return response()->json(['success' => true]);
+   }
+
+   public function coinbilet()
+   {
+      return Items::query()->where('id', '<=', 2)->get();
    }
 }

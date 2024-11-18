@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Items\Items;
-use App\Models\Withdrawl\WithdrawItems;
 use Illuminate\Http\Request;
 
 class ItemsController extends Controller
@@ -15,7 +14,7 @@ class ItemsController extends Controller
             'type' => ['required', 'string']
         ]);
 
-        return WithdrawItems::query()->where([['typeView', 1], ['type', $request->type]])->orWhere([['typeView', 3], ['type', $request->type]])->get();
+//        return WithdrawItems::query()->where([['typeView', 1], ['type', $request->type]])->orWhere([['typeView', 3], ['type', $request->type]])->get();
    }
 
    public function getEvent()

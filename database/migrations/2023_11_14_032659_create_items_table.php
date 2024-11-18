@@ -17,6 +17,18 @@ return new class extends Migration {
          $table->string('icon');
          $table->timestamps();
       });
+
+      \App\Models\Items\Items::query()->create([
+         'idItem' => 1,
+         'name' => 'Монета',
+         'icon' => 'ayazik/icons/coin.svg'
+      ]);
+
+      \App\Models\Items\Items::query()->create([
+         'idItem' => 1,
+         'name' => 'Билет',
+         'icon' => 'ayazik/icons/bilet.svg'
+      ]);
    }
 
    /**

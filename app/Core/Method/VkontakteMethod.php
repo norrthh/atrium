@@ -9,25 +9,25 @@ use Illuminate\Support\Facades\Storage;
 
 class VkontakteMethod implements SocialMethod
 {
-    protected string $vkKey;
-    protected string $vkVersion;
+   protected string $vkKey;
+   protected string $vkVersion;
 
-    public function __construct()
-    {
-        $this->vkKey = env('VKONTAKTE_TOKEN');
-        $this->vkVersion = env('VKONTAKTE_VERSION');
-    }
+   public function __construct()
+   {
+      $this->vkKey = env('VKONTAKTE_TOKEN');
+      $this->vkVersion = env('VKONTAKTE_VERSION');
+   }
 
-    public function sendMessage(int $userId, string $message): Response
-    {
-        return Http::get('https://api.vk.com/method/messages.send', [
-            'user_id' => $userId,
-            'message' => $message,
-            'random_id' => rand(),
-            'access_token' => $this->vkKey,
-            'v' => $this->vkVersion,
-        ]);
-    }
+   public function sendMessage(int $userId, string $message): Response
+   {
+      return Http::get('https://api.vk.com/method/messages.send', [
+         'user_id' => $userId,
+         'message' => $message,
+         'random_id' => rand(),
+         'access_token' => $this->vkKey,
+         'v' => $this->vkVersion,
+      ]);
+   }
 
    public function sendWallMessage($filePath, $message)
    {
@@ -153,6 +153,29 @@ class VkontakteMethod implements SocialMethod
 
       if (isset($result['response'])) {
          return $result['response'] == 1;
+      }
+
+      return false;
+   }
+
+   public function checkVkDonutSubscription(int $userId): bool
+   {
+      $url = "https://api.vk.com/method/donut.isDon";
+      $params = [
+         'owner_id' => '-' . env('VKONTAKTE_GROUP_ID'),
+         'user_id' => $userId,
+         'access_token' => env('VKONTAKTE_USER_TOKEN'),
+         'v' => env('VKONTAKTE_VERSION')
+      ];
+
+      // Отправляем запрос
+      $response = file_get_contents($url . '?' . http_build_query($params));
+      $data = json_decode($response, true);
+
+      if (isset($data['response']) && $data['response'] == 1) {
+         return true; // Пользователь подписан
+      } elseif (isset($data['error'])) {
+         throw new \Exception("Ошибка API: " . $data['error']['error_msg']);
       }
 
       return false;

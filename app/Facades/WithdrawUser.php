@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Facades;
+
+use App\Services\WithdrawUserServices;
+use Illuminate\Support\Facades\Facade;
+
+/**
+ * @method static store(int $item_id, int $count): void
+ */
+class WithdrawUser extends Facade
+{
+   protected static function getFacadeAccessor(): string
+   {
+      return WithdrawUserServices::class;
+   }
+}

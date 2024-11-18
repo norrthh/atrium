@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('log_messages', function (Blueprint $table) {
-            $table->id();
-            $table->integer('user_id');
-            $table->integer('post_id');
-            $table->integer('typeMessage');
-            $table->timestamps();
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->integer('status')->default(0);
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('log_messages');
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
     }
 };

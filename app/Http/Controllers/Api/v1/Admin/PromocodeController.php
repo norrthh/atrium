@@ -11,7 +11,7 @@ class PromocodeController extends Controller
    public function store(Request $request, EventPromocodeServices $eventPromocodeServices)
    {
       $request->validate([
-         'typeCreate' => ['required', 'int'],
+         'type_id' => ['required', 'int'],
          'name' => ['required'],
          'type' => ['required', 'array'],
          'type.type' => [''],
@@ -23,6 +23,6 @@ class PromocodeController extends Controller
          'social' => ['required', 'required'],
       ]);
 
-      return $eventPromocodeServices->create($request->all());
+      $eventPromocodeServices->create($request->all());
    }
 }

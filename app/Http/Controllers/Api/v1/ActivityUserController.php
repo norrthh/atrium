@@ -12,11 +12,11 @@ class ActivityUserController extends Controller
 {
     public function now(Request $request)
     {
-        return User::query()->orderBy('coin', 'desc')->take(20)->get();
+        return User::query()->orderBy('coin', 'desc')->take(5)->get();
     }
 
     public function last(): Collection
     {
-        return LastActivity::query()->with('user')->take(20)->get();
+        return LastActivity::query()->with('user')->take(5)->get();
     }
 }

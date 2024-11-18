@@ -25,7 +25,8 @@ class ShopController extends Controller
          'category' => ['required', 'int'],
       ]);
 
-      ShopItems::query()->create($request->all());
+      $item = ShopItems::query()->create($request->all());
+      return $item;
    }
 
    public function destroy(string $id)

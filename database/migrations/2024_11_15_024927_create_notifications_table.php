@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('href');
             $table->string('time');
             $table->string('image');
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }
