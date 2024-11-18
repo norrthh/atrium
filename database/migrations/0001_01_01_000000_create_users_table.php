@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->text('nickname');
+            $table->text('nickname')->nullable();
             $table->string('telegram_id')->nullable();
             $table->string('vkontakte_id')->nullable();
             $table->string('coin')->default(0);
