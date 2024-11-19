@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class OwnCors
@@ -15,6 +16,7 @@ class OwnCors
      */
     public function handle(Request $request, Closure $next): Response
     {
+       Log::info('test', (array)print_r($request->all(), 1));
        return $next($request)
           ->header('Access-Control-Allow-Origin', '*')
           ->header('Access-Control-Allow-Methods', '*')
