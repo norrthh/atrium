@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Storage;
 
 Route::post('auth', [AuthController::class, 'auth']);
 
-Route::middleware('auth:sanctum')->middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
    Route::prefix('activity')->group(function () {
       Route::post('/now', [ActivityUserController::class, 'now']);
       Route::post('/last', [ActivityUserController::class, 'last']);
