@@ -576,7 +576,7 @@ const transferActivateCode = () => {
    }).then(res => {
       transferResponse.value = res.data
 
-      if (res.status) {
+      if (res.data.status) {
          window.location.reload();
       }
    })
@@ -1592,8 +1592,7 @@ const transferCopyToClipboard = () => {
             </div>
             <div v-if="transferType === 2">
                <div class="modal-input">
-                  <p class="p">Вставьте код, который вы получили в приложении
-                     {{ user.telegram_id === '' ? 'Telegram' : 'VK' }}</p>
+                  <p class="p">Вставьте код, который вы получили в приложении VK</p>
                   <input type="text" id="large-input"
                          placeholder="Например, 1aA2-3bB4"
                          v-model="transferInput"
