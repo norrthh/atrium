@@ -237,10 +237,10 @@ let boustModal = () => {
 let userProfile = ref()
 
 const telegramData = ref(null);
-
-if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
-   telegramData.value = window.Telegram.WebApp;
+if (Object.keys(window.Telegram.WebApp.initDataUnsafe).length !== 0) {
+   telegramData.value = window.Telegram.WebApp; // Если данные есть, используем их
 } else {
+   // Если данных нет, устанавливаем тестовые значения
    telegramData.value = {
       "initData": "user=%7B%22id%22%3A891954506%2C%22first_name%22%3A%22%D0%90%D1%8F%D0%B7%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22norrthh%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-7945443225735177088&chat_type=private&auth_date=1726175825&hash=e75f3598d93782f6c71daff1bb41db674233f3eb55261e254dd7b1c1fedb19fb",
       "initDataUnsafe": {
@@ -326,8 +326,6 @@ if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData
       }
    };
 }
-
-console.log(telegramData.value ? 1 : 2);
 
 axios.post('/api/auth/', {
    'telegram_id': telegramData.value.initDataUnsafe.user.id,
