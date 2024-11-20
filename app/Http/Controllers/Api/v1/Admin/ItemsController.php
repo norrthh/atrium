@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ItemResource;
 use App\Models\Items\Items;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class ItemsController extends Controller
     */
    public function index()
    {
-      return Items::query()->where('id', '>', 2)->get();
+      return ItemResource::collection(Items::query()->where('id', '>', 2)->get());
    }
 
    public function all()

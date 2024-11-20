@@ -38,7 +38,7 @@ Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
       Route::prefix('admin')->group(function () {
          Route::prefix('items')->group(function () {
             Route::get('/', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'index']);
-            Route::get('/all', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'index']);
+            Route::get('/all', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'all']);
             Route::get('/coinbilet', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'coinbilet']);
             Route::post('/create', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'store']);
             Route::patch('/edit', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'edit']);
