@@ -57,7 +57,7 @@ class UserAuthenticationServices
             'user' => new UserResource(auth()->user()),
             'token' => $user->createToken('authToken')->plainTextToken,
             'vk_donut' => (new VkontakteMethod())->checkVkDonutSubscription($data['vkontakte_id'] ?? 0),
-            'notification' => (new NotificationServices())->getNotification()
+            'notification' => (new NotificationServices())->getNotification(isset($data['vkontakte_id']) ? 'vkontakte' : 'telegram')
          ];
       }
 

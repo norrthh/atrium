@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Notification extends Model
 {
    protected $fillable = [
-      'description', 'href', 'time', 'image', 'status'
+      'description', 'href', 'time', 'image', 'status', 'type_social'
    ];
 
    public function item(): \Illuminate\Database\Eloquent\Relations\HasMany

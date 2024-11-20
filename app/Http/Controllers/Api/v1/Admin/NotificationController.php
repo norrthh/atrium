@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\Cache;
 
 class NotificationController extends Controller
 {
-   /**
-    * Display a listing of the resource.
-    */
-   public function index(): JsonResponse
-   {
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(): JsonResponse
+    {
         $lastNotification = Notification::query()->orderBy('id', 'desc')->with('item')->first();
         $data = [];
 
@@ -31,60 +31,62 @@ class NotificationController extends Controller
         }
 
         return response()->json($data);
-   }
+    }
 
     public function ready(): void
     {
         $lastNotification = Notification::query()->orderBy('id', 'desc')->where('status', 0)->first();
         Cache::forever('notification_' . $lastNotification->id . '_user_id=' . auth()->user()->id, 1);
-   }
+    }
 
-   /**
-    * Store a newly created resource in storage.
-    */
+    /**
+     * Store a newly created resource in storage.
+     */
 
-   public function store(Request $request)
-   {
-      $request->validate([
-         'description' => ['required', 'string'],
-         'href' => ['required', 'string'],
-         'time' => ['required', 'int'],
-         'attempts' => ['required'],
-         'image' => ['required', 'string'],
-      ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'description' => ['required', 'string'],
+            'href' => ['required', 'string'],
+            'time' => ['required', 'int'],
+            'attempts' => ['required'],
+            'image' => ['required', 'string'],
+            'type_social' => ['required', 'in:vkontakte,telegram'],
+        ]);
 
-      $notificationOld = Notification::query()->orderBy('id', 'desc')->first();
+        $notificationOld = Notification::query()->orderBy('id', 'desc')->first();
 
-      $notification = Notification::query()->create([
-         'description' => $request->get('description'),
-         'href' => $request->get('href'),
-         'time' => $request->get('time'),
-         'image' => $request->get('image'),
-      ]);
+        $notification = Notification::query()->create([
+            'description' => $request->get('description'),
+            'href' => $request->get('href'),
+            'time' => $request->get('time'),
+            'image' => $request->get('image'),
+            'type_social' => $request->get('type_social'),
+        ]);
 
-      foreach ($request->get('attempts') as $item) {
-         NotificationItems::query()->create([
-            'notification_id' => $notification->id,
-            'item_id' => $item['idItem'],
-            'count' => $item['count'],
-         ]);
-      }
+        foreach ($request->get('attempts') as $item) {
+            NotificationItems::query()->create([
+                'notification_id' => $notification->id,
+                'item_id' => $item['idItem'],
+                'count' => $item['count'],
+            ]);
+        }
 
-      if ($notificationOld) {
-          Notification::query()->where('id', $notificationOld->id)->delete();
-      }
+        if ($notificationOld) {
+            Notification::query()->where('id', $notificationOld->id)->delete();
+        }
 
-      return response()->json([
-         'message' => 'success'
-      ]);
-   }
+        return response()->json([
+            'message' => 'success'
+        ]);
+    }
 
-   public function destroy(string $id): JsonResponse
-   {
-      Notification::query()->where('id', $id)->delete();
+    public function destroy(string $id): JsonResponse
+    {
+        Notification::query()->where('id', $id)->delete();
 
-      return response()->json([
-         'message' => 'success'
-      ]);
-   }
+        return response()->json([
+            'message' => 'success'
+        ]);
+    }
 }

@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Cache;
 
 class NotificationServices
 {
-   public function getNotification()
+   public function getNotification(string $type)
    {
       $notification = Notification::query()
          ->orderBy('id', 'desc')
-         ->where('status', 0)
+         ->where([['status', 0], ['type_social', $type]])
          ->with('item')
          ->first();
 
