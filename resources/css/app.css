@@ -210,21 +210,6 @@
    }
 }
 
-.unique_car {
-   background-image: url("/img/unique_car.png");
-}
-
-.unique_skin {
-   background-image: url("/img/unique_skin.png");
-}
-
-.unique_item {
-   background-image: url("/img/unique_item.png");
-}
-
-.unique_value {
-   background-image: url("/img/unique_value.png");
-}
 
 .boust-modal {
    z-index: 10000;
@@ -460,79 +445,6 @@ textarea {
    text-transform: uppercase;
 }
 
-.p {
-   font-size: 20px;
-   font-weight: 500;
-   line-height: 37.7px;
-   text-align: left;
-   opacity: 64%
-}
-
-.modal-input input {
-   font-size: 20px;
-   font-weight: 800;
-   color: #FFFFFF;
-
-   width: 100%;
-   margin-top: 10px;
-   padding: 30px;
-   border-radius: 25px;
-   background: #FFFFFF0A;
-
-   @apply uppercase
-}
-
-.modal-input input::placeholder {
-   color: #FFFFFF;
-   opacity: 32%;
-}
-
-.mini-title {
-   font-family: Akrobat;
-   font-size: 20px;
-   font-weight: 600;
-}
-
-.selectBlock select, .selectBlock option {
-   display: block;
-   width: 100%;
-   background-color: #3e3e3b;
-   border: 1.61px solid #FFFFFF1F;
-   color: #fff;
-   border-radius: 25px;
-   padding: 30px;
-
-   font-size: 20px;
-   font-weight: 800;
-   text-align: left;
-   -webkit-appearance: button;
-   appearance: none;
-   outline: none;
-   text-transform: uppercase;
-}
-
-.selectBlock option {
-   font-weight: 600 !important;
-}
-
-textarea {
-   display: block;
-   width: 100%;
-   background-color: #151514;
-   border: 1.61px solid #FFFFFF1F;
-   color: #fff;
-   border-radius: 25px;
-   padding: 15px;
-
-   font-size: 15px;
-   font-weight: 800;
-   text-align: left;
-   -webkit-appearance: button;
-   appearance: none;
-   outline: none;
-   text-transform: uppercase;
-}
-
 .p2 {
    font-size: 15px;
    font-weight: 600;
@@ -540,4 +452,130 @@ textarea {
    text-align: left;
    color: #FFFFFF;
    opacity: 30%;
+}
+
+
+.active-item_nav {
+   opacity: 1;
+}
+
+.unique_car {
+   background-image: url("/img/unique_car.png");
+}
+
+.unique_skin {
+   background-image: url("/img/unique_skin.png");
+}
+
+.unique_item {
+   background-image: url("/img/unique_item.png");
+}
+
+.unique_value {
+   background-image: url("/img/unique_value.png");
+}
+
+.modal-promo {
+   z-index: 10000;
+   background: #242424;
+   width: 100%;
+   bottom: 0;
+   border-top-left-radius: 30px;
+   border-top-right-radius: 30px;
+//height: 475px;
+   @apply absolute;
+}
+
+.modal-header {
+   background: #FFFFFF1A;
+   height: 10px;
+   width: 81px;
+   border-radius: 60px;
+   margin: auto;
+}
+
+.modal-content {
+   padding: 25px 45px 50px 42px;
+   color: #fff;
+}
+
+.modal-title {
+   padding-top: 24px;
+   display: flex;
+   align-items: center;
+   gap: 20px;
+}
+
+.modal-title .content {
+   font-size: 28px;
+   font-weight: 800;
+
+   @apply uppercase
+}
+
+@media (max-width: 415px) {
+   .modal-title .content {
+      font-size: 22px;
+   }
+}
+
+@media (max-width: 360px) {
+   .modal-title svg {
+      width: 70px;
+   }
+}
+
+.notification {
+
+}
+
+.notification .prize {
+   border: 1px solid #FFFFFF1F;
+   background: #FFFFFF0A;
+   padding: 20px 25px 20px 25px;
+   gap: 12px;
+   border-radius: 16px;
+}
+
+.notification .prize .item {
+   display: flex;
+   gap: 10px;
+   font-size: 18px;
+   font-weight: 700;
+   align-items: center;
+}
+
+.notification .prize .item .item__circle {
+   background: #FFFFFFA3;
+   width: 8px;
+   height: 8px;
+   border-radius: 15px;
+}
+
+.setting_info {
+   border: 1px solid #FFFFFF26
+}
+
+.auction_shop {
+   background-image: url("/ayazik/auction.svg");
+}
+
+.withdrawButton {
+   padding: 8px 25px;
+   border-radius: 100px;
+   background: white;
+   color: black;
+   font-weight: 800;
+}
+
+@media (max-width: 480px) {
+   .cardsGood .p, .cardsGood h1 {
+      font-size: 18px !important;
+   }
+}
+
+@media (max-width: 407px) {
+   .cardsGood .p, .cardsGood h1 {
+      font-size: 14px !important;
+   }
 }
