@@ -571,8 +571,8 @@ const transferCode = () => {
 const transferActivateCode = () => {
    axios.post('/api/transfer/activate', {
       code: transferInput.value,
-      from: 'vkontakte',
-      to: 'telegram',
+      from: 'telegram',
+      to: 'vkontakte',
    }).then(res => {
       transferResponse.value = res.data
    })

@@ -36,7 +36,7 @@ class TransferController extends Controller
 
    public function activate(Request $request)
    {
-      $userFind = UserTransfer::query()->where([['code', $request->get('code')]])->first();
+      $userFind = UserTransfer::query()->where([['code', $request->get('code')], ['to', $request->get('to')], ['from', $request->get('from')]])->first();
 
       if ($userFind) {
          $user = User::query()->where('id', $userFind->user_id)->first();
