@@ -20,7 +20,7 @@ class ItemsController extends Controller
 
    public function all()
    {
-      return Items::query()->get();
+      return ItemResource::collection(Items::query()->get());
    }
 
    /**

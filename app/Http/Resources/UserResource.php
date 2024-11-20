@@ -14,6 +14,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $nickname
  * @property int $id
  * @property string $avatar
+ * @property int $telegram_id
+ * @property string $created_at
+ * @property int $vkontakte_id
  */
 class UserResource extends JsonResource
 {
@@ -32,7 +35,7 @@ class UserResource extends JsonResource
           'bilet' => $this->bilet ?? 0,
           'avatar' => $this->avatar_telegram ?: ($this->avatar ?: '/ayazik/no_image.png'),
           'created_at' => $this->created_at,
-          'connect_social' => $this->username_vkontakte and $this->username_telegram ? true : false
+          'connect_social' => $this->telegram_id and $this->vkontakte_id
        ];
     }
 }
