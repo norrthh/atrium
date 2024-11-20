@@ -236,93 +236,93 @@ let boustModal = () => {
 
 let userProfile = ref()
 
-const telegramData = ref({
-   "initData": "user=%7B%22id%22%3A891954506%2C%22first_name%22%3A%22%D0%90%D1%8F%D0%B7%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22norrthh%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-7945443225735177088&chat_type=private&auth_date=1726175825&hash=e75f3598d93782f6c71daff1bb41db674233f3eb55261e254dd7b1c1fedb19fb",
-   "initDataUnsafe": {
-      "user": {
-         "id": 891954506,
-         "first_name": "Аяз",
-         "last_name": "",
-         "username": "norrthh",
-         "language_code": "ru",
-         "is_premium": true,
-         "allows_write_to_pm": true
-      },
-      "chat_instance": "-7945443225735177088",
-      "chat_type": "private",
-      "auth_date": "1726175825",
-      "hash": "e75f3598d93782f6c71daff1bb41db674233f3eb55261e254dd7b1c1fedb19fb"
-   },
-   "version": "7.10",
-   "platform": "tdesktop",
-   "colorScheme": "dark",
-   "themeParams": {
-      "accent_text_color": "#79e8da",
-      "bg_color": "#282e33",
-      "bottom_bar_bg_color": "#282e33",
-      "button_color": "#3fc1b0",
-      "button_text_color": "#ffffff",
-      "destructive_text_color": "#f57474",
-      "header_bg_color": "#282e33",
-      "hint_color": "#82868a",
-      "link_color": "#4be1c3",
-      "secondary_bg_color": "#313b43",
-      "section_bg_color": "#282e33",
-      "section_header_text_color": "#4be1c3",
-      "section_separator_color": "#242a2e",
-      "subtitle_text_color": "#82868a",
-      "text_color": "#f5f5f5"
-   },
-   "isExpanded": true,
-   "viewportHeight": 590,
-   "viewportStableHeight": 590,
-   "isClosingConfirmationEnabled": false,
-   "isVerticalSwipesEnabled": true,
-   "headerColor": "#282e33",
-   "backgroundColor": "#282e33",
-   "bottomBarColor": "#282e33",
-   "BackButton": {
-      "isVisible": false
-   },
-   "MainButton": {
-      "type": "main",
-      "text": "Continue",
-      "color": "#3fc1b0",
-      "textColor": "#ffffff",
-      "isVisible": false,
-      "isProgressVisible": false,
-      "isActive": true,
-      "hasShineEffect": false
-   },
-   "SecondaryButton": {
-      "type": "secondary",
-      "text": "Cancel",
-      "color": "#282e33",
-      "textColor": "#3fc1b0",
-      "isVisible": false,
-      "isProgressVisible": false,
-      "isActive": true,
-      "hasShineEffect": false,
-      "position": "left"
-   },
-   "SettingsButton": {
-      "isVisible": false
-   },
-   "HapticFeedback": {},
-   "CloudStorage": {},
-   "BiometricManager": {
-      "isInited": false,
-      "isBiometricAvailable": false,
-      "biometricType": "unknown",
-      "isAccessRequested": false,
-      "isAccessGranted": false,
-      "isBiometricTokenSaved": false,
-      "deviceId": ""
-   }
-})
+const telegramData = window.Telegram.WebApp
 
 if (!telegramData) {
-   const telegramData = window.Telegram.WebApp
+   const telegramData = ref({
+      "initData": "user=%7B%22id%22%3A891954506%2C%22first_name%22%3A%22%D0%90%D1%8F%D0%B7%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22norrthh%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-7945443225735177088&chat_type=private&auth_date=1726175825&hash=e75f3598d93782f6c71daff1bb41db674233f3eb55261e254dd7b1c1fedb19fb",
+      "initDataUnsafe": {
+         "user": {
+            "id": 891954506,
+            "first_name": "Аяз",
+            "last_name": "",
+            "username": "norrthh",
+            "language_code": "ru",
+            "is_premium": true,
+            "allows_write_to_pm": true
+         },
+         "chat_instance": "-7945443225735177088",
+         "chat_type": "private",
+         "auth_date": "1726175825",
+         "hash": "e75f3598d93782f6c71daff1bb41db674233f3eb55261e254dd7b1c1fedb19fb"
+      },
+      "version": "7.10",
+      "platform": "tdesktop",
+      "colorScheme": "dark",
+      "themeParams": {
+         "accent_text_color": "#79e8da",
+         "bg_color": "#282e33",
+         "bottom_bar_bg_color": "#282e33",
+         "button_color": "#3fc1b0",
+         "button_text_color": "#ffffff",
+         "destructive_text_color": "#f57474",
+         "header_bg_color": "#282e33",
+         "hint_color": "#82868a",
+         "link_color": "#4be1c3",
+         "secondary_bg_color": "#313b43",
+         "section_bg_color": "#282e33",
+         "section_header_text_color": "#4be1c3",
+         "section_separator_color": "#242a2e",
+         "subtitle_text_color": "#82868a",
+         "text_color": "#f5f5f5"
+      },
+      "isExpanded": true,
+      "viewportHeight": 590,
+      "viewportStableHeight": 590,
+      "isClosingConfirmationEnabled": false,
+      "isVerticalSwipesEnabled": true,
+      "headerColor": "#282e33",
+      "backgroundColor": "#282e33",
+      "bottomBarColor": "#282e33",
+      "BackButton": {
+         "isVisible": false
+      },
+      "MainButton": {
+         "type": "main",
+         "text": "Continue",
+         "color": "#3fc1b0",
+         "textColor": "#ffffff",
+         "isVisible": false,
+         "isProgressVisible": false,
+         "isActive": true,
+         "hasShineEffect": false
+      },
+      "SecondaryButton": {
+         "type": "secondary",
+         "text": "Cancel",
+         "color": "#282e33",
+         "textColor": "#3fc1b0",
+         "isVisible": false,
+         "isProgressVisible": false,
+         "isActive": true,
+         "hasShineEffect": false,
+         "position": "left"
+      },
+      "SettingsButton": {
+         "isVisible": false
+      },
+      "HapticFeedback": {},
+      "CloudStorage": {},
+      "BiometricManager": {
+         "isInited": false,
+         "isBiometricAvailable": false,
+         "biometricType": "unknown",
+         "isAccessRequested": false,
+         "isAccessGranted": false,
+         "isBiometricTokenSaved": false,
+         "deviceId": ""
+      }
+   })
 }
 
 axios.post('/api/auth/', {
