@@ -1445,7 +1445,7 @@ const transferCopyToClipboard = () => {
       <div class="modal-promo" v-if="isCoupon">
          <div class="modal-content"
               :style="responseCoupon.status === 200 ? 'background-repeat: no-repeat; background-size: cover; border-top-left-radius: 30px; border-top-right-radius: 30px;' : ''"
-              :class="responseCoupon.status ? 'unique_value' : ''">
+              :class="responseCoupon.status === 200 ? 'unique_value' : ''">
             <div class="modal-header"></div>
             <div class="modal-title">
                <div>
@@ -1471,18 +1471,17 @@ const transferCopyToClipboard = () => {
                </div>
             </div>
 
-            <div v-if="responseCoupon.status === 200">
-               <div class="grid gris-cols-2 gap-4 cardsBuy" style="overflow: inherit; height: 100%">
+            <div v-if="responseCoupon.status === 200" class="promocode">
+               <div class="grid gris-cols-2 gap-4 cardsBuy">
                   <div class="cards" v-for="shopItem in responseCoupon.item"
                        @click="selectPromocodeItem(shopItem, responseCoupon.item, selectedCouponItems, responseCoupon.select)"
                        :class="{ selected: shopItem.selected }"
-                       style="height: 190px"
                   >
                      <div class="relative">
                         <img src="/ayazik/icons/time.svg" class="absolute right-0 top-[12px]"
                              v-if="shopItem.item_type === 1"/>
                         <img :src="shopItem.item.icon" alt="" class="mx-auto"
-                             :class="shopItem.item.skin ? 'h-[159px]' : ''">
+                             :class="shopItem.item.skin ? 'skin' : ''">
                      </div>
                      <h1 class="promo_title">{{ shopItem.item.name }}</h1>
                   </div>
