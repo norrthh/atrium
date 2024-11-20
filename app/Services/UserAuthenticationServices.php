@@ -19,12 +19,16 @@ class UserAuthenticationServices
 
       if (isset($data['telegram_id'])) {
          $user = User::query()->where('telegram_id', $data['telegram_id'])->first();
+
+         if ($user) {
+            $user->update(['username_telegram' => $data['nickname']]);
+         }
       }
 
       if (isset($data['vkontakte_id'])) {
          $user = User::query()->where('vkontakte_id', $data['vkontakte_id'])->first();
          if ($user) {
-            $user->update(['avatar' => $data['avatar']]);
+            $user->update(['avatar' => $data['avatar'], 'username_vkontakte' => $data['nickname']]);
          }
       }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\LastActivity;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,7 +13,7 @@ class ActivityUserController extends Controller
 {
     public function now(Request $request)
     {
-        return User::query()->orderBy('coin', 'desc')->take(5)->get();
+        return UserResource::collection(User::query()->orderBy('coin', 'desc')->take(5)->get());
     }
 
     public function last(): Collection

@@ -856,10 +856,9 @@ const transferCopyToClipboard = () => {
 
                   <div class="flex flex-col gap-8" v-if="loadedPage">
                      <div class="flex flex-col gap-4 h-[55vh] overflow-y-auto">
-                        <ActivityComponent v-if="selectPage === 'rating' && activity" :activity="activity"/>
+                        <ActivityComponent v-if="selectPage === 'rating' && activity" :activity="activity.data"/>
                         <LoaderComponent v-else-if="selectPage === 'rating'"/>
-                        <ActivityComponent v-if="selectPage === 'last_activity' && lastActivity"
-                                           :activity="lastActivity"/>
+                        <ActivityComponent v-if="selectPage === 'last_activity' && lastActivity" :activity="lastActivity.data"/>
                         <LoaderComponent v-else-if="selectPage === 'last_activity'"/>
                      </div>
                   </div>
