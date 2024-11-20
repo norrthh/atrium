@@ -1,7 +1,8 @@
 <script setup>
 import { computed } from 'vue';
 
-defineProps({
+// Используем props для получения данных
+const props = defineProps({
    activity: {
       type: Array,
       default: () => []
@@ -10,7 +11,7 @@ defineProps({
 
 // Вычисляемое свойство для сортировки массива по убыванию coin
 const sortedActivities = computed(() => {
-   return [...activity].sort((a, b) => b.coin - a.coin);
+   return [...props.activity].sort((a, b) => b.coin - a.coin);
 })
 </script>
 
