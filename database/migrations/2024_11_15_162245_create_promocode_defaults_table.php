@@ -10,19 +10,21 @@ return new class extends Migration {
     */
    public function up(): void
    {
-      Schema::create('promocode', function (Blueprint $table) {
+      Schema::create('promocodes', function (Blueprint $table) {
          $table->id();
          $table->string('code');
-         $table->json('type');
+         $table->integer('promo_type');
+         $table->json('expiration');
          $table->integer('countPrize')->nullable();
-         $table->foreignId('event_id')->constrained('events')->cascadeOnDelete();
+         $table->foreignId('event_id')->nullable()->constrained('events')->cascadeOnDelete();
          $table->timestamps();
       });
 
       Schema::create('promocode_items', function (Blueprint $table) {
          $table->id();
-         $table->integer('promocode_id');
+         $table->foreignId('promocode_id')->constrained('promocodes')->cascadeOnDelete();
          $table->foreignId('item_id')->constrained('items')->cascadeOnDelete();
+         $table->integer('count')->default(0);
          $table->timestamps();
       });
    }
@@ -32,6 +34,7 @@ return new class extends Migration {
     */
    public function down(): void
    {
-      Schema::dropIfExists('promocode_defaults');
+      Schema::dropIfExists('promocode_items');
+      Schema::dropIfExists('promocodes');
    }
 };

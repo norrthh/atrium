@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ItemResource extends JsonResource
+class PromocodeResource extends JsonResource
 {
    /**
     * Transform the resource into an array.
@@ -16,10 +16,7 @@ class ItemResource extends JsonResource
    {
       return [
          'id' => $this->id,
-         'game_id' => $this->idItem,
-         'name' => $this->name,
-         'icon' => request()->root() . '/storage/' . $this->icon,
-         'skin' => $this->skin
+         'item' => new ItemResource($this->item),
       ];
    }
 }

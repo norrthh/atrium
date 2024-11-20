@@ -47,21 +47,21 @@ class EventServices
          'post_id' => $data['post_id'],
          'social_type' => $data['social_type'],
          'eventType' => $data['type'], // тип игры
-         'word' => $data['word'], // слово
-         'countAttempt' => $data['countAttempt'], // Количество попыток:
-         'countMessage' => $data['countMessage'], // Количество попыток до выпадения приза:
-         'bg' => $data['bg'], // картинки
-         'subscribe' => $data['subscribe'],
-         'subscribe_mailing' => $data['subscribe_mailing'],
-         'timeForAttempt' => $data['timeForAttempt'], // Время между попытками:
-         'cumebackPlayer' => $data['cumebackPlayer'], // Возвращать игроков в конкурс бонусными попытками:
+         'word' => $data['word'] ?? '', // слово
+         'countAttempt' => $data['countAttempt'] ?? 0, // Количество попыток:
+         'countMessage' => $data['countMessage'] ?? 0, // Количество попыток до выпадения приза:
+         'bg' => $data['bg'] ?? ['bg1.png'], // картинки
+         'subscribe' => $data['subscribe'] ?? 'not_required',
+         'subscribe_mailing' => $data['subscribe_mailing'] ?? 'not_required',
+         'timeForAttempt' => $data['timeForAttempt'] ?? 0, // Время между попытками:
+         'cumebackPlayer' => $data['cumebackPlayer'] ?? 0, // Возвращать игроков в конкурс бонусными попытками:
          'text' => $data['text'],
-         'states' => $data['states'],
-         'attempts' => $data['attempts'],
-         'postMessage' => $data['postMessage'],
-         'status' => $data['status'],
-         'like' => $data['like'],
-         'repost' => $data['repost'],
+         'states' => $data['states'] ?? [],
+         'attempts' => $data['attempts'] ?? [],
+         'postMessage' => $data['postMessage'] ?? '',
+         'status' => $data['status'] ?? 0,
+         'like' => $data['like'] ?? [],
+         'repost' => $data['repost'] ?? [],
       ]);
    }
 

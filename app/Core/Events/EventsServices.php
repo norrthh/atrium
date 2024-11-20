@@ -4,10 +4,12 @@ namespace App\Core\Events;
 
 use App\Core\Message\Message;
 use App\Core\Method\SocialMethod;
+use App\Facades\WithdrawUser;
 use App\Models\Event\Event;
 use App\Models\Event\EventPrize;
 use App\Models\Event\EventSocialLogs;
 use App\Models\Event\EventUsers;
+use App\Models\Items\Items;
 use App\Models\User\User;
 use App\Models\WithdrawUsers;
 use Illuminate\Support\Carbon;
@@ -96,27 +98,13 @@ class EventsServices
 
    public function giveItemUser($user_id, int $event_id, int $item_id, int $count, string $actionText, SocialMethod $socialMethod = null, $type = null): void
    {
-      WithdrawUsers::query()->create([
-         'user_id' => $user_id,
-         'withdraw_items_id' => $item_id,
-         'count' => $count,
-         'status' => 0
-      ]);
+      $withdraw = WithdrawUser::store($item_id, $count, $user_id);
 
       if ($type) {
          $user = User::query()->where('id', $user_id)->first();
-         $withdraw = WithdrawItems::query()->where('id', $item_id)->first();
-
-         $socialMethod->sendMessage(($type == 1 ? $user->vkontakte_id : $user->telegram_id), Message::getMessage('prize_gift', ['name' => $withdraw->name, 'count' => $count]));
+         $item = Items::query()->where('id', $item_id)->first();
+         $socialMethod->sendMessage(($type == 1 ? $user->vkontakte_id : $user->telegram_id), Message::getMessage('prize_gift', ['name' => $item->name, 'count' => $count]));
       }
-
-//      UserLogItems::query()->create([
-//         'user_id' => $user_id,
-//         'event_id' => $event_id,
-//         'withdraw_items_id' => $item_id,
-//         'count' => $count,
-//         'action' => $actionText
-//      ]);
    }
 
    public function checkLastMessage(int $post_id, Event $event, int $comment_id, SocialMethod $socialMethod): bool

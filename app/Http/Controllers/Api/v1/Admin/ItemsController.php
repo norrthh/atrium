@@ -31,6 +31,7 @@ class ItemsController extends Controller
          'name' => $request->get('name'),
          'idItem' => $request->get('idItem'),
          'icon' => $request->get('icon'),
+         'skin' => $request->get('skin')
       ]);
 
       return response()->json(['message' => 'success']);

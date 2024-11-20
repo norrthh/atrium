@@ -8,12 +8,13 @@ class Promocode extends Model
 {
    protected $fillable = [
       'code',
-      'type',
+      'expiration',
+      'promo_type',
       'countPrize',
       'event_id',
    ];
 
    protected $casts = [
-      'type' => 'array',
+      'expiration' => 'array',
    ];
 }

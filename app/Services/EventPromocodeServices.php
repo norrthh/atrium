@@ -2,37 +2,73 @@
 
 namespace App\Services;
 
+use App\Core\Method\VkontakteMethod;
 use App\Models\Event\Event;
 use App\Models\Event\EventPromocode;
+use App\Models\Items\Items;
+use App\Models\Promocode\Promocode;
+use App\Models\Promocode\PromocodeItem;
 
 class EventPromocodeServices
 {
-   public function promocode(Event $event, array $prizes)
+   public function promocode()
    {
-      foreach ($prizes as $prize) {
-         if ($prize['name']) {
-            $this->store($event->id, $prize['promcoode'] ?? '', $prize['count'] ?? 0, $prize['countActivatePromocode'] ?? 0, $prize['name']['id']);
-         }
-      }
+
+   }
+   protected function store($code, $type, $expiration, $event_id, $countPrize)
+   {
+      return Promocode::query()->create([
+         'code' => $code,
+         'promo_type' => $type,
+         'expiration' => $expiration,
+         'countPrize' => $countPrize,
+         'event_id' => $event_id,
+      ]);
    }
 
-   protected function store($event_id, $code, $count, $count_activate, $prize_id)
+   public function storePrizes($promo_id, array $prizes)
    {
-      return EventPromocode::query()->create([
-         'event_id' => $event_id,
-         'prize_id' => $prize_id,
-         'code' => $code,
-         'count' => $count,
-         'count_prize' => $count_activate,
-         'count_used' => 0
-      ]);
+      foreach ($prizes as $prize) {
+         PromocodeItem::query()->create([
+            'promocode_id' => $promo_id,
+            'item_id' => $prize['item_id'],
+            'count' => $prize['count'],
+         ]);
+      }
    }
 
    public function create(array $data)
    {
-      if ($data['typeCreate'] == 1) {
-         $postMessage = str_replace('{twist_word}', $data['word'], $data['text']);
+      $promocode = Promocode::query()->where('code', $data['name'])->first();
 
+      if ($promocode) {
+         return response()->json([
+            'message' => 'Такой промокод уже существует'
+         ], 403);
       }
+
+      switch ($data['type_id']) {
+         case 1:
+            $data['event_id'] = null;
+            break;
+         case 2:
+            $data['text'] = str_replace(
+               '{prizes}', Items::query()->where('id', $data['prizes'][0]['id'])->first()->name, // Замена {prizes}
+               str_replace('{promocode}', $data['name'], $data['text']) // Замена {promocode}
+            );
+            $data['post_id'] = (new VkontakteMethod())->sendWallMessage($data['image'], $data['text'])['response']['post_id'];
+            $data['social_type'] = $data['social'];
+            $data['type'] = 5;
+            $data['event_id'] = (new EventServices())->store($data)->id;
+            break;
+      }
+
+      $promo_id = $this->store($data['name'], $data['type_id'], $data['expiration'], $data['event_id'], $data['selectAccessPrize'])->id;
+      $this->storePrizes($promo_id, $data['prizes']);
+
+      return [
+         'status' => true,
+         'message' => 'success'
+      ];
    }
 }

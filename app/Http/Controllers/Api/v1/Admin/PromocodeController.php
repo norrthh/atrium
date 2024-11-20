@@ -13,16 +13,16 @@ class PromocodeController extends Controller
       $request->validate([
          'type_id' => ['required', 'int'],
          'name' => ['required'],
-         'type' => ['required', 'array'],
-         'type.type' => [''],
-         'type.value' => [''],
+         'expiration' => ['required', 'array'],
+         'expiration.*.type' => ['required', 'int'],
+         'expiration.*.value' => ['required', 'int'],
          'prizes' => ['required', 'array'],
-         'selectAccessPrize' => ['int', 'required'],
-         'text' => ['string', 'required_if:typeCreate,2'],
-         'image' => ['string', 'required_if:typeCreate,2'],
-         'social' => ['required', 'required'],
+         'selectAccessPrize' => ['required', 'int'],
+         'text' => ['nullable', 'string', 'required_if:type_id,2'],
+         'image' => ['nullable', 'string', 'required_if:type_id,2'],
+         'social' => ['string'],
       ]);
 
-      $eventPromocodeServices->create($request->all());
+      return response()->json($eventPromocodeServices->create($request->all()));
    }
 }

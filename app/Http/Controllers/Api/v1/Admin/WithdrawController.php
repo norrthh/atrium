@@ -25,7 +25,7 @@ class WithdrawController extends Controller
       $userIds = $users->pluck('user_id')->toArray();
 
       $records = WithdrawUsers::query()
-         ->where('status', 0)
+         ->where('status', 1)
          ->whereIn('user_id', $userIds)
          ->with(['user', 'item'])
          ->get()

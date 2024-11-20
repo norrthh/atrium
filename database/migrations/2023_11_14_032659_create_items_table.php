@@ -13,6 +13,7 @@ return new class extends Migration {
       Schema::create('items', function (Blueprint $table) {
          $table->id();
          $table->integer('idItem');
+         $table->integer('skin')->default(1);
          $table->string('name');
          $table->string('icon');
          $table->timestamps();

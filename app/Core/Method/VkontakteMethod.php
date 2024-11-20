@@ -63,7 +63,7 @@ class VkontakteMethod implements SocialMethod
          'multipart' => [
             [
                'name' => 'file',
-               'contents' => fopen(Storage::path($imagePath), 'r'),
+               'contents' => fopen(Storage::disk('public')->path($imagePath), 'r'),
             ],
          ],
       ]);

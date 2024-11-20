@@ -10,5 +10,6 @@ class Items extends Model
       'name',
       'idItem',
       'icon',
+      'skin',
    ];
 }
