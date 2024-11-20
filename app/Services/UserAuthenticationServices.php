@@ -49,7 +49,7 @@ class UserAuthenticationServices
          auth()->login($user, true);
 
          return [
-            'user' => $user,
+            'user' => auth()->user(),
             'token' => $user->createToken('authToken')->plainTextToken,
             'vk_donut' => (new VkontakteMethod())->checkVkDonutSubscription($data['vkontakte_id'] ?? 0),
             'notification' => (new NotificationServices())->getNotification()
