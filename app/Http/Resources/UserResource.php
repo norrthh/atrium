@@ -26,7 +26,7 @@ class UserResource extends JsonResource
     {
        return [
           'id' => $this->id,
-          'nickname' => $this->username_telegram ?: ($this->username_vkontakte ?: 'North Hemingway'),
+          'nickname' => $this->username_telegram ?: ($this->username_vkontakte ?: $this->nickname),
           'username' => $this->nickname,
           'coin' => $this->coin,
           'bilet' => $this->bilet ?? 0,

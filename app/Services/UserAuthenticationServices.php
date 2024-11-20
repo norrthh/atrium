@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Core\Method\VkontakteMethod;
+use App\Http\Resources\UserResource;
 use App\Models\User\User;
 use Illuminate\Validation\ValidationException;
 
@@ -49,7 +50,7 @@ class UserAuthenticationServices
          auth()->login($user, true);
 
          return [
-            'user' => auth()->user(),
+            'user' => new UserResource(auth()->user()),
             'token' => $user->createToken('authToken')->plainTextToken,
             'vk_donut' => (new VkontakteMethod())->checkVkDonutSubscription($data['vkontakte_id'] ?? 0),
             'notification' => (new NotificationServices())->getNotification()
