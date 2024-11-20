@@ -10,3 +10,7 @@ use Illuminate\Http\Request;
 Route::get('login', function () {
    return response()->json(['error' => 'Unauthorized'], 401);
 })->name('login');
+
+Route::get('/', function () {
+   return Inertia::render('app');
+});

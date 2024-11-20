@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('telegram_id')->nullable();
             $table->string('vkontakte_id')->nullable();
             $table->string('coin')->default(0);
+            $table->string('bilet')->default(0);
             $table->text('avatar')->nullable();
             $table->rememberToken();
             $table->timestamps();

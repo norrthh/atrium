@@ -126,6 +126,11 @@ Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
          Route::post('/', [\App\Http\Controllers\Api\v1\PromocodeController::class, 'index']);
          Route::post('/activate', [\App\Http\Controllers\Api\v1\PromocodeController::class, 'activate']);
       });
+
+      Route::prefix('transfer')->group(function () {
+         Route::post('/code', [\App\Http\Controllers\Api\v1\TransferController::class, 'code']);
+         Route::post('/activate', [\App\Http\Controllers\Api\v1\TransferController::class, 'activate']);
+      });
    });
 
    Route::prefix('vkontakte')->group(function () {

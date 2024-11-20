@@ -18,6 +18,7 @@ class User extends Authenticatable
         'vkontakte_id',
         'coin',
         'avatar',
+        'bilet',
     ];
 
 }
