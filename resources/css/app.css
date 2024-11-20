@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 @font-face {
-    font-display: swap;
-    font-family: Akrobat;
-    font-style: normal;
-    font-weight: 400;
-    src: url(/fonts/Akrobat-Light.woff2) format("woff2")
+   font-display: swap;
+   font-family: Akrobat;
+   font-style: normal;
+   font-weight: 400;
+   src: url('/fonts/Akrobat-Light.woff2') format("woff2")
 }
 
 /*@font-face {*/
@@ -42,394 +42,502 @@
 
 
 @font-face {
-    font-display: swap;
-    font-family: Akrobat;
-    font-style: normal;
-    font-weight: 500;
-    src: url(/fonts/Akrobat-Regular.woff2) format("woff2")
+   font-display: swap;
+   font-family: Akrobat;
+   font-style: normal;
+   font-weight: 500;
+   src: url("/fonts/Akrobat-Regular.woff2") format("woff2")
 }
 
 @font-face {
-    font-display: swap;
-    font-family: Akrobat;
-    font-style: normal;
-    font-weight: 600;
-    src: url(/fonts/Akrobat-Bold.woff2) format("woff2")
+   font-display: swap;
+   font-family: Akrobat;
+   font-style: normal;
+   font-weight: 600;
+   src: url("/fonts/Akrobat-Bold.woff2") format("woff2")
 }
 
 @font-face {
-    font-display: swap;
-    font-family: Akrobat;
-    font-style: normal;
-    font-weight: 700;
-    src: url(/fonts/Akrobat-SemiBold.woff2) format("woff2")
+   font-display: swap;
+   font-family: Akrobat;
+   font-style: normal;
+   font-weight: 700;
+   src: url("/fonts/Akrobat-SemiBold.woff2") format("woff2")
 }
 
 @font-face {
-    font-display: swap;
-    font-family: Akrobat;
-    font-style: normal;
-    font-weight: 800;
-    src: url(/fonts/Akrobat-Black.woff2) format("woff2")
+   font-display: swap;
+   font-family: Akrobat;
+   font-style: normal;
+   font-weight: 800;
+   src: url("/fonts/Akrobat-Black.woff2") format("woff2")
 }
 
 * {
-    font-family: LTSuperior, Akrobat, sans-serif;
+   font-family: LTSuperior, Akrobat, sans-serif;
 }
 
 
 .bg_blure {
-    background: linear-gradient(165deg, #f5f5dc42, #f5f5dc1c, #f5f5dc14, black)
+   background: linear-gradient(165deg, #f5f5dc42, #f5f5dc1c, #f5f5dc14, black)
 
 }
 
 .bgb_one {
-    background: url(/ayazik/bg_one.svg);
-    background-size: cover;
+   background: url("/ayazik/bg_one.svg");
+   background-size: cover;
 }
 
 .bgb_two {
-    background: url(/ayazik/bg_two.svg);
-    background-size: cover;
+   background: url("/ayazik/bg_two.svg");
+   background-size: cover;
 }
 
 
 :root {
-    --color-background: #EEEEEE;
-    --color-design: #6cffe779;
-    --color-research: #ed75ff73;
-    --radius: 240px;
+   --color-background: #EEEEEE;
+   --color-design: #6cffe779;
+   --color-research: #ed75ff73;
+   --radius: 240px;
 }
 
 .rat1 {
-    background: url(/ayazik/rat1.svg);
-    background-size: cover;
+   background: url("/ayazik/rat1.svg");
+   background-size: cover;
 }
 
 .rat2 {
-    background: url(/ayazik/rat2.svg);
-    background-size: cover;
+   background: url("/ayazik/rat2.svg");
+   background-size: cover;
 }
 
 .rat3 {
-    background: url(/ayazik/rat3.svg);
-    background-size: cover;
+   background: url("/ayazik/rat3.svg");
+   background-size: cover;
 }
 
 .rat4 {
-    background: url(/ayazik/rat4.svg);
-    background-size: cover;
+   background: url("/ayazik/rat4.svg");
+   background-size: cover;
 }
 
 .rat5 {
-    background: url(/ayazik/rat5.svg);
-    background-size: cover;
+   background: url("/ayazik/rat5.svg");
+   background-size: cover;
 }
 
 .rat6 {
-    background: url(/ayazik/rat6.svg);
-    background-size: cover;
+   background: url("/ayazik/rat6.svg");
+   background-size: cover;
 }
 
+.rat7 {
+   background: url("/ayazik/rat7.svg");
+   background-size: cover;
+}
+
+.rat8 {
+   background: url("/ayazik/rat8.svg");
+   background-size: cover;
+}
+
+
 .max-w-max {
-    max-width: max-content;
-    -webkit-max-width: max-content;
+   max-width: max-content;
+   -webkit-max-width: max-content;
 }
 
 .active-item_nav {
-    opacity: 1;
+   opacity: 1;
 }
 
 .t-shadow-neon {
-    text-shadow: 0 0 10px #00FFDD;
+   text-shadow: 0 0 10px #00FFDD;
 }
 
 .an-topup {
-    animation: topup 1s forwards;
+   animation: topup 1s forwards;
 }
 
 .an-opacity {
-    animation: anopacity 1s forwards;
+   animation: anopacity 1s forwards;
 }
 
 .an-navi {
-    animation: annavi 4s forwards;
-    transition: 1s;
+   animation: annavi 4s forwards;
+   transition: 1s;
 }
 
 
 @keyframes anopacity {
-    0% {
-        opacity: 0;
-    }
-    100% {
-    }
+   0% {
+      opacity: 0;
+   }
+   100% {
+   }
 }
 
 @keyframes topup {
-    0% {
-        opacity: 0;
-        margin-top: 10px;
-        background: #00FFDD;
-        border-radius: 16px
-    }
-    100% {
-    }
+   0% {
+      opacity: 0;
+      margin-top: 10px;
+      background: #00FFDD;
+      border-radius: 16px
+   }
+   100% {
+   }
 }
 
 @keyframes annavi {
-    0% {
-        opacity: 0;
-        height:
-    }
-    100% {
-    }
+   0% {
+      opacity: 0;
+   }
+   100% {
+   }
 }
 
 @keyframes movebg {
-    0% {
-        background-position: 0% 0%;
-    }
+   0% {
+      background-position: 0% 0%;
+   }
 
-    50% {
-        background-position: 100% 100%;
-    }
+   50% {
+      background-position: 100% 100%;
+   }
 
-    100% {
-        background-position: 0% 0%;
-    }
+   100% {
+      background-position: 0% 0%;
+   }
 }
 
+.unique_car {
+   background-image: url("/img/unique_car.png");
+}
+
+.unique_skin {
+   background-image: url("/img/unique_skin.png");
+}
+
+.unique_item {
+   background-image: url("/img/unique_item.png");
+}
+
+.unique_value {
+   background-image: url("/img/unique_value.png");
+}
 
 .boust-modal {
-    z-index: 10000;
-    width: 100%;
-    bottom: 0;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    /*height: 635px;*/
-    background: #938AFF url("/img/boust/bg.png") no-repeat right 0;
-    background-size: 40%;
-    @apply absolute;
+   z-index: 10000;
+   width: 100%;
+   bottom: 0;
+   border-top-left-radius: 30px;
+   border-top-right-radius: 30px;
+   /*height: 635px;*/
+   background: #938AFF url("/img/boust/bg.png") no-repeat right 0;
+   background-size: 40%;
+   @apply absolute;
 }
 
 .boust-content {
-    padding: 25px 43px;
-    color: #fff;
+   padding: 25px 43px;
+   color: #fff;
 }
 
 .boust-header {
-    background: #FFFFFF1A;
-    border-radius: 20px;
-    height: 10px;
-    width: 81px;
-    margin: auto;
+   background: #FFFFFF1A;
+   border-radius: 20px;
+   height: 10px;
+   width: 81px;
+   margin: auto;
 }
 
 .boust-title {
-    display: flex;
-    padding-top: 32px;
-    align-items: center;
-    gap: 20px
+   display: flex;
+   padding-top: 32px;
+   align-items: center;
+   gap: 20px
 }
 
 .boust-title h1 {
-    font-size: 38px;
-    font-weight: 800;
-    text-align: left;
-    line-height: 45px;
+   font-size: 38px;
+   font-weight: 800;
+   text-align: left;
+   line-height: 45px;
 }
 
 .boust-info {
-    padding-top: 40px;
-    font-size: 25px;
-    font-weight: 800;
-    line-height: 30px;
-    text-align: left;
+   padding-top: 40px;
+   font-size: 25px;
+   font-weight: 800;
+   line-height: 30px;
+   text-align: left;
 }
 
 .boust-ul {
-    background: #FFFFFF1A;
-    width: 100%;
-    padding: 20px 25px;
-    border-radius: 10px;
-    margin-top: 32px;
+   background: #FFFFFF1A;
+   width: 100%;
+   padding: 20px 25px;
+   border-radius: 10px;
+   margin-top: 32px;
 }
 
 .boust-circle {
-    background: #FFFFFFA3;
-    border-radius: 50%;
-    width: 6px;
-    height: 6px;
-    margin-right: 10px;
+   background: #FFFFFFA3;
+   border-radius: 50%;
+   width: 6px;
+   height: 6px;
+   margin-right: 10px;
 }
 
 .boust-ul p {
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 33.8px;
-    text-align: left;
+   font-size: 22px;
+   font-weight: 700;
+   line-height: 33.8px;
+   text-align: left;
 }
 
 .cardsBuy {
-    display: flex;
-    gap: 27px;
-    margin: auto;
-    flex-wrap: wrap;
-    justify-content: center;
-    overflow: auto;
-    height: 60vh;
-    -ms-overflow-style: none;  /* IE и Edge */
-    scrollbar-width: none;  /* Firefox */
+   display: flex;
+   gap: 27px;
+   margin: auto;
+   flex-wrap: wrap;
+   justify-content: center;
+   overflow: auto;
+   height: 60vh;
+   -ms-overflow-style: none;  /* IE и Edge */
+   scrollbar-width: none;  /* Firefox */
 }
 
 .cardsBuy::-webkit-scrollbar {
-    display: none;
+   display: none;
 }
 
-.cardsBuy .cards {
-    background: #FFFFFF08;
-    padding: 20px;
-    max-width: 266px;
-    width: 100%;
-    border-radius: 50px;
-    position: relative;
-    max-height: 280px;
-    border: 1.97px solid #FFFFFF1A;
+.cardsBuy .cards, .cardsGood {
+   background: #FFFFFF08;
+   padding: 20px;
+   max-width: 266px;
+   width: 100%;
+   border-radius: 50px;
+   position: relative;
+   /*max-height: 235px;*/
+   border: 1.97px solid #FFFFFF1A;
+}
+
+.cardsGood {
+   max-width: 100% !important;
+   height: 280px !important;
+   margin-bottom: 20px;
 }
 
 .unique_car_cards .cards .photo {
-    padding-top: 20px;
-    width: 179px;
-    margin: auto;
+   padding-top: 20px;
+   width: 179px;
+   margin: auto;
 }
 
-.cardsBuy .cards .cardName {
-    font-size: 26px;
-    font-weight: 800;
-    text-align: left;
-    padding-left: 20px;
-    padding-right: 20px;
-    max-width: 195px;
+.cardsBuy .cards .cardName, .cardName {
+   font-size: 26px;
+   font-weight: 800;
+   text-align: center;
+   /*padding-left: 20px;*/
+   /*padding-right: 20px;*/
+   /*max-width: 195px;*/
+}
+
+.cardsGood .cardName {
+   max-width: 100%;
 }
 
 .unique_skin_cards .cards {
-    max-height: 266px;
-    max-width: 300px;
-    height: 100%;
-    /*width: 266px;*/
+   max-height: 266px;
+   max-width: 300px;
+   height: 100%;
+   /*width: 266px;*/
 }
 
 .unique_skin_cards .cards .photo {
-    position: absolute;
-    z-index: -1;
-    width: 156px;
-    height: 193px;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 4px;
+   /*position: absolute;*/
+   z-index: -1;
+   width: 156px;
+   height: 200px;
+   left: 0;
+   right: 0;
+   margin-left: auto;
+   margin-right: auto;
+   /*margin-top: 4px;*/
 }
 
 .unique_skin_cards .cards {
-    background: #FFFFFF08;
-    width: 266px;
+   background: #FFFFFF08;
+   width: 266px;
 }
 
 .unique_skin_cards .cards .cardName {
-    position: absolute;
-    bottom: 17px;
+   position: absolute;
+   bottom: 17px;
+   left: 0;
+   right: 0;
 }
 
 .unique_value_cards .cards .photo {
-    width: 91px;
-    height: 91px;
-    margin: 13px auto 10px;
+   width: 91px;
+   height: 91px;
+   margin: 13px auto 10px;
 }
 
 .modal-input {
-    padding-top: 20px;
+   padding-top: 20px;
 }
 
 .p {
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 37.7px;
-    text-align: left;
-    opacity: 64%
+   font-size: 20px;
+   font-weight: 500;
+   line-height: 25px;
+   text-align: left;
+   opacity: 64%
 }
 
 .modal-input input {
-    font-size: 20px;
-    font-weight: 800;
-    color: #FFFFFF;
+   font-size: 20px;
+   font-weight: 800;
+   color: #FFFFFF;
 
-    width: 100%;
-    margin-top: 10px;
-    padding: 30px;
-    border-radius: 25px;
-    background: #FFFFFF0A;
-
-    @apply uppercase
+   width: 100%;
+   margin-top: 10px;
+   padding: 30px;
+   border-radius: 25px;
+   background: #FFFFFF0A;
 }
 
 .modal-input input::placeholder {
-    color: #FFFFFF;
-    opacity: 32%;
+   color: #FFFFFF;
+   opacity: 32%;
 }
 
 .mini-title {
-    font-family: Akrobat;
-    font-size: 20px;
-    font-weight: 600;
+   font-family: Akrobat;
+   font-size: 20px;
+   font-weight: 600;
 }
 
 .selectBlock select, .selectBlock option {
-    display: block;
-    width: 100%;
-    background-color: #3e3e3b;
-    border: 1.61px solid #FFFFFF1F;
-    color: #fff;
-    border-radius: 25px;
-    padding: 30px;
+   display: block;
+   width: 100%;
+   background-color: #3e3e3b;
+   border: 1.61px solid #FFFFFF1F;
+   color: #fff;
+   border-radius: 25px;
+   padding: 30px;
 
-    font-size: 20px;
-    font-weight: 800;
-    text-align: left;
-    -webkit-appearance: button;
-    appearance: none;
-    outline: none;
-    text-transform: uppercase;
+   font-size: 20px;
+   font-weight: 800;
+   text-align: left;
+   -webkit-appearance: button;
+   appearance: none;
+   outline: none;
+   text-transform: uppercase;
 }
 
 .selectBlock option {
-    font-weight: 600 !important;
+   font-weight: 600 !important;
 }
 
 textarea {
-    display: block;
-    width: 100%;
-    background-color: #151514;
-    border: 1.61px solid #FFFFFF1F;
-    color: #fff;
-    border-radius: 25px;
-    padding: 15px;
+   display: block;
+   width: 100%;
+   background-color: #151514;
+   border: 1.61px solid #FFFFFF1F;
+   color: #fff;
+   border-radius: 25px;
+   padding: 15px;
 
-    font-size: 15px;
-    font-weight: 800;
-    text-align: left;
-    -webkit-appearance: button;
-    appearance: none;
-    outline: none;
-    text-transform: uppercase;
+   font-size: 15px;
+   font-weight: 800;
+   text-align: left;
+   -webkit-appearance: button;
+   appearance: none;
+   outline: none;
+   text-transform: uppercase;
+}
+
+.p {
+   font-size: 20px;
+   font-weight: 500;
+   line-height: 37.7px;
+   text-align: left;
+   opacity: 64%
+}
+
+.modal-input input {
+   font-size: 20px;
+   font-weight: 800;
+   color: #FFFFFF;
+
+   width: 100%;
+   margin-top: 10px;
+   padding: 30px;
+   border-radius: 25px;
+   background: #FFFFFF0A;
+
+   @apply uppercase
+}
+
+.modal-input input::placeholder {
+   color: #FFFFFF;
+   opacity: 32%;
+}
+
+.mini-title {
+   font-family: Akrobat;
+   font-size: 20px;
+   font-weight: 600;
+}
+
+.selectBlock select, .selectBlock option {
+   display: block;
+   width: 100%;
+   background-color: #3e3e3b;
+   border: 1.61px solid #FFFFFF1F;
+   color: #fff;
+   border-radius: 25px;
+   padding: 30px;
+
+   font-size: 20px;
+   font-weight: 800;
+   text-align: left;
+   -webkit-appearance: button;
+   appearance: none;
+   outline: none;
+   text-transform: uppercase;
+}
+
+.selectBlock option {
+   font-weight: 600 !important;
+}
+
+textarea {
+   display: block;
+   width: 100%;
+   background-color: #151514;
+   border: 1.61px solid #FFFFFF1F;
+   color: #fff;
+   border-radius: 25px;
+   padding: 15px;
+
+   font-size: 15px;
+   font-weight: 800;
+   text-align: left;
+   -webkit-appearance: button;
+   appearance: none;
+   outline: none;
+   text-transform: uppercase;
 }
 
 .p2 {
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 37.7px;
-    text-align: left;
-    color: #FFFFFF;
-    opacity: 30%;
+   font-size: 15px;
+   font-weight: 600;
+   line-height: 37.7px;
+   text-align: left;
+   color: #FFFFFF;
+   opacity: 30%;
 }
