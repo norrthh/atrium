@@ -236,10 +236,12 @@ let boustModal = () => {
 
 let userProfile = ref()
 
-const telegramData = window.Telegram.WebApp
+const telegramData = ref(null);
 
-if (!telegramData) {
-   const telegramData = ref({
+if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
+   telegramData.value = window.Telegram.WebApp;
+} else {
+   telegramData.value = {
       "initData": "user=%7B%22id%22%3A891954506%2C%22first_name%22%3A%22%D0%90%D1%8F%D0%B7%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22norrthh%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-7945443225735177088&chat_type=private&auth_date=1726175825&hash=e75f3598d93782f6c71daff1bb41db674233f3eb55261e254dd7b1c1fedb19fb",
       "initDataUnsafe": {
          "user": {
@@ -322,29 +324,29 @@ if (!telegramData) {
          "isBiometricTokenSaved": false,
          "deviceId": ""
       }
-   })
+   };
 }
+
+console.log(telegramData.value ? 1 : 2);
 
 axios.post('/api/auth/', {
    'telegram_id': telegramData.value.initDataUnsafe.user.id,
-   // 'avatar_telegram': userProfile.value.photo_base,
    'nickname': telegramData.value.initDataUnsafe.user.first_name + ' ' + telegramData.value.initDataUnsafe.user.last_name
 }).then(res => {
-   loadedSite.value = true
-   user.value = res.data.user
-   bearer_token.value = res.data.token
-   localStorage.setItem('bearer', res.data.token)
+   loadedSite.value = true;
+   user.value = res.data.user;
+   bearer_token.value = res.data.token;
+   localStorage.setItem('bearer', res.data.token);
 
    axios.defaults.headers.common["Authorization"] = "Bearer " + res.data.token;
 
    if (res.data.notification.status) {
-      checkNotification()
-      isCheckNotification.value = true
-      notification.value = res.data.notification.data
-      axios.post('/api/notification/ready')
+      checkNotification();
+      isCheckNotification.value = true;
+      notification.value = res.data.notification.data;
+      axios.post('/api/notification/ready');
    }
-})
-
+});
 
 onMounted(() => {
    if (props.page) {
