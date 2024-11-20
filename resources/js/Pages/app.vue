@@ -575,6 +575,10 @@ const transferActivateCode = () => {
       to: 'vkontakte',
    }).then(res => {
       transferResponse.value = res.data
+
+      if (res.status) {
+         window.location.reload();
+      }
    })
 }
 
