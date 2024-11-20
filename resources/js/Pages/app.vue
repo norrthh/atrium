@@ -1708,7 +1708,7 @@ const transferCopyToClipboard = () => {
                </div>
             </div>
 
-            <img :src="notification.image" alt="" class="h-[340px]"/>
+            <img :src="notification.image" alt="" class="h-[200px] mx-auto pt-2"/>
             <div class="notification mt-3">
                <p class="p mb-3">Получите за выполнение:</p>
 

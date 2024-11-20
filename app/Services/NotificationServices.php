@@ -27,7 +27,7 @@ class NotificationServices
          $hoursSinceCreated = Carbon::parse($notification->created_at)->diffInHours(now());
 
          if ($hoursSinceCreated < $hoursThreshold) {
-            if (!Cache::has('notification_' . $notification->id . '_user_id1=' . auth()->user()->id)) {
+            if (!Cache::has('notification_' . $notification->id . '_user_id=' . auth()->user()->id)) {
                $data = [
                   'data' => new NotificationResource($notification),
                   'status' => true
