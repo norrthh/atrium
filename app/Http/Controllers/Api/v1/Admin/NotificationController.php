@@ -35,8 +35,8 @@ class NotificationController extends Controller
 
     public function ready(): void
     {
-//        $lastNotification = Notification::query()->orderBy('id', 'desc')->where('status', 0)->first();
-//        Cache::forever('notification_' . $lastNotification->id . '_user_id=' . auth()->user()->id, 1);
+        $lastNotification = Notification::query()->orderBy('id', 'desc')->where('status', 0)->first();
+        Cache::forever('notification_' . $lastNotification->id . '_user_id=' . auth()->user()->id, 1);
    }
 
    /**
