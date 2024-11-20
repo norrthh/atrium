@@ -31,7 +31,8 @@ class UserResource extends JsonResource
           'coin' => $this->coin,
           'bilet' => $this->bilet ?? 0,
           'avatar' => $this->avatar_telegram ?: ($this->avatar ?: '/ayazik/no_image.png'),
-          'created_at' => $this->created_at
+          'created_at' => $this->created_at,
+          'connect_social' => $this->username_vkontakte and $this->username_telegram ? true : false
        ];
     }
 }

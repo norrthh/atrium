@@ -571,7 +571,8 @@ const transferCode = () => {
 const transferActivateCode = () => {
    axios.post('/api/transfer/activate', {
       code: transferInput.value,
-      social: 'telegram'
+      from: 'vkontakte',
+      to: 'telegram',
    }).then(res => {
       transferResponse.value = res.data
    })
@@ -627,7 +628,8 @@ const transferCopyToClipboard = () => {
                   <div class="flex gap-4 w-fit items-center">
                      <img :src="user?.avatar" alt="avatar" class="w-[70px] h-[70px]  rounded-full">
                      <div class="text-white flex flex-col font-bold">
-                        <h1 class="uppercase text-2xl">{{ telegramData.initDataUnsafe.user.first_name + ' ' + telegramData.initDataUnsafe.user.last_name}}</h1>
+                        <h1 class="uppercase text-2xl">
+                           {{ telegramData.initDataUnsafe.user.first_name + ' ' + telegramData.initDataUnsafe.user.last_name }}</h1>
                         <div class="uppercaseflex gap-3 text-lg flex">
                            <p class="opacity-50 uppercase">ВАШ БАЛАНС:</p>
                            <p class="flex items-center gap-2">
@@ -858,7 +860,8 @@ const transferCopyToClipboard = () => {
                      <div class="flex flex-col gap-4 h-[55vh] overflow-y-auto">
                         <ActivityComponent v-if="selectPage === 'rating' && activity" :activity="activity.data"/>
                         <LoaderComponent v-else-if="selectPage === 'rating'"/>
-                        <ActivityComponent v-if="selectPage === 'last_activity' && lastActivity" :activity="lastActivity.data"/>
+                        <ActivityComponent v-if="selectPage === 'last_activity' && lastActivity"
+                                           :activity="lastActivity.data"/>
                         <LoaderComponent v-else-if="selectPage === 'last_activity'"/>
                      </div>
                   </div>
@@ -1184,33 +1187,21 @@ const transferCopyToClipboard = () => {
                         </div>
                      </div>
 
-                     <div v-if="user.telegram_id === '' || user.vkontakte_id === ''"
-                          class="flex gap-4 font-black items-center bg-[#FFFFFF0F] p-4 rounded-full text-white justify-between mt-4"
-                          @click="transferModal(1)">
-                        <div class="flex items-center gap-4">
-                           <div class="bg-[#FFFFFF0F] rounded-full p-4">
-                              <img
-                                 src='/ayazik/icons/telegram.svg'
-                                 alt="">
-                           </div>
-                           <div class="flex flex-col uppercase">
-                              <span>ПРИВЯЗАТЬ ТЕЛЕГРАМ АККАУНТ</span>
-                              <span style="color: #FFFFFFA3;">НЕ ПРИВЯЗАН</span>
-                           </div>
-                        </div>
-                     </div>
-                     <div v-if="user.telegram_id === '' || user.vkontakte_id === ''"
-                          class="flex gap-4 font-black items-center bg-[#FFFFFF0F] p-4 rounded-full text-white justify-between mt-4"
-                          @click="transferModal(2)">
-                        <div class="flex items-center gap-4">
-                           <div class="bg-[#FFFFFF0F] rounded-full p-4">
-                              <img
-                                 src='/ayazik/icons/VK.svg'
-                                 alt="">
-                           </div>
-                           <div class="flex flex-col uppercase">
-                              <span>ПРИВЯЗАТЬ ВК АККАУНТ</span>
-                              <span style="color: #FFFFFFA3;">НЕ ПРИВЯЗАН</span>
+                     <div v-if="!user.connect_social">
+
+                        <div
+                           class="flex gap-4 font-black items-center bg-[#FFFFFF0F] p-4 rounded-full text-white justify-between mt-4"
+                           @click="transferModal(0)">
+                           <div class="flex items-center gap-4">
+                              <div class="bg-[#FFFFFF0F] rounded-full p-4">
+                                 <img
+                                    src='/ayazik/icons/VK.svg'
+                                    alt="">
+                              </div>
+                              <div class="flex flex-col uppercase">
+                                 <span>ПРИВЯЗАТЬ ВК АККАУНТ</span>
+                                 <span style="color: #FFFFFFA3;">НЕ ПРИВЯЗАН</span>
+                              </div>
                            </div>
                         </div>
                      </div>
@@ -1527,7 +1518,6 @@ const transferCopyToClipboard = () => {
             </div>
          </div>
       </div>
-
       <div class="modal-promo" v-if="isTransferShow">
          <div class="modal-content">
             <div class="modal-header"></div>
@@ -1554,18 +1544,37 @@ const transferCopyToClipboard = () => {
                </div>
             </div>
 
+            <div v-if="transferType === 0">
+               <button
+                  @click="transferModal(1)"
+                  style="background: #FFFFFF29"
+                  class="flex text-white items-center gap-4 justify-center w-full py-6 rounded-3xl mt-[20px]">
+                  <!--                <img src="/ayazik/group.svg" alt="" class="w-6">-->
+                  <p class="text-lg font-black text-center uppercase">
+                     СГЕНЕРИРОВАТЬ КОД
+                  </p>
+               </button>
+               <button
+                  @click="transferModal(2)"
+                  class="flex bg-white text-black items-center gap-4 justify-center w-full py-6 rounded-3xl mt-[20px]">
+                  <!--                <img src="/ayazik/group.svg" alt="" class="w-6">-->
+                  <p class="text-lg font-black text-center uppercase">
+                     ввести сгенерированный КОД
+                  </p>
+               </button>
+            </div>
+
             <div v-if="transferType === 1">
                <div class="modal-input">
-                  <p class="p">Введите сгенерированный код в приложение {{ user.telegram_id === '' ? 'Telegram' : 'VK'}}</p>
+                  <p class="p">Введите сгенерированный код в приложение
+                     {{ user.telegram_id === '' ? 'Telegram' : 'VK' }}</p>
                   <input type="text" id="large-input"
                          placeholder="Например, 1aA2-3bB4"
                          v-model="transferGenerateCode"
                          readonly
                          @click="transferCopyToClipboard"
                   >
-                  <p class="text-green-500 font-black text-xm" v-if="transferResponse">{{
-                        transferResponse.message
-                     }}</p>
+                  <p class="text-green-500 font-black text-xm" v-if="transferResponse">{{transferResponse.message }}</p>
                </div>
 
                <button
@@ -1577,9 +1586,10 @@ const transferCopyToClipboard = () => {
                   </p>
                </button>
             </div>
-            <div v-else>
+            <div v-if="transferType === 2">
                <div class="modal-input">
-                  <p class="p">Вставьте код, который вы получили в приложении {{ user.telegram_id === '' ? 'Telegram' : 'VK'}}</p>
+                  <p class="p">Вставьте код, который вы получили в приложении
+                     {{ user.telegram_id === '' ? 'Telegram' : 'VK' }}</p>
                   <input type="text" id="large-input"
                          placeholder="Например, 1aA2-3bB4"
                          v-model="transferInput"
@@ -1601,7 +1611,6 @@ const transferCopyToClipboard = () => {
             </div>
          </div>
       </div>
-
       <div class="modal-promo" v-if="isWithdrawModal">
          <div class="modal-content" v-if="!responseWithdrawItem.message">
             <div class="modal-header"></div>
