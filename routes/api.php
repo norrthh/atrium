@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 
 Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
    Route::post('auth', [AuthController::class, 'auth']);
+   Route::post('getAvatar', [AuthController::class, 'avatar']);
 
    Route::middleware('auth:sanctum')->group(function () {
       Route::prefix('activity')->group(function () {

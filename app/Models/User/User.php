@@ -20,7 +20,8 @@ class User extends Authenticatable
       'avatar',
       'bilet',
       'username_vkontakte',
-      'username_telegram'
+      'username_telegram',
+      'avatar_telegram'
    ];
 
 }

@@ -327,30 +327,39 @@ if (Object.keys(window.Telegram.WebApp.initDataUnsafe).length !== 0) {
    };
 }
 
-axios.post('/api/auth/', {
-   'telegram_id': telegramData.value.initDataUnsafe.user.id,
-   'nickname': telegramData.value.initDataUnsafe.user.first_name + ' ' + telegramData.value.initDataUnsafe.user.last_name
-}).then(res => {
-   loadedSite.value = true;
-   user.value = res.data.user;
-   bearer_token.value = res.data.token;
-   localStorage.setItem('bearer', res.data.token);
-
-   axios.defaults.headers.common["Authorization"] = "Bearer " + res.data.token;
-
-   if (res.data.notification.status) {
-      checkNotification();
-      isCheckNotification.value = true;
-      notification.value = res.data.notification.data;
-      axios.post('/api/notification/ready');
-   }
-});
+let userAvatar = ref()
 
 onMounted(() => {
    if (props.page) {
       selectPage.value = props.page;
    }
    document.addEventListener('click', handleClick);
+
+   axios.post('/api/getAvatar', {
+      'user_id': telegramData.value.initDataUnsafe.user.id
+   }).then(res => {
+      axios.post('/api/auth/', {
+         'telegram_id': telegramData.value.initDataUnsafe.user.id,
+         'nickname': telegramData.value.initDataUnsafe.user.first_name + ' ' + telegramData.value.initDataUnsafe.user.last_name,
+         'avatar_telegram': res.data?.photo_url
+      }).then(res => {
+         loadedSite.value = true;
+         user.value = res.data.user;
+         bearer_token.value = res.data.token;
+         localStorage.setItem('bearer', res.data.token);
+
+         axios.defaults.headers.common["Authorization"] = "Bearer " + res.data.token;
+
+         if (res.data.notification.status) {
+            checkNotification();
+            isCheckNotification.value = true;
+            notification.value = res.data.notification.data;
+            axios.post('/api/notification/ready');
+         }
+      });
+   })
+
+
 });
 
 let isCheckNotification = ref(false),
@@ -1069,10 +1078,11 @@ const transferCopyToClipboard = () => {
                         понедельник с 00:00 до 23:00</p>
                   </div>
 
-                  <div v-if="loadedPage && inventoryItems">
+                  <div v-if="loadedPage && inventoryItems ">
                      <div
+                        v-if="inventoryItems.length > 0"
                         class="flex gap-4 items-center bg-[#FFFFFF0F] p-2 rounded-full text-white mb-3 justify-between"
-                        v-for="withD in inventoryItems['data']" @click="withdrawButtonModal(withD)">
+                        v-for="withD in inventoryItems" @click="withdrawButtonModal(withD)">
                         <p class="flex items-center mr-2 gap-3 mr-3 font-bold">
                            <img :src="withD.item.icon" alt="" class="h-12">
                            <span class="w-[90px] ml-auto" v-html="withD.item.name"></span>
@@ -1091,7 +1101,7 @@ const transferCopyToClipboard = () => {
                   </div>
 
                   <div class="unique_car_cards cardsBuy" v-if="shopItems">
-                     <div class="cards" v-for="shopItem in shopItems['data']">
+                     <div class="cards" v-for="shopItem in shopItems">
                         <div @click="buyItemModal(shopItem)">
                            <CardHeader :value="shopItem"/>
                            <div class="relative">
@@ -1113,7 +1123,7 @@ const transferCopyToClipboard = () => {
                   </div>
 
                   <div class="unique_skin_cards cardsBuy" v-if="shopItems">
-                     <div class="cards" v-for="shopItem in shopItems['data']" @click="buyItemModal(shopItem)">
+                     <div class="cards" v-for="shopItem in shopItems" @click="buyItemModal(shopItem)">
                         <CardHeader :value="shopItem"/>
                         <div class="relative">
                            <img src="/ayazik/icons/time.svg" class="absolute right-0 top-[12px]"
@@ -1133,7 +1143,7 @@ const transferCopyToClipboard = () => {
                   </div>
 
                   <div class="unique_car_cards cardsBuy" v-if="shopItems">
-                     <div class="cards" v-for="shopItem in shopItems['data']" @click="buyItemModal(shopItem)">
+                     <div class="cards" v-for="shopItem in shopItems" @click="buyItemModal(shopItem)">
                         <CardHeader :value="shopItem"/>
                         <div class="relative">
                            <img src="/ayazik/icons/time.svg" class="absolute right-0 top-[12px]"
@@ -1153,7 +1163,7 @@ const transferCopyToClipboard = () => {
                   </div>
 
                   <div class="unique_value_cards cardsBuy" v-if="shopItems">
-                     <div class="cards" v-for="shopItem in shopItems['data']" @click="buyItemModal(shopItem)">
+                     <div class="cards" v-for="shopItem in shopItems" @click="buyItemModal(shopItem)">
                         <CardHeader :value="shopItem"/>
                         <div class="relative">
                            <img src="/ayazik/icons/time.svg" class="absolute right-0 top-[12px]"

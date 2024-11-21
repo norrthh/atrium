@@ -31,7 +31,7 @@ class UserResource extends JsonResource
           'id' => $this->id,
           'username' => $this->username_telegram ?: ($this->username_vkontakte ?: $this->nickname),
           'nickname' => $this->nickname,
-          'coin' => $this->coin,
+          'coin' => $this->coin ?? 0,
           'bilet' => $this->bilet ?? 0,
           'avatar' => $this->avatar_telegram ?: ($this->avatar ?: '/ayazik/no_image.png'),
           'created_at' => $this->created_at,

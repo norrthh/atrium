@@ -38,6 +38,7 @@ class TransferController extends Controller
    {
       $userFind = UserTransfer::query()->where([['code', $request->get('code')], ['to', $request->get('to')], ['from', $request->get('from')]])->first();
 
+
       if ($userFind) {
          $user = User::query()->where('id', $userFind->user_id)->first();
 
@@ -49,7 +50,7 @@ class TransferController extends Controller
                'bilet' => $user->bilet + auth()->user()->bilet,
             ]);
 
-            if ($userFind->from == 'vk') {
+            if ($userFind->to == 'vkontakte') {
                User::query()->where('id', auth()->user()->id)->update([
                   'vkontakte_id' => $user->vkontakte_id ?? null,
                   'username_vkontakte' => $user->username_vkontakte ?? null,
