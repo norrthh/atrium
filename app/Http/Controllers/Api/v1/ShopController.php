@@ -15,7 +15,7 @@ class ShopController extends Controller
    public function index(Request $request)
    {
       $items = ShopItems::query()->where([['category', $request->get('type')], ['status', 0]])->with('item')->get();
-      if (!$items) {
+      if (count($items) == 0) {
          return response()->json([]);
       }
       return ShopItemResource::collection($items);
