@@ -574,7 +574,7 @@ const pasteText = async () => {
       // Чтение текста из буфера обмена
       transferInput.value = await navigator.clipboard.readText(); // Сохраняем текст в переменную
    } catch (err) {
-      console.error('Не удалось вставить текст:', err);
+      transferInput.value = err
    }
 };
 
