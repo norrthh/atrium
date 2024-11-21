@@ -18,6 +18,13 @@ class UserAuthenticationServices
       $user = null;
 
       if (isset($data['telegram_id'])) {
+         if ($data['nickname'] == '') {
+            return [
+               'status' => false,
+               'message' => 'Чтобы продолжить необходимо указать никнейм в настройках телеграмм'
+            ];
+         }
+
          $user = User::query()->where('telegram_id', $data['telegram_id'])->first();
 
          if ($user) {
