@@ -89,7 +89,7 @@ const loadPage = (url, targetRef, callback = null) => {
 
       if (url === '/api/auction') {
          console.log(res.data.data)
-         auctions.value = res.data.data.map(auction => ({
+         auctions.value = res.data.map(auction => ({
             ...auction,
             timer: startTimer2(auction.time, auction.created_at) // Добавляем таймер
          }));

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\UserAuction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,7 +23,8 @@ class AuctionResource extends JsonResource
            'start_price' => UserAuction::query()->where('auction_id', $this->id)->orderBy('id', 'desc')->first()->value ?? $this->start_price,
            'time' => $this->time,
            'item' => new ItemResource($this->item),
-           'created_at' => $this->created_at
+           'created_at' => $this->created_at,
+           'end_auction' => Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->addHours($this->time)->format('Y-m-d H:i:s')
         ];
     }
 }
