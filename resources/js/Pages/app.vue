@@ -1651,7 +1651,7 @@ const transferCopyToClipboard = () => {
                </button>
             </div>
             <div v-if="transferType === 2">
-               <div class="modal-input" :style="isMobile && isInputFocused ? 'padding-bottom:80px' : ''">
+               <div class="modal-input" :style="isMobile && isInputFocused ? 'padding-bottom:120px' : ''">
                   <p class="p">Вставьте код, который вы получили в приложении VK</p>
                   <input type="text" id="large-input"
                          placeholder="Например, 1aA2-3bB4"
