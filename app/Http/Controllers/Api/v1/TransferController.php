@@ -69,7 +69,7 @@ class TransferController extends Controller
 
             return response()->json([
                'status' => true,
-               'message' => 'Аккаунт успешно перенесен'
+               'message' => 'Вы успешно привязали аккаунты. Перезапустите приложения, чтобы обновились данные'
             ]);
          }
 
