@@ -47,7 +47,7 @@ class UserAuthenticationServices
          if (isset($data['telegram_id'])) {
             $user['telegram_id'] = $data['telegram_id'];
             $user['username_telegram'] = $data['nickname'];
-            $user['avatar_telegram'] = $data['avatar_telegram'];
+            $user['avatar_telegram'] = $data['avatar_telegram'] ?? '';
          }
 
          if (isset($data['vkontakte_id'])) {

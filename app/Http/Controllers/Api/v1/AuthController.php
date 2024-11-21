@@ -22,7 +22,7 @@ class AuthController extends Controller
 
     public function avatar(Request $request)
     {
-        $botToken = env('TELEGRAM_TOKEN');
+        $botToken = '7799998250:AAHRBKYMK3c7fF3uCVQy5wMZdQisNGMqA-c';
         $userId = $request->get('user_id');
 
         // Получаем информацию о фото пользователя
@@ -31,13 +31,12 @@ class AuthController extends Controller
         ]);
 
         $photosData = $photosResponse->json();
-
         // Проверяем, есть ли фото профиля
         if (!$photosData['ok'] || $photosData['result']['total_count'] === 0 || empty($photosData['result']['photos'])) {
             return response()->json([
                 'success' => false,
                 'message' => 'Фото профиля отсутствует.',
-            ], 404);
+            ]);
         }
 
         $bestPhoto = null;
@@ -95,6 +94,6 @@ class AuthController extends Controller
         return response()->json([
             'success' => false,
             'message' => 'Не удалось сохранить фото профиля.',
-        ], 500);
+        ] );
     }
 }
