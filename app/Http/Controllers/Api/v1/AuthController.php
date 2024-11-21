@@ -70,7 +70,7 @@ class AuthController extends Controller
 
         // Загружаем файл
         $fileContents = file_get_contents($fileUrl);
-        $fileName = basename($filePath);
+        $fileName = "{$userId}.jpg";
 
         // Проверяем, существует ли файл
         if (Storage::disk('public')->exists("photos/{$fileName}")) {
