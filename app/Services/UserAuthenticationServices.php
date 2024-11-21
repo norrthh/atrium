@@ -30,7 +30,7 @@ class UserAuthenticationServices
          if ($user) {
             $user->update([
                'username_telegram' => $data['nickname'],
-               'avatar_telegram' => $data['avatar_telegram'],
+               'avatar_telegram' => $data['avatar_telegram'] ?? '',
             ]);
          }
       }
