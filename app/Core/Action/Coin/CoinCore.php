@@ -19,41 +19,47 @@ class CoinCore
         return false;
     }
 
-    public function getTime(): array|string
-    {
-        $user = UserCoins::query()->where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first();
+   public function getTime(): array|string
+   {
+      $user = UserCoins::query()
+         ->where('user_id', auth()->user()->id)
+         ->orderBy('id', 'desc')
+         ->first();
 
-        if (!$user) {
-            return 'now';
-        }
+      if (!$user) {
+         return 'now';
+      }
 
-        $lastCollected = Carbon::parse($user->updated_at)->setTimezone('Europe/Moscow');
-        $now = Carbon::now('Europe/Moscow');
+      $lastCollected = Carbon::parse($user->updated_at)->setTimezone('Europe/Moscow');
+      $now = Carbon::now('Europe/Moscow');
 
-        $timePassed = $lastCollected->diffInSeconds($now);
+      // Время, прошедшее с момента последнего обновления
+      $timePassed = $lastCollected->diffInSeconds($now);
 
-        $totalSeconds = 24 * 3600;
+      // Общее количество секунд в сутках
+      $totalSeconds = 24 * 3600;
 
-        if ($timePassed < $totalSeconds) {
-            $secondsLeft = $totalSeconds - $timePassed;
+      // Проверяем, прошло ли меньше суток
+      if ($timePassed < $totalSeconds) {
+         $secondsLeft = $totalSeconds - $timePassed;
 
-            $hoursLeft = floor($secondsLeft / 3600);
-            $minutesLeft = floor(($secondsLeft % 3600) / 60);
-            $secondsLeft = $secondsLeft % 60;
+         // Переводим оставшееся время в часы, минуты и секунды
+         $hoursLeft = (int) floor($secondsLeft / 3600);
+         $minutesLeft = (int) floor(($secondsLeft % 3600) / 60);
+         $secondsLeft = (int) ($secondsLeft % 60);
 
-            return [
-                'hours' => $hoursLeft - 1,
-                'minutes' => 59 - $minutesLeft,
-                'seconds' => 59 - $secondsLeft
-            ];
-        }
+         return [
+            'hours' => $hoursLeft,
+            'minutes' => $minutesLeft,
+            'seconds' => $secondsLeft,
+         ];
+      }
 
-        return 'now';
-    }
+      return 'now';
+   }
 
 
-
-    public function getDay(): int
+   public function getDay(): int
     {
         $user = UserCoins::query()->where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first();
 

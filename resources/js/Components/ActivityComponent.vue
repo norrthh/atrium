@@ -17,13 +17,13 @@ const sortedActivities = computed(() => {
 
 <template>
    <div v-if="sortedActivities.length > 0" v-for="(activity, i) in sortedActivities" :key="i">
-      <div class="flex gap-4 items-center bg-[#FFFFFF0F] p-4 rounded-full text-white justify-between" :class="{'rat1': i === 0, 'rat2': i === 1, 'rat3': i === 2, 'rat4': i > 2}">
+      <div v-if="activity.username" class="flex gap-4 items-center bg-[#FFFFFF0F] p-4 rounded-full text-white justify-between" :class="{'rat1': i === 0, 'rat2': i === 1, 'rat3': i === 2, 'rat4': i > 2}">
          <div class="flex items-center gap-4">
             <h2 class="font-black uppercase">#{{ i + 1 }} </h2>
             <div class="rounded-full overflow-hidden">
                <img :src="activity.avatar ? activity.avatar : '/ayazik/no_image.png'" alt="" class="h-12">
             </div>
-            <h2 class="font-black uppercase">{{ activity.nickname }}</h2>
+            <h2 class="font-black uppercase">{{ activity.username }}</h2>
          </div>
          <p class="flex items-center gap-1 mr-2 text-[#FDD835]">
             <img src="/ayazik/donate.svg" alt="" class="h-6">+{{ activity.coin }}

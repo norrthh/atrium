@@ -120,39 +120,41 @@ const getBonusActivity = (bonus) => {
       startTimer(23, 59, 59)
    })
 }
+let timerInterval = null; // Глобальный таймер для управления
+
 const startTimer = (initialHours, initialMinutes, initialSeconds) => {
-   let hours = initialHours;
-   let minutes = initialMinutes;
-   let seconds = initialSeconds;
+   if (timerInterval) {
+      clearInterval(timerInterval); // Очистить предыдущий таймер, если он запущен
+   }
 
-   const countdown = () => {
-      if (seconds > 0) {
-         seconds--;
-      } else if (minutes > 0) {
-         minutes--;
-         seconds = 59;
-      } else if (hours > 0) {
-         hours--;
-         minutes = 59;
-         seconds = 59;
-      } else {
+   const totalInitialSeconds =
+      initialHours * 3600 + initialMinutes * 60 + initialSeconds; // Всего секунд
+   const startTime = Date.now();
+   const endTime = startTime + totalInitialSeconds * 1000;
+
+   const updateTimer = () => {
+      const now = Date.now();
+      const remainingSeconds = Math.max(0, Math.floor((endTime - now) / 1000));
+
+      const hours = Math.floor(remainingSeconds / 3600);
+      const minutes = Math.floor((remainingSeconds % 3600) / 60);
+      const seconds = remainingSeconds % 60;
+
+      if (remainingSeconds <= 0) {
          clearInterval(timerInterval);
-         timeLeft.value = {
-            hours: null,
-            minutes: null,
-            seconds: null
-         };
+         timerInterval = null; // Сбрасываем состояние таймера
+         timeLeft.value = { hours: null, minutes: null, seconds: null };
+      } else {
+         timeLeft.value = { hours, minutes, seconds };
       }
-
-      timeLeft.value = {
-         hours: hours,
-         minutes: minutes,
-         seconds: seconds
-      };
    };
 
-   const timerInterval = setInterval(countdown, 1000); // Запускаем обновление каждую секунду
+   updateTimer();
+   timerInterval = setInterval(updateTimer, 1000);
+
+   return timeLeft;
 };
+
 const handleClick = (event) => {
    const targetElement = event.target;
    const tagName = targetElement.tagName.toLowerCase();
@@ -473,7 +475,6 @@ const startTimer2 = (time, createdAt) => {
 
    return {formattedTime, timerExpired};
 };
-
 
 let isWithdrawModal = ref(false),
    responseWithdrawItem = ref({}),
@@ -838,8 +839,7 @@ const transferCopyToClipboard = () => {
 
                      <div v-if="selectPage === 'bonus'" class="flex flex-col gap-8">
                         <div v-if="loadedPage && bonus">
-                           <div class="flex justify-between items-center font-bold"
-                                v-if="bonus.status === true">
+                           <div class="flex justify-between items-center font-bold" v-if="bonus.status === true">
                               <p class="opacity-50 text-xl">Заберите свой бонус:</p>
                               <button class="px-10 py-3 bg-white text-black rounded-xl font-black"
                                       @click="getBonusActivity(bonus)">ЗАБРАТЬ
