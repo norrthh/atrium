@@ -22,13 +22,13 @@ return new class extends Migration {
       \App\Models\Items\Items::query()->create([
          'idItem' => 1,
          'name' => 'Монета',
-         'icon' => 'ayazik/icons/coin.svg'
+         'icon' => 'file/coin.svg'
       ]);
 
       \App\Models\Items\Items::query()->create([
          'idItem' => 1,
          'name' => 'Билет',
-         'icon' => 'ayazik/icons/bilet.svg'
+         'icon' => 'file/bilet.svg'
       ]);
    }
 

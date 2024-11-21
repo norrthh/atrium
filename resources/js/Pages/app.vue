@@ -1549,11 +1549,11 @@ const transferCopyToClipboard = () => {
                        @click="selectPromocodeItem(shopItem, responseCoupon.item, selectedCouponItems, responseCoupon.select)"
                        :class="{ selected: shopItem.selected }"
                   >
-                     <div class="relative">
+                     <div class="relative h-full">
                         <img src="/ayazik/icons/time.svg" class="absolute right-0 top-[12px]"
                              v-if="shopItem.item_type === 1"/>
                         <img :src="shopItem.item.icon" alt="" class="mx-auto"
-                             :class="shopItem.item.skin ? 'skin' : ''">
+                             :class="shopItem.item.skin ? 'skin' : 'h-[90%]'">
                      </div>
                      <h1 class="promo_title">{{ shopItem.item.name }}</h1>
                   </div>

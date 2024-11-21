@@ -302,7 +302,7 @@
    padding: 20px;
    max-width: 266px;
    width: 100%;
-   border-radius: 50px;
+   border-radius: 30px;
    position: relative;
    /*max-height: 235px;*/
    border: 1.97px solid #FFFFFF1A;
@@ -580,12 +580,17 @@ textarea {
    }
 }
 
+.promocode .cards img {
+   padding-top: 30px;
+}
+
 .promocode .cards {
-   height: 190px
+   height: 230px;
+   margin-top: 15px;
 }
 
 .promocode .cards .skin {
-   height: 167px;
+   height: 208px;
 }
 
 .cardsBuy {
@@ -603,6 +608,11 @@ textarea {
 
    .promocode .cardsBuy .cards, .cardsGood {
       max-width: 220px;
+      height: 205px;
+   }
+
+   .promocode .cards img {
+      padding-top: 15px;
    }
 }
 
@@ -617,6 +627,7 @@ textarea {
 
    .promocode .cardsBuy .cards, .cardsGood {
       max-width: 190px;
+      height: 175px;
    }
 
    .promo_title {
@@ -629,18 +640,19 @@ textarea {
    }
 
    .promocode .cards .skin {
-      height: 136px;
+      height: 153px;
    }
 }
 
 @media (max-width: 480px) {
    .promocode .cardsBuy .cards, .cardsGood {
       max-width: 160px;
+      height: 127px;
    }
 
    .promo_title {
       font-size: 12px !important;
-      bottom: 20px !important;
+      bottom: 7px !important;
    }
 
    .promocode .cards {
@@ -679,7 +691,7 @@ textarea {
    }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 400px) {
    .modal-title {
       gap: 8px;
    }
@@ -687,5 +699,17 @@ textarea {
    .modal-title svg {
       width: 63px;
       height: 63px;
+   }
+
+   .promocode .cards img {
+      padding-top: 0;
+   }
+
+   .promocode .cardsBuy .cards, .cardsGood {
+      height: 175px;
+   }
+
+   .promocode .cards .skin {
+      height: 153px;
    }
 }
