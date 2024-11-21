@@ -986,7 +986,7 @@ const transferCopyToClipboard = () => {
                               <img src="/ayazik/icons/time.svg" class="absolute right-0 top-[12px]"
                                    v-if="shopItem.item_type === 1"/>
                               <img :src="shopItem.item.icon" alt="" class="photo mx-auto"
-                                   :class="shopItem.item.skin ? 'h-[156px]' : 'pt-[20px]'">
+                                   :class="shopItem.item.skin ? 'h-[156px]' : 'pt-[20px] h-[140px]'">
                            </div>
 
                            <div class="flex gap-3 absolute bottom-[10px] max-w-[500px] left-0 right-0 mx-auto">
