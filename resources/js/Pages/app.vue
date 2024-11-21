@@ -1651,10 +1651,12 @@ const transferCopyToClipboard = () => {
                </button>
             </div>
             <div v-if="transferType === 2">
-               <div class="modal-input" :style="isMobile && isInputFocused ? 'padding-top:60px' : ''">
+               <div class="modal-input" :style="isMobile && isInputFocused ? 'padding-bottom:80px' : ''">
                   <p class="p">Вставьте код, который вы получили в приложении VK</p>
                   <input type="text" id="large-input"
                          placeholder="Например, 1aA2-3bB4"
+                         @focus="handleTransferFocus"
+                         @blur="handleTransferBlur"
                          v-model="transferInput"
                   >
                   <p class="text-green-500 font-black text-xm" v-if="transferResponse && transferResponse?.status">
