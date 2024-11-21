@@ -569,12 +569,51 @@ const transferModal = (type) => {
    transferResponse.value = {}
 };
 
+let pastTextError = ref()
 const pasteText = async () => {
    try {
-      // Чтение текста из буфера обмена
-      transferInput.value = await navigator.clipboard.readText(); // Сохраняем текст в переменную
+      // Проверка поддержки Clipboard API
+      if (!navigator.clipboard || !navigator.clipboard.readText) {
+         transferResponse.value = {
+            status: false,
+            message: 'Буфер обмена не поддерживается в вашем браузере.',
+         };
+      } else {
+         transferInput.value = await navigator.clipboard.readText();
+      }
    } catch (err) {
-      transferInput.value = err
+      if (err.name === 'NotAllowedError') {
+         transferResponse.value = {
+            status: false,
+            message: 'Доступ к буферу обмена запрещён. Проверьте настройки браузера.',
+         };
+      } else {
+         transferResponse.value = {
+            status: false,
+            message: `Ошибка: ${err.message}`,
+         };
+      }
+   }
+};
+
+const isMobile = ref(false);
+const isInputFocused = ref(false);
+
+const detectDevice = () => {
+   isMobile.value = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+};
+
+detectDevice()
+
+const handleTransferFocus = () => {
+   if (isMobile.value) {
+      isInputFocused.value = true;
+   }
+};
+
+const handleTransferBlur = () => {
+   if (isMobile.value) {
+      isInputFocused.value = false;
    }
 };
 
@@ -1612,7 +1651,7 @@ const transferCopyToClipboard = () => {
                </button>
             </div>
             <div v-if="transferType === 2">
-               <div class="modal-input">
+               <div class="modal-input" :style="isMobile && isInputFocused ? 'padding-top:60px' : ''">
                   <p class="p">Вставьте код, который вы получили в приложении VK</p>
                   <input type="text" id="large-input"
                          placeholder="Например, 1aA2-3bB4"
