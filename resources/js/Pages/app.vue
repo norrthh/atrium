@@ -245,10 +245,10 @@ if (Object.keys(window.Telegram.WebApp.initDataUnsafe).length !== 0) {
       "initData": "user=%7B%22id%22%3A891954506%2C%22first_name%22%3A%22%D0%90%D1%8F%D0%B7%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22norrthh%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-7945443225735177088&chat_type=private&auth_date=1726175825&hash=e75f3598d93782f6c71daff1bb41db674233f3eb55261e254dd7b1c1fedb19fb",
       "initDataUnsafe": {
          "user": {
-            "id": 891954506,
+            "id": 479591855,
             "first_name": "Аяз",
             "last_name": "",
-            "username": "norrthh",
+            "username": "",
             "language_code": "ru",
             "is_premium": true,
             "allows_write_to_pm": true
@@ -568,6 +568,16 @@ const transferModal = (type) => {
 
    transferResponse.value = {}
 };
+
+const pasteText = async () => {
+   try {
+      // Чтение текста из буфера обмена
+      transferInput.value = await navigator.clipboard.readText(); // Сохраняем текст в переменную
+   } catch (err) {
+      console.error('Не удалось вставить текст:', err);
+   }
+};
+
 const transferCode = () => {
    axios.post('/api/transfer/code', {
       from: 'vkontakte',
@@ -603,6 +613,8 @@ const transferCopyToClipboard = () => {
       message: 'Код скопирован в буфер обмена!'
    }
 };
+
+
 </script>
 <template>
    <div class="bg-black overflow-hidden" id="body">
@@ -1618,6 +1630,16 @@ const transferCopyToClipboard = () => {
                   <!--                <img src="/ayazik/group.svg" alt="" class="w-6">-->
                   <p class="text-lg font-black text-center uppercase">
                      перейти
+                  </p>
+               </button>
+
+               <button
+                  @click="pasteText"
+                  class="flex text-white items-center gap-4 justify-center w-full py-6 rounded-3xl mt-[20px]"
+                  style="background: rgba(255, 255, 255, 0.16);"
+               >
+                  <p class="text-lg font-black text-center uppercase">
+                     вставить скопированный текст
                   </p>
                </button>
             </div>
