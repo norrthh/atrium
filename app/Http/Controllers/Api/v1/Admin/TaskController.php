@@ -101,7 +101,7 @@ class TaskController extends Controller
                                     ]);
 
                                     $taskItem = TaskItems::query()->where('task_id', $task->id)->first();
-                                    WithdrawUser::store($taskItem->item_id, $taskItem->count);
+                                    WithdrawUser::store($taskItem->item_id, $taskItem->count, auth()->user()->id);
 
                                     return response()->json(['status' => true, 'message' => 'Вам успешно начислены бонусы за эту задачу']);
                                 } else {
@@ -125,7 +125,7 @@ class TaskController extends Controller
                                     ]);
 
                                     $taskItem = TaskItems::query()->where('task_id', $task->id)->first();
-                                    WithdrawUser::store($taskItem->item_id, $taskItem->count);
+                                    WithdrawUser::store($taskItem->item_id, $taskItem->count, auth()->user()->id);
 
                                     return response()->json(['status' => true, 'message' => 'Вам успешно начислены бонусы за эту задачу']);
                                 } else {
