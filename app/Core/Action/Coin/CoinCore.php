@@ -33,17 +33,13 @@ class CoinCore
       $lastCollected = Carbon::parse($user->updated_at)->setTimezone('Europe/Moscow');
       $now = Carbon::now('Europe/Moscow');
 
-      // Время, прошедшее с момента последнего обновления
       $timePassed = $lastCollected->diffInSeconds($now);
 
-      // Общее количество секунд в сутках
       $totalSeconds = 24 * 3600;
 
-      // Проверяем, прошло ли меньше суток
       if ($timePassed < $totalSeconds) {
          $secondsLeft = $totalSeconds - $timePassed;
 
-         // Переводим оставшееся время в часы, минуты и секунды
          $hoursLeft = (int) floor($secondsLeft / 3600);
          $minutesLeft = (int) floor(($secondsLeft % 3600) / 60);
          $secondsLeft = (int) ($secondsLeft % 60);

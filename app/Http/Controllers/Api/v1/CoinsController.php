@@ -11,29 +11,37 @@ use Illuminate\Http\JsonResponse;
 
 class CoinsController extends Controller
 {
-   public function index(CoinCore $coinCore): JsonResponse
-   {
-      return response()->json([
-         'coins' => Coins::query()->get(),
-         'status' => $coinCore->getStatus(),
-         'time' => $coinCore->getTime(),
-         'day' => $coinCore->getDay(),
-      ]);
-   }
+    public function index(CoinCore $coinCore): JsonResponse
+    {
+        return response()->json([
+            'coins' => Coins::query()->get(),
+            'status' => $coinCore->getStatus(),
+            'time' => $coinCore->getTime(),
+            'day' => $coinCore->getDay(),
+        ]);
+    }
 
-   public function getCoins(CoinCore $coinCore)
-   {
-      if ($coinCore->getTime() == 'now') {
-         UserCoins::query()->create([
-            'user_id' => auth()->user()->id,
-            'coin_id' => $coinCore->getDay(),
-         ]);
+    public function getCoins(CoinCore $coinCore)
+    {
+        if ($coinCore->getTime() == 'now') {
+            $userCoin = UserCoins::query()->where('user_id', auth()->user()->id)->first();
 
-         User::query()->where('id', auth()->user()->id)->update([
-            'coin' => $coinCore->getCoin() + auth()->user()->coin
-         ]);
+            if (!$userCoin) {
+                UserCoins::query()->create([
+                    'user_id' => auth()->user()->id,
+                    'coin_id' => $coinCore->getDay(),
+                ]);
+            } else {
+                $userCoin->update([
+                    'coin_id' => $coinCore->getDay(),
+                ]);
+            }
 
-         return response()->json(['coin' => $coinCore->getCoin()]);
-      }
-   }
+            User::query()->where('id', auth()->user()->id)->update([
+                'coin' => $coinCore->getCoin() + auth()->user()->coin
+            ]);
+
+            return response()->json(['coin' => $coinCore->getCoin()]);
+        }
+    }
 }

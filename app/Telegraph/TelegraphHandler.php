@@ -28,11 +28,10 @@ class TelegraphHandler extends WebhookHandler
          if ($this->message->from()->username() == '') {
             $this->chat->message('У вас должен быть установлен username в настройках, чтобы запустить приложение')->send();
          } else {
-            $this->chat->message('Вы должны подписаться на телеграмм канал @asdasdsadsdaas, чтобы продолжить дальше')->send();
+            $this->chat->message('Вы должны подписаться на телеграмм канал @atriumru, чтобы продолжить дальше')->send();
          }
       }
    }
-
    public function handleChatMessage(Stringable $text): void
    {
    }
@@ -44,7 +43,6 @@ class TelegraphHandler extends WebhookHandler
          $task = Tasks::query()->where([['social_id', $this->message->chat()->id()], ['status', 0], ['typeSocial', 2], ['typeTask', '2']])->first();
          if ($task) {
             if ($task->access['type'] == 1 and Carbon::parse($task->created_at)->diffInMinutes(now()) >= $task->access['value']) {
-               $this->chat->message('ne ok 1')->send();
                return ;
             } else {
                if (!UserTask::query()->where([['task_id', $task->id], ['user_id', $member->id()]])->exists()) {
@@ -56,12 +54,9 @@ class TelegraphHandler extends WebhookHandler
                   $taskItem = TaskItems::query()->where('task_id', $task->id)->first();
                   WithdrawUser::store($taskItem->item_id, $taskItem->count, $user->id);
 
-               } else {
                }
             }
-         } else {
          }
-      } else {
       }
    }
 }
