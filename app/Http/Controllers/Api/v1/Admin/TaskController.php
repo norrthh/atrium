@@ -90,7 +90,7 @@ class TaskController extends Controller
                     return response()->json(['status' => false, 'message' => 'Время выполнения задачи истекло']);
                 } else {
                     if ($task->typeTask == 1) {
-                        return response()->json(['status' => 403, 'message' => 'Ожидайте обработки задачи']);
+                        return response()->json(['status' => 403, 'message' => 'Ожидайте обработки задачи. Если вы совершали это действие до создания аккаунта, вам нужно будет повторить его заново.']);
                     } elseif ($task->typeTask == 2) {
                         if ($task->typeSocial == 1) {
                             if (auth()->user()->vkontakte_id) {
@@ -111,10 +111,10 @@ class TaskController extends Controller
                                 return response()->json(['status' => false, 'message' => 'У вас не привязан вк аккаунт']);
                             }
                         }
-                        return response()->json(['status' => 403, 'message' => 'Ожидайте обработки задачи']);
+                        return response()->json(['status' => 403, 'message' => 'Ожидайте обработки задачи. Если вы совершали это действие до создания аккаунта, вам нужно будет повторить его заново.']);
                     } elseif ($task->typeTask == 3) {
                         if ($task->typeSocial == 1) {
-                            return response()->json(['status' => 403, 'message' => 'Ожидайте обработки задачи']);
+                            return response()->json(['status' => 403, 'message' => 'Ожидайте обработки задачи. Если вы совершали это действие до создания аккаунта, вам нужно будет повторить его заново.']);
                         } else {
                             if (auth()->user()->telegram_id) {
                                 $subscription = (new TelegramMethodServices())->getChatMember(auth()->user()->telegram_id, $task->social_id);
