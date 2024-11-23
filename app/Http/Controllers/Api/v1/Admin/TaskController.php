@@ -22,16 +22,20 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return TaskResource::collection(
-            Tasks::query()
-                ->where('status', 0)
-                ->get()
-                ->filter(function ($task) {
-                    if (!UserTask::query()->where('task_id', $task->id)->where('user_id', auth()->user()->id)->exists()) {
-                        return $task;
-                    }
-                })
-        );
+        $tasks = Tasks::query()
+            ->where('status', 0)
+            ->get()
+            ->filter(function ($task) {
+                if (!UserTask::query()->where('task_id', $task->id)->where('user_id', auth()->user()->id)->exists()) {
+                    return $task;
+                }
+            });
+
+        if (count($tasks) == 0) {
+            return response()->json([]);
+        }
+
+        return TaskResource::collection($tasks);
     }
 
     /**
