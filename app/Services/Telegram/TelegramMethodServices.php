@@ -12,7 +12,7 @@ class TelegramMethodServices
             $chatId = env('TELEGRAM_CHANNEL_ID');
         }
 
-        return Http::post("https://api.telegram.org/bot" . $chatId . "/getChatMember", [
+        return Http::post("https://api.telegram.org/bot" . env('TELEGRAM_TOKEN') . "/getChatMember", [
             'chat_id' => $chatId,
             'user_id' => $userId,
         ])->json();
