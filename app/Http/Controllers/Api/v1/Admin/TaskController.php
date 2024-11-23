@@ -103,7 +103,7 @@ class TaskController extends Controller
                                     $taskItem = TaskItems::query()->where('task_id', $task->id)->first();
                                     WithdrawUser::store($taskItem->item_id, $taskItem->count, auth()->user()->id);
 
-                                    return response()->json(['status' => true, 'message' => 'Вам успешно начислены бонусы за эту задачу']);
+                                    return response()->json(['status' => true, 'message' => 'Вам успешно начислены бонусы за эту задачу. Обновите страницу, чтобы увидеть изменения']);
                                 } else {
                                     return response()->json(['status' => false, 'message' => 'Вы не вступили в беседу']);
                                 }
@@ -127,7 +127,7 @@ class TaskController extends Controller
                                     $taskItem = TaskItems::query()->where('task_id', $task->id)->first();
                                     WithdrawUser::store($taskItem->item_id, $taskItem->count, auth()->user()->id);
 
-                                    return response()->json(['status' => true, 'message' => 'Вам успешно начислены бонусы за эту задачу']);
+                                    return response()->json(['status' => true, 'message' => 'Вам успешно начислены бонусы за эту задачу. Обновите страницу, чтобы увидеть изменения']);
                                 } else {
                                     return response()->json(['status' => false, 'message' => 'Вы не подписали на телеграмм канал']);
                                 }
