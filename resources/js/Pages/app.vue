@@ -143,9 +143,9 @@ const startTimer = (initialHours, initialMinutes, initialSeconds) => {
       if (remainingSeconds <= 0) {
          clearInterval(timerInterval);
          timerInterval = null; // Сбрасываем состояние таймера
-         timeLeft.value = { hours: null, minutes: null, seconds: null };
+         timeLeft.value = {hours: null, minutes: null, seconds: null};
       } else {
-         timeLeft.value = { hours, minutes, seconds };
+         timeLeft.value = {hours, minutes, seconds};
       }
    };
 
@@ -154,13 +154,12 @@ const startTimer = (initialHours, initialMinutes, initialSeconds) => {
 
    return timeLeft;
 };
-
 const handleClick = (event) => {
    const targetElement = event.target;
    const tagName = targetElement.tagName.toLowerCase();
 
    if (tagName === 'main') {
-      if (isCoupon.value || isBoust.value || isCheckNotification.value || isBuyItem.value || isBuyAuction.value || isWithdrawModal.value || isTransferShow.value) {
+      if (isCoupon.value || isBoust.value || isCheckNotification.value || isBuyItem.value || isBuyAuction.value || isWithdrawModal.value || isTransferShow.value || isTaskShow.value) {
          document.body.removeAttribute("style");
          isCoupon.value = false
          isBoust.value = false
@@ -169,6 +168,7 @@ const handleClick = (event) => {
          isBuyItem.value = false
          isTransferShow.value = false
          isWithdrawModal.value = false
+         isTaskShow.value = false
       }
    }
 }
@@ -360,6 +360,7 @@ onMounted(() => {
          }
       });
    })
+})
 
 
 });
@@ -476,6 +477,7 @@ const startTimer2 = (time, createdAt) => {
    return {formattedTime, timerExpired};
 };
 
+
 let isWithdrawModal = ref(false),
    responseWithdrawItem = ref({}),
    inventorySelectWithdrawItem = ref();
@@ -580,6 +582,7 @@ const pasteText = async () => {
             message: 'Буфер обмена не поддерживается в вашем браузере.',
          };
       } else {
+         // Чтение текста из буфера обмена
          transferInput.value = await navigator.clipboard.readText();
       }
    } catch (err) {
@@ -649,8 +652,24 @@ const transferCopyToClipboard = () => {
       message: 'Код скопирован в буфер обмена!'
    }
 };
+let isTaskShow = ref(false),
+   selectTask = ref(),
+   taskResponse = ref();
 
+const showCheckTask = (task) => {
+   selectTask.value = task
+   isTaskShow.value = true
 
+   taskResponse.value = {}
+}
+
+const sendRequestCheckTask = () => {
+   axios.post('/api/tasks/check', {
+      id: selectTask.value.id
+   }).then(res => {
+      taskResponse.value = res.data
+   })
+}
 </script>
 <template>
    <div class="bg-black overflow-hidden" id="body">
@@ -668,8 +687,8 @@ const transferCopyToClipboard = () => {
                 }"
       >
          <div
-            :style="{'opacity': loadedSite && !isCoupon && !isBoust && !isCheckNotification && !isBuyItem && !isBuyAuction && !isWithdrawModal && !isTransferShow ? 1 : 0.05}"
-            :class="{'pointer-events-none': isCoupon || isBoust || isCheckNotification || isBuyItem || isBuyAuction || isWithdrawModal || isTransferShow}"
+            :style="{'opacity': loadedSite && !isCoupon && !isBoust && !isCheckNotification && !isBuyItem && !isBuyAuction && !isWithdrawModal && !isTransferShow && !isTaskShow ? 1 : 0.05}"
+            :class="{'pointer-events-none': isCoupon || isBoust || isCheckNotification || isBuyItem || isBuyAuction || isWithdrawModal || isTransferShow || isTaskShow}"
             id="miniBody">
             <div class=" relative mx-auto p-2 flex justify-center flex-col gap-12 items-center an-opacity">
 
@@ -799,18 +818,6 @@ const transferCopyToClipboard = () => {
                         </div>
                         <img src="/ayazik/arrow-right.svg" alt="">
                      </div>
-
-                     <div v-if="user && user?.user?.vkontakte_id == 582127671 ||  user?.user?.vkontakte_id == 217199523"
-                          class="flex gap-4 items-center p-4 rounded-full text-white justify-between"
-                          @click="changePage('admin')">
-                        <div class="flex items-center gap-4">
-                           <div class="bg-[#FFFFFF0F] rounded-full p-4">
-                              <img src="/ayazik/promo.svg" alt=""
-                                   class="h-[18px]"></div>
-                           <h2 class="uppercase">Админ панель</h2>
-                        </div>
-                        <img src="/ayazik/arrow-right.svg" alt="">
-                     </div>
                   </div>
                </section>
                <section class="flex flex-col w-full gap-12"
@@ -874,7 +881,8 @@ const transferCopyToClipboard = () => {
                      <div v-else-if="selectPage === 'bonus_subscription'" class="flex flex-col gap-4">
                         <div v-if="loadedPage && tasks">
                            <div v-if="tasks" v-for="(item, i) in tasks" :key="i">
-                              <a :href="item.href"
+                              <div
+                                 @click="showCheckTask(item)"
                                  class="flex gap-4 items-center bg-[#FFFFFF0F] p-4 rounded-full text-white justify-between mb-4">
                                  <div class="flex items-center gap-4">
                                     <div class="bg-[#FFFFFF0F] rounded-full p-4">
@@ -890,7 +898,7 @@ const transferCopyToClipboard = () => {
                                     <img :src="item.items[0].item_details.icon" alt=""
                                          class="h-6">+{{ item.items[0].count }}
                                  </p>
-                              </a>
+                              </div>
                            </div>
                         </div>
                         <LoaderComponent v-else></LoaderComponent>
@@ -918,7 +926,8 @@ const transferCopyToClipboard = () => {
 
                   <div class="flex flex-col gap-8" v-if="loadedPage">
                      <div class="flex flex-col gap-4 h-[55vh] overflow-y-auto">
-                        <ActivityComponent v-if="selectPage === 'rating' && activity" :activity="activity.data"/>
+                        <ActivityComponent v-if="selectPage === 'rating' && activity"
+                                           :activity="activity.data"/>
                         <LoaderComponent v-else-if="selectPage === 'rating'"/>
                         <ActivityComponent v-if="selectPage === 'last_activity' && lastActivity"
                                            :activity="lastActivity.data"/>
@@ -1248,6 +1257,7 @@ const transferCopyToClipboard = () => {
                         </div>
                      </div>
 
+
                      <div v-if="!user.connect_social">
                         <div
                            class="flex gap-4 font-black items-center bg-[#FFFFFF0F] p-4 rounded-full text-white justify-between mt-4"
@@ -1255,11 +1265,11 @@ const transferCopyToClipboard = () => {
                            <div class="flex items-center gap-4">
                               <div class="bg-[#FFFFFF0F] rounded-full p-4">
                                  <img
-                                    src='/ayazik/icons/VK.svg'
+                                    src='/ayazik/icons/telegram.svg'
                                     alt="">
                               </div>
                               <div class="flex flex-col uppercase">
-                                 <span>ПРИВЯЗАТЬ ВК АККАУНТ</span>
+                                 <span>ПРИВЯЗАТЬ ТЕЛЕГРАМ АККАУНТ</span>
                                  <span style="color: #FFFFFFA3;">НЕ ПРИВЯЗАН</span>
                               </div>
                            </div>
@@ -1593,6 +1603,7 @@ const transferCopyToClipboard = () => {
             </div>
          </div>
       </div>
+
       <div class="modal-promo" v-if="isTransferShow">
          <div class="modal-content">
             <div class="modal-header"></div>
@@ -1697,6 +1708,51 @@ const transferCopyToClipboard = () => {
             </div>
          </div>
       </div>
+
+      <div class="modal-promo" v-if="isTaskShow">
+         <div class="modal-content">
+            <div class="modal-header"></div>
+            <div class="modal-title">
+               <div>
+                  <img :src="(selectTask.icon == 'VK' ? '/ayazik/icons/VK.svg' : '/ayazik/icons/telegram.svg')" width="90" height="90" alt="">
+               </div>
+               <div class="content">
+                  <span>Выполнение задания ({{ selectTask.task}})</span>
+               </div>
+            </div>
+
+            <a
+               :href="selectTask.href"
+               style="background: #FFFFFF29"
+               class="flex text-white items-center gap-4 justify-center w-full py-6 rounded-3xl mt-[20px]">
+               <!--                <img src="/ayazik/group.svg" alt="" class="w-6">-->
+               <p class="text-lg font-black text-center uppercase">
+                  Выполнить задание
+               </p>
+            </a>
+            <button
+               @click="sendRequestCheckTask"
+               class="flex bg-white text-black items-center gap-4 justify-center w-full py-6 rounded-3xl mt-[20px]">
+               <!--                <img src="/ayazik/group.svg" alt="" class="w-6">-->
+               <p class="text-lg font-black text-center uppercase">
+                  проверить задание
+               </p>
+            </button>
+
+            <p class="text-red-500 font-medium text-center mt-3 text-xm" v-if="!taskResponse.status">
+               {{ taskResponse.message }}
+            </p>
+
+            <p class="text-orange-500 font-medium text-center mt-3 text-xm" v-else-if="taskResponse.status === 403">
+               {{ taskResponse.message }}
+            </p>
+
+            <p class="text-green-500 font-medium text-center mt-3 text-xm" v-else>
+               {{ taskResponse.message }}
+            </p>
+         </div>
+      </div>
+
       <div class="modal-promo" v-if="isWithdrawModal">
          <div class="modal-content" v-if="!responseWithdrawItem.message">
             <div class="modal-header"></div>
@@ -1792,7 +1848,7 @@ const transferCopyToClipboard = () => {
                </div>
             </div>
 
-            <img :src="notification.image" alt="" class="h-[200px] mx-auto pt-2"/>
+            <img :src="notification.image" alt="" class="h-[200px] mx-auto"/>
             <div class="notification mt-3">
                <p class="p mb-3">Получите за выполнение:</p>
 
