@@ -718,7 +718,7 @@ const sendRequestCheckTask = () => {
                            <p class="opacity-50 uppercase">Билетов:</p>
                            <p class="flex items-center gap-2">
                               <img src="/ayazik/bilet.svg" alt="" class="h-6">
-                              <span style="color: #f3a418" class="uppercase">0</span> <!-- bilet data !-->
+                              <span style="color: #f3a418" class="uppercase">{{ user.bilet }}</span> <!-- bilet data !-->
                            </p>
                         </div>
                      </div>
