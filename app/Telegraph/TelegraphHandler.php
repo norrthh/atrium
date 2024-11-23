@@ -35,7 +35,7 @@ class TelegraphHandler extends WebhookHandler
 
    public function handleChatMessage(Stringable $text): void
    {
-
+      $this->chat->message(print_r($this->message->toArray(), 1))->send();
    }
 
    public function handleChatMemberJoined(\DefStudio\Telegraph\DTO\User $member): void
@@ -45,6 +45,7 @@ class TelegraphHandler extends WebhookHandler
          $task = Tasks::query()->where([['social_id', $this->message->chat()->id()], ['status', 0], ['typeSocial', 2], ['typeTask', '2']])->first();
          if ($task) {
             if ($task->access['type'] == 1 and Carbon::parse($task->created_at)->diffInMinutes(now()) >= $task->access['value']) {
+               $this->chat->message('ne ok 1')->send();
                return ;
             } else {
                if (!UserTask::query()->where([['task_id', $task->id], ['user_id', $member->id()]])->exists()) {
@@ -55,9 +56,17 @@ class TelegraphHandler extends WebhookHandler
 
                   $taskItem = TaskItems::query()->where('task_id', $task->id)->first();
                   WithdrawUser::store($taskItem->item_id, $taskItem->count, $user->id);
+
+                  $this->chat->message('ok')->send();
+               } else {
+                  $this->chat->message('ne ok 3')->send();
                }
             }
+         } else {
+            $this->chat->message('ne ok 2')->send();
          }
+      } else {
+         $this->chat->message('ne ok 5')->send();
       }
    }
 }
