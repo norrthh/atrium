@@ -35,7 +35,6 @@ class TelegraphHandler extends WebhookHandler
 
    public function handleChatMessage(Stringable $text): void
    {
-      $this->chat->message(print_r($this->message->toArray(), 1))->send();
    }
 
    public function handleChatMemberJoined(\DefStudio\Telegraph\DTO\User $member): void
@@ -57,16 +56,12 @@ class TelegraphHandler extends WebhookHandler
                   $taskItem = TaskItems::query()->where('task_id', $task->id)->first();
                   WithdrawUser::store($taskItem->item_id, $taskItem->count, $user->id);
 
-                  $this->chat->message('ok')->send();
                } else {
-                  $this->chat->message('ne ok 3')->send();
                }
             }
          } else {
-            $this->chat->message('ne ok 2')->send();
          }
       } else {
-         $this->chat->message('ne ok 5')->send();
       }
    }
 }
