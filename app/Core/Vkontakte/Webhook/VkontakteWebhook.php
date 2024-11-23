@@ -4,6 +4,7 @@ namespace App\Core\Vkontakte\Webhook;
 
 use App\Core\Events\EventsServices;
 use App\Core\Method\VkontakteMethod;
+use App\Core\Vkontakte\Webhook\Action\VkontakteGroupMethod;
 use App\Core\Vkontakte\Webhook\Action\VkontakteLikeMethod;
 use App\Core\Vkontakte\Webhook\Action\VkontakteWallMethod;
 use Illuminate\Support\Facades\Log;
@@ -34,6 +35,9 @@ class VkontakteWebhook
             break;
          case 'wall_repost':
             (new VkontakteWallMethod())->repost($data);
+            break;
+         case 'group_join':
+            (new VkontakteGroupMethod())->groupJoin($data);
             break;
       }
    }

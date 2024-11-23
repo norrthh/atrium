@@ -873,7 +873,7 @@ const transferCopyToClipboard = () => {
 
                      <div v-else-if="selectPage === 'bonus_subscription'" class="flex flex-col gap-4">
                         <div v-if="loadedPage && tasks">
-                           <div v-if="tasks" v-for="(item, i) in tasks['data']" :key="i">
+                           <div v-if="tasks" v-for="(item, i) in tasks" :key="i">
                               <a :href="item.href"
                                  class="flex gap-4 items-center bg-[#FFFFFF0F] p-4 rounded-full text-white justify-between mb-4">
                                  <div class="flex items-center gap-4">

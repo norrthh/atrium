@@ -6,7 +6,7 @@ use App\Services\WithdrawUserServices;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static store(int $item_id, int $count, int|null $user_id): void
+ * @method static store(string $item_id, string $count, int|null $user_id): void
  */
 class WithdrawUser extends Facade
 {

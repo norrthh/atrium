@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Core\Method\VkontakteMethod;
 use App\Http\Resources\UserResource;
 use App\Models\User\User;
+use App\Services\Telegram\TelegramMethodServices;
 use Illuminate\Validation\ValidationException;
 
 class UserAuthenticationServices
@@ -68,10 +69,22 @@ class UserAuthenticationServices
             'user' => new UserResource(auth()->user()),
             'token' => $user->createToken('authToken')->plainTextToken,
             'vk_donut' => (new VkontakteMethod())->checkVkDonutSubscription($data['vkontakte_id'] ?? 0),
-            'notification' => (new NotificationServices())->getNotification(isset($data['vkontakte_id']) ? 'vkontakte' : 'telegram')
+            'notification' => (new NotificationServices())->getNotification(isset($data['vkontakte_id']) ? 'vkontakte' : 'telegram'),
+            'telegram_check' => auth()->user()->telegram_id && $this->checkSubscriptionTelegramAndNickname(),
          ];
       }
 
       return $user;
+   }
+
+   protected function checkSubscriptionTelegramAndNickname(): bool
+   {
+      $subscription = (new TelegramMethodServices())->getChatMember(auth()->user()->telegram_id);
+
+      if ($subscription && isset($subscription['result']) && $subscription['result']['status'] != 'left' or auth()->user()->username_telegram == '') {
+         return true;
+      }
+
+      return false;
    }
 }

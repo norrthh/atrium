@@ -12,6 +12,14 @@ class TaskResource extends JsonResource
     *
     * @return array<string, mixed>
     */
+
+//'typeSocial',
+//'typeTask',
+//'href',
+//'description',
+//'access',
+//'status',
+//'social_id'
    public function toArray(Request $request): array
    {
       return [

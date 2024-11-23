@@ -12,7 +12,8 @@ class Tasks extends Model
       'href',
       'description',
       'access',
-      'status'
+      'status',
+      'social_id'
    ];
 
    protected $casts = [

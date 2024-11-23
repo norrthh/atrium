@@ -34,6 +34,7 @@ Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
 
       Route::prefix('tasks')->group(function () {
          Route::post('/', [TaskController::class, 'index']);
+         Route::post('/check', [TaskController::class, 'check']);
       });
 
       Route::prefix('admin')->group(function () {
