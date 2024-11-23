@@ -362,9 +362,6 @@ onMounted(() => {
    })
 })
 
-
-});
-
 let isCheckNotification = ref(false),
    notification = ref()
 
