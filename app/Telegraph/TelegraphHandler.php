@@ -76,8 +76,6 @@ class TelegraphHandler extends WebhookHandler
 
          $this->request = $request;
 
-         Log::info(print_r($request->all(), 1));
-
          if ($this->request->has('message')) {
             /* @phpstan-ignore-next-line */
             $this->message = Message::fromArray($this->request->input('message'));
