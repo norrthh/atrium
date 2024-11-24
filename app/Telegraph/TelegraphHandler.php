@@ -9,7 +9,7 @@ use App\Models\Task\Tasks;
 use App\Models\User\User;
 use App\Models\UserTask;
 use App\Services\Telegram\TelegramMethodServices;
-use App\Telegraph\Event\TelegraphKorobkaHandler;
+use App\Telegraph\Message\TelegraphMessage;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 use Illuminate\Support\Carbon;
@@ -34,6 +34,7 @@ class TelegraphHandler extends WebhookHandler
    }
    public function handleChatMessage(Stringable $text): void
    {
+      (new TelegraphMessage($this))->message();
    }
 
    public function handleChatMemberJoined(\DefStudio\Telegraph\DTO\User $member): void

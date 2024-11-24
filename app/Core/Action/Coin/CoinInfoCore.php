@@ -17,7 +17,7 @@ class CoinInfoCore
             ],
             [
                 'type' => 'comment',
-                'amount' => 3,
+                'amount' => 1,
             ]
         ];
     }

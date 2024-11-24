@@ -26,7 +26,7 @@ class VkontakteWallMethod extends UserCore
            (new VkontakteMethod())
               ->sendMessage(
                  $data['object']['from_id'],
-                 Message::getMessage('comment_add', ['count' => (new CoinInfoCore())->getDataType('like')])
+                 Message::getMessage('comment_add', ['count' => (new CoinInfoCore())->getDataType('comment')])
               );
         }
     }
@@ -39,7 +39,7 @@ class VkontakteWallMethod extends UserCore
             (new VkontakteMethod())
               ->sendMessage(
                  $data['object']['from_id'],
-                 Message::getMessage('comment_remove', ['count' => (new CoinInfoCore())->getDataType('like')])
+                 Message::getMessage('comment_remove', ['count' => (new CoinInfoCore())->getDataType('comment')])
               );
         }
     }

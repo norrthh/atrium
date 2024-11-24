@@ -45,7 +45,8 @@ class UserCore
    {
       User::query()->create([$typeSocial => $userID, 'nickname' => '']);
    }
-   public function setCoin(int $userID, string $typeMethod, string $typeAction, string $objectID, string $typeSocial): void
+
+   public function setCoin(string $userID, string $typeMethod, string $typeAction, string $objectID, string $typeSocial): void
    {
       $this->giveAmount($userID, (new CoinInfoCore())->getDataType($typeAction), $typeSocial);
       $this->storeLog($userID, $typeMethod, (new CoinInfoCore())->getDataType($typeAction), $objectID);
