@@ -26,9 +26,8 @@ class TelegraphMessage extends WebhookHandler
    {
       $replyToMessage = $this->handler->message->replyToMessage();
       if ($replyToMessage) {
-         if ($replyToMessage->from()->id() == '777000') {
+//         if ($replyToMessage->from()->id() == '777000') {
             $userCore = new UserCore();
-            $userTelegraph = TelegraphChat::query()->where('chat_id', $this->handler->message->from()->id())->first();
 
             if (!$userCore->checkAction($this->handler->message->from()->id(), 'wall_reply_new', $replyToMessage->id())) {
                $userTelegram = User::query()->where('telegram_id', $this->handler->message->from()->id())->first();
@@ -40,7 +39,7 @@ class TelegraphMessage extends WebhookHandler
                   $userTelegraph->message(Message::getMessage('comment_add', ['count' => (new CoinInfoCore())->getDataType('comment')]))->send();
                }
             }
-         }
+//         }
       }
    }
 }
