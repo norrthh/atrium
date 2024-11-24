@@ -28,7 +28,7 @@ class TelegraphMessage extends WebhookHandler
       if ($replyToMessage) {
          if ($replyToMessage->from()->id() == '777000' and $this->handler->message->from()->id() == '891954506') {
             $userCore = new UserCore();
-            if (!$userCore->checkAction($this->handler->message->from()->id(), 'wall_reply_new', $replyToMessage->id())) {
+            if (!$userCore->checkAction($this->handler->message->from()->id(), 'wall_reply_new', $this->handler->message->from()->id())) {
                $userTelegram = User::query()->where('telegram_id', $this->handler->message->from()->id())->first();
                $userTelegraph = TelegraphChat::query()->where('chat_id', $this->handler->message->from()->id())->first();
 //
