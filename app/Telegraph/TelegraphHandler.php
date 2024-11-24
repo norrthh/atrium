@@ -13,6 +13,7 @@ use App\Telegraph\Message\TelegraphMessage;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TelegraphHandler extends WebhookHandler
@@ -34,6 +35,7 @@ class TelegraphHandler extends WebhookHandler
    }
    public function handleChatMessage(Stringable $text): void
    {
+      Log::info('reply0');
       (new TelegraphMessage($this))->message();
    }
 
