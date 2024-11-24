@@ -39,7 +39,7 @@ class UserAuthenticationServices
       if (isset($data['vkontakte_id'])) {
          $user = User::query()->where('vkontakte_id', $data['vkontakte_id'])->first();
          if ($user) {
-            $user->update(['avatar' => $data['avatar'], 'username_vkontakte' => $data['nickname']]);
+            $user->update(['avatar' => $data['avatar'] ?? '', 'username_vkontakte' => $data['nickname']]);
          }
       }
 
