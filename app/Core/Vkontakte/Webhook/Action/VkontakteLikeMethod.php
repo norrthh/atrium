@@ -35,11 +35,11 @@ class VkontakteLikeMethod extends UserCore
         if ($data['object']['object_type'] == 'post' && !$this->checkAction($data['object']['liker_id'], $data['type'], $data['object']['object_id'])) {
             $this->unsetCoin($data['object']['liker_id'], $data['type'], 'like', $data['object']['object_id'], 'vkontakte_id');
 //
-//            (new VkontakteMethod())
-//                ->sendMessage(
-//                    $data['object']['liker_id'],
-//                    Message::getMessage('like_remove', ['count' => (new CoinInfoCore())->getDataType('like')])
-//                );
+            (new VkontakteMethod())
+                ->sendMessage(
+                    $data['object']['liker_id'],
+                    Message::getMessage('like_remove', ['count' => (new CoinInfoCore())->getDataType('like')])
+                );
         }
     }
 }
