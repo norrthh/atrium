@@ -984,7 +984,7 @@ const sendRequestCheckTask = () => {
                   </div>
 
                   <div class="unique_car_cards" v-if="auctions">
-                     <div class="cardsGood" v-for="shopItem in auctions['data']">
+                     <div class="cardsGood" v-for="shopItem in auctions">
                         <div @click="auctionItemModal(shopItem)">
                            <h1 class="cardName">{{ shopItem.item.name }}</h1>
                            <div :class="shopItem.item.skin ? 'absolute bottom-0 left-0 right-0' : ''">
