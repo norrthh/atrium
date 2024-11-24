@@ -15,12 +15,6 @@ class AuctionResource extends JsonResource
      * @return array<string, mixed>
      */
 
-   public function __construct($resource)
-   {
-      parent::__construct($resource);
-      static::withoutWrapping(); // Убираем обёртку только для этого ресурса
-   }
-
     public function toArray(Request $request): array
     {
         return [
