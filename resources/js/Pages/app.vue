@@ -115,9 +115,7 @@ const getBonusActivity = (bonus) => {
       user.value.coin = Number(user.value.coin) + Number(res.data.coin);
 
       bonus.status = false
-
       bonus.time = {hours: res.data.time.hours, minutes: res.data.time.minutes, seconds: res.data.time.seconds}
-
       startTimer(res.data.time.hours, res.data.time.minutes, res.data.time.seconds)
    })
 }
