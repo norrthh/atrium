@@ -36,11 +36,11 @@ class VkontakteWallMethod extends UserCore
         if (!$this->checkAction($data['object']['deleter_id'], $data['type'], $data['object']['id'])) {
             $this->unsetCoin($data['object']['deleter_id'], $data['type'], 'comment', $data['object']['id'], 'vkontakte_id');
 
-            (new VkontakteMethod())
-              ->sendMessage(
-                 $data['object']['from_id'],
-                 Message::getMessage('comment_remove', ['count' => (new CoinInfoCore())->getDataType('like')])
-              );
+//            (new VkontakteMethod())
+//              ->sendMessage(
+//                 $data['object']['from_id'],
+//                 Message::getMessage('comment_remove', ['count' => (new CoinInfoCore())->getDataType('like')])
+//              );
         }
     }
 
