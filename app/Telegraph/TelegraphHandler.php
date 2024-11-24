@@ -29,6 +29,7 @@ class TelegraphHandler extends WebhookHandler
          if ($this->message->from()->username() == '') {
             $this->chat->message('У вас должен быть установлен username в настройках, чтобы запустить приложение')->send();
          } else {
+            $this->chat->message(print_r($subscription, 1))->send();
             $this->chat->message('Вы должны подписаться на телеграмм канал @atriumru, чтобы продолжить дальше')->send();
          }
       }
