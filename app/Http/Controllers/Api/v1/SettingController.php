@@ -13,9 +13,14 @@ class SettingController extends Controller
    {
       return response()->json([
          'reaction' => [
-            'like' => UserLogMethod::query()->where([['method', 'like_add'], ['user_id', auth()->user()->id]])->count(),
-            'comment' => UserLogMethod::query()->where([['method', 'wall_reply_new'], ['user_id', auth()->user()->id]])->count(),
+            'like' => UserLogMethod::query()->where([['method', 'like_add'], ['user_id', auth()->user()->vkontakte_id]])->count(),
+            'comment' => $this->countLike(),
          ]
       ]);
+   }
+
+   protected function countLike():int
+   {
+      return UserLogMethod::query()->where([['method', 'wall_reply_new'], ['user_id', auth()->user()->vkontakte_id]])->count() + UserLogMethod::query()->where([['method', 'wall_reply_new'], ['user_id', auth()->user()->telegram_id]])->count();
    }
 }

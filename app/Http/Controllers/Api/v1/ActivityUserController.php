@@ -13,7 +13,14 @@ class ActivityUserController extends Controller
 {
     public function now(Request $request)
     {
-        return UserResource::collection(User::query()->orderBy('coin', 'desc')->take(5)->get());
+        return UserResource::collection(
+           User::query()
+              ->orderBy('coin', 'desc')
+              ->where('username_telegram', '!=', '')
+              ->orWhere('username_vkontakte', '!=', '')
+              ->take(5)
+              ->get()
+        );
     }
 
     public function last(): Collection
