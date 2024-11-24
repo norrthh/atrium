@@ -32,8 +32,8 @@ class CoinsController extends Controller
                     'coin_id' => $coinCore->getDay(),
                 ]);
             } else {
-                $userCoin->update([
-                    'coin_id' => $coinCore->getDay(),
+                UserCoins::query()->where('user_id', auth()->user()->id)->update([
+                    'coin_id' => $coinCore->getDay() + 1,
                 ]);
             }
 
@@ -43,5 +43,7 @@ class CoinsController extends Controller
 
             return response()->json(['coin' => $coinCore->getCoin(), 'time' => $coinCore->getTime()]);
         }
+
+        return response()->json(['time' => $coinCore->getTime()]);
     }
 }
