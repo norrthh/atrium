@@ -41,7 +41,6 @@ class TelegraphHandler extends WebhookHandler
 
    public function handleChatMessage(Stringable $text): void
    {
-      Log::info('reply0');
       (new TelegraphMessage($this))->message();
    }
 
@@ -66,61 +65,6 @@ class TelegraphHandler extends WebhookHandler
                }
             }
          }
-      }
-   }
-
-   public function handle(Request $request, TelegraphBot $bot): void
-   {
-      try {
-         $this->bot = $bot;
-
-         $this->request = $request;
-
-         if ($this->request->has('message')) {
-            /* @phpstan-ignore-next-line */
-            $this->message = Message::fromArray($this->request->input('message'));
-            $this->handleMessage();
-
-            return;
-         }
-
-         if ($this->request->has('edited_message')) {
-            /* @phpstan-ignore-next-line */
-            $this->message = Message::fromArray($this->request->input('edited_message'));
-            $this->handleMessage();
-
-            return;
-         }
-
-         if ($this->request->has('channel_post')) {
-            /* @phpstan-ignore-next-line */
-            $this->message = Message::fromArray($this->request->input('channel_post'));
-            $this->handleMessage();
-
-            return;
-         }
-
-         if ($this->request->has('message_reaction')) {
-            /* @phpstan-ignore-next-line */
-            $this->reaction = Reaction::fromArray($this->request->input('message_reaction'));
-            $this->handleReaction();
-
-            return;
-         }
-
-
-         if ($this->request->has('callback_query')) {
-            /* @phpstan-ignore-next-line */
-            $this->callbackQuery = CallbackQuery::fromArray($this->request->input('callback_query'));
-            $this->handleCallbackQuery();
-         }
-
-         if ($this->request->has('inline_query')) {
-            /* @phpstan-ignore-next-line */
-            $this->handleInlineQuery(InlineQuery::fromArray($this->request->input('inline_query')));
-         }
-      } catch (Throwable $throwable) {
-         $this->onFailure($throwable);
       }
    }
 }
