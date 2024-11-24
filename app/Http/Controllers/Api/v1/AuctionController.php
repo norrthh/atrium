@@ -12,7 +12,13 @@ class AuctionController extends Controller
 {
    public function index()
    {
-      return AuctionResource::collection(Auction::query()->with('item')->get());
+      $auctions = Auction::query()->with('item')->get();
+
+      if (count($auctions)) {
+         return response()->json([]);
+      }
+
+      return AuctionResource::collection($auctions);
    }
 
    public function buy(Request $request)
