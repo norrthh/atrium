@@ -116,9 +116,9 @@ const getBonusActivity = (bonus) => {
 
       bonus.status = false
 
-      loadPage('/api/bonus/coins', bonus, (data) =>
-         startTimer(data.time.hours, data.time.minutes, data.time.seconds)
-      )
+      bonus.time = {hours: res.data.time.hours, minutes: res.data.time.minutes, seconds: res.data.time.seconds}
+
+      startTimer(res.data.time.hours, res.data.time.minutes, res.data.time.seconds)
    })
 }
 let timerInterval = null; // Глобальный таймер для управления

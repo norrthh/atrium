@@ -41,7 +41,7 @@ class CoinsController extends Controller
                 'coin' => $coinCore->getCoin() + auth()->user()->coin
             ]);
 
-            return response()->json(['coin' => $coinCore->getCoin()]);
+            return response()->json(['coin' => $coinCore->getCoin(), 'time' => $coinCore->getTime()]);
         }
     }
 }
