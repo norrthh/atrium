@@ -14,7 +14,7 @@ class AuctionController extends Controller
    {
       $auctions = Auction::query()->with('item')->get();
 
-      if (count($auctions)) {
+      if (count($auctions) == 0) {
          return response()->json([]);
       }
 
