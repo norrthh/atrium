@@ -21,7 +21,7 @@ class TelegraphHandler extends WebhookHandler
    {
       $subscription = (new TelegramMethodServices())->getChatMember($this->message->from()->id());
       if ($subscription && isset($subscription['result']) && $subscription['result']['status'] != 'left' and $this->message->from()->username() != '') {
-         $this->chat->message('test')->keyboard(
+         $this->chat->message('Открыть мини приложение')->keyboard(
             Keyboard::make()->button('Перейти в мини приложение')->webApp('https://telegram.atrium-bot.ru/')
          )->send();
       } else {
