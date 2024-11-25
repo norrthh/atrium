@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ShopItemResource;
 use App\Models\Items\ShopItems;
 use App\Models\User\User;
-use App\Models\WithdrawUsers;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller

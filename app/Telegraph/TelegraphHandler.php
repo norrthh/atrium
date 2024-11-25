@@ -3,24 +3,16 @@
 namespace App\Telegraph;
 
 use App\Facades\WithdrawUser;
-use App\Models\Event\Event;
 use App\Models\Task\TaskItems;
 use App\Models\Task\Tasks;
 use App\Models\User\User;
-use App\Models\UserTask;
+use App\Models\User\UserTask;
 use App\Services\Telegram\TelegramMethodServices;
 use App\Telegraph\Message\TelegraphMessage;
-use DefStudio\Telegraph\DTO\CallbackQuery;
-use DefStudio\Telegraph\DTO\InlineQuery;
-use DefStudio\Telegraph\DTO\Message;
-use DefStudio\Telegraph\DTO\Reaction;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Keyboard;
-use DefStudio\Telegraph\Models\TelegraphBot;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
-use Illuminate\Http\Request;
 
 class TelegraphHandler extends WebhookHandler
 {

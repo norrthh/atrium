@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\User\User;
-use App\Models\WithdrawUsers;
+use App\Models\User\WithdrawUsers;
 
 class WithdrawUserServices
 {

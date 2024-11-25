@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WithdrawUserResource;
+use App\Models\User\WithdrawUsers;
 use App\Models\Withdraw\WithdrawItems;
-use App\Models\WithdrawUsers;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
 
 class WithdrawController extends Controller
 {

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\v1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WithdrawUserResource;
-use App\Models\WithdrawUsers;
+use App\Models\User\WithdrawUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

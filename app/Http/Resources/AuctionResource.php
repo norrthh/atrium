@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Models\UserAuction;
+use App\Models\User\UserAuction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

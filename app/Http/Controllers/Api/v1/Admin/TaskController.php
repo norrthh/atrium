@@ -7,13 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\TaskResource;
 use App\Models\Task\TaskItems;
 use App\Models\Task\Tasks;
-use App\Models\User\User;
-use App\Models\UserTask;
+use App\Models\User\UserTask;
 use App\Services\Telegram\TelegramMethodServices;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use function Symfony\Component\Translation\t;
 
 class TaskController extends Controller
 {

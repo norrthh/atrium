@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Facades\WithdrawUser;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WithdrawUserResource;
-use App\Models\WithdrawUsers;
+use App\Models\User\WithdrawUsers;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller

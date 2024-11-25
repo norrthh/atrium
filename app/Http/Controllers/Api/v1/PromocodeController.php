@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Core\Events\EventsServices;
 use App\Facades\WithdrawUser;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PromocodeResource;
@@ -10,7 +9,7 @@ use App\Models\Event\EventPromocode;
 use App\Models\Event\EventPromocodeActivate;
 use App\Models\Promocode\Promocode;
 use App\Models\Promocode\PromocodeItem;
-use App\Models\UserActivatePromocode;
+use App\Models\User\UserActivatePromocode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

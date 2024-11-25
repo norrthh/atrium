@@ -6,7 +6,7 @@ use App\Facades\WithdrawUser;
 use App\Models\Task\TaskItems;
 use App\Models\Task\Tasks;
 use App\Models\User\User;
-use App\Models\UserTask;
+use App\Models\User\UserTask;
 use Illuminate\Support\Carbon;
 
 class VkontakteGroupMethod

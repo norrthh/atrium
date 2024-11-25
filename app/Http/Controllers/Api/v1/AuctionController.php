@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AuctionResource;
 use App\Models\Auction;
-use App\Models\UserAuction;
+use App\Models\User\UserAuction;
 use Illuminate\Http\Request;
 
 class AuctionController extends Controller

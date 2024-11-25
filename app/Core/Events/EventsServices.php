@@ -11,7 +11,6 @@ use App\Models\Event\EventSocialLogs;
 use App\Models\Event\EventUsers;
 use App\Models\Items\Items;
 use App\Models\User\User;
-use App\Models\WithdrawUsers;
 use Illuminate\Support\Carbon;
 
 class EventsServices
