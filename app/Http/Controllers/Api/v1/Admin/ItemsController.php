@@ -15,12 +15,24 @@ class ItemsController extends Controller
     */
    public function index()
    {
-      return ItemResource::collection(Items::query()->where('id', '>', 4)->get());
+      $items = Items::query()->where('id', '>', 4)->get();
+
+      if(count($items) == 0 ) {
+         return response()->json([]);
+      }
+
+      return ItemResource::collection();
    }
 
    public function all()
    {
-      return ItemResource::collection(Items::query()->get());
+      $items = Items::query()->get();
+
+      if(count($items) == 0 ) {
+         return response()->json([]);
+      }
+
+      return ItemResource::collection($items);
    }
 
    /**
