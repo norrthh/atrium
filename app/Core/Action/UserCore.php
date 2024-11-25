@@ -39,7 +39,7 @@ class UserCore
       }
 
       User::query()->where($typeSocial, $userID)->update([
-         'coins_week' => User::query()->where($typeSocial, $userID)->first()->coin - $coin,
+         'coins_week' => User::query()->where($typeSocial, $userID)->first()->coins_week - $coin,
          'coin' => User::query()->where($typeSocial, $userID)->first()->coin - $coin,
       ]);
    }

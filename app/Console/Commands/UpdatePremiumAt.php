@@ -38,7 +38,7 @@ class UpdatePremiumAt extends Command
          foreach ($premiumUsers as $user) {
             User::query()->where('id', $user->id)->update([
                'updated_premium_at' => Carbon::now(),
-               'coins_week' => 5 + $user->coin,
+               'coins_week' => 5 + $user->coins_week,
                'coin' => $user->coin + 5
             ]);
 
