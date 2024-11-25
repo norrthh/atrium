@@ -25,14 +25,15 @@ class TelegraphMessage extends WebhookHandler
    public function message(): void
    {
       $replyToMessage = $this->handler->message->replyToMessage();
+      $userTelegram = User::query()->where('telegram_id', $this->handler->message->from()->id())->first();
+      $userTelegraph = TelegraphChat::query()->where('chat_id', $this->handler->message->from()->id())->first();
+
       if ($replyToMessage) {
-         if ($replyToMessage->from()->id() == '777000' and $this->handler->message->from()->id() == '891954506') {
+         if ($replyToMessage->from()->id() == '777000') {
             $userCore = new UserCore();
-            if (!$userCore->checkAction($this->handler->message->from()->id(), 'wall_reply_new', $this->handler->message->from()->id())) {
-               $userTelegram = User::query()->where('telegram_id', $this->handler->message->from()->id())->first();
-               $userTelegraph = TelegraphChat::query()->where('chat_id', $this->handler->message->from()->id())->first();
-//
-               $objectId = (string)$replyToMessage->id();
+            $objectId = (string)$replyToMessage->id();
+
+            if (!$userCore->checkAction($userTelegram->id, 'wall_reply_new', $objectId)) {
                if ($userTelegram && $userTelegraph) {
                   $userCore->setCoin($userTelegram->id, 'wall_reply_new', 'comment', $objectId, 'telegram_id');
                   $userTelegraph->message(Message::getMessage('comment_add', ['count' => (new CoinInfoCore())->getDataType('comment')]))->send();
