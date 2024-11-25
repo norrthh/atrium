@@ -53,9 +53,17 @@ class ItemsController extends Controller
    /**
     * Show the form for editing the specified resource.
     */
-   public function edit(string $id)
+   public function edit(Request $request)
    {
-      //
+      $item = Items::query()->where('id', $request->get('id'))->first();
+      if($item) {
+         Items::query()->where('id', $request->get('id'))->update([
+            'name' => $request->get('name') ?? $item->name,
+            'idItem' => $request->get('idItem') ?? $item->idItem,
+            'icon' => $request->get('icon') ?? $item->img,
+            'skin' => $request->get('skin') ?? $item->skin
+         ]);
+      }
    }
 
    /**
