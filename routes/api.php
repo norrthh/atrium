@@ -43,7 +43,7 @@ Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
             Route::get('/all', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'all']);
             Route::get('/coinbilet', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'coinbilet']);
             Route::post('/create', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'store']);
-            Route::patch('/edit', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'edit']);
+            Route::post('/edit', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'edit']);
             Route::delete('/delete/{id}', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'destroy']);
          });
 
