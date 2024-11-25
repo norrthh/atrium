@@ -22,7 +22,7 @@ class ItemResource extends JsonResource
    {
       return [
          'id' => $this->id,
-         'game_id' => $this->idItem,
+         'idItem' => $this->idItem,
          'name' => $this->name,
          'icon' => request()->root() . '/storage/' . $this->icon,
          'skin' => $this->skin
