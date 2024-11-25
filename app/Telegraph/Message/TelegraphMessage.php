@@ -29,7 +29,7 @@ class TelegraphMessage extends WebhookHandler
       $userTelegraph = TelegraphChat::query()->where('chat_id', $this->handler->message->from()->id())->first();
 
       if ($replyToMessage) {
-         if ($replyToMessage->from()->id() == '777000') {
+         if ($replyToMessage->from()->id() == '777000' and $userTelegram) {
             $userCore = new UserCore();
             $objectId = (string)$replyToMessage->id();
 
