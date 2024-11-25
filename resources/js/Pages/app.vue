@@ -1284,7 +1284,7 @@ const sendRequestCheckTask = () => {
                                     alt="">
                               </div>
                               <div class="flex flex-col uppercase">
-                                 <span>ПРИВЯЗАТЬ ТЕЛЕГРАМ АККАУНТ</span>
+                                 <span>ПРИВЯЗАТЬ ВК АККАУНТ</span>
                                  <span style="color: #FFFFFFA3;">НЕ ПРИВЯЗАН</span>
                               </div>
                            </div>
