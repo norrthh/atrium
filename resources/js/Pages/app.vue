@@ -558,6 +558,12 @@ let isTransferShow = ref(false),
    transferResponse = ref();
 
 const transferModal = (type) => {
+   document.body.setAttribute("style", "overflow: hidden;");
+   window.scrollTo({
+      top: 0,
+   });
+
+
    isTransferShow.value = true
    transferType.value = type
 
@@ -789,6 +795,18 @@ const sendRequestCheckTask = () => {
                               <img src="/ayazik/promo.svg" alt=""
                                    class="h-[18px]"></div>
                            <h2 class="">ВВЕСТИ ПРОМОКОД</h2>
+                        </div>
+                        <img src="/ayazik/arrow-right.svg" alt="">
+                     </div>
+
+                     <div
+                        class="flex gap-4 items-center p-4 rounded-full text-white justify-between"
+                        @click="transferModal(0)">
+                        <div class="flex items-center gap-4">
+                           <div class="bg-[#FFFFFF0F] rounded-full p-4">
+                              <img src="/ayazik/icons/telegram.svg" alt="" class="h-[18px]">
+                           </div>
+                           <h2 class="">ПРИВЯЗАТЬ ТЕЛЕГРАМ АККАУНТ</h2>
                         </div>
                         <img src="/ayazik/arrow-right.svg" alt="">
                      </div>
