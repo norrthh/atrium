@@ -12,7 +12,8 @@ class WithdrawUserServices
       switch ($item_id) {
          case 1:
             User::query()->where('id', $user_id ?: auth()->user()->id)->update([
-               'coin' => User::query()->where('id', $user_id ?: auth()->user()->id)->first()->coin + $count
+               'coin' => User::query()->where('id', $user_id ?: auth()->user()->id)->first()->coin + $count,
+               'coins_week' => User::query()->where('id', $user_id ?: auth()->user()->id)->first()->coins_week + $count,
             ]);
             break;
          case 2:

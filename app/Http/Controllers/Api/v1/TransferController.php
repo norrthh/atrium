@@ -47,6 +47,7 @@ class TransferController extends Controller
 
             User::query()->where('id', auth()->user()->id)->update([
                'coin' => $user->coin + auth()->user()->coin,
+               'coins_week' => $user->coin + auth()->user()->coins_week,
                'bilet' => $user->bilet + auth()->user()->bilet,
             ]);
 

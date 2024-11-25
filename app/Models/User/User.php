@@ -21,7 +21,9 @@ class User extends Authenticatable
       'bilet',
       'username_vkontakte',
       'username_telegram',
-      'avatar_telegram'
+      'avatar_telegram',
+      'coins_week',
+      'isPremium',
    ];
 
 }

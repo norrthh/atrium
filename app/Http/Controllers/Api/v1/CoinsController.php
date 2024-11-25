@@ -38,7 +38,8 @@ class CoinsController extends Controller
             }
 
             User::query()->where('id', auth()->user()->id)->update([
-                'coin' => $coinCore->getCoin() + auth()->user()->coin
+                'coins_week' => $coinCore->getCoin() + auth()->user()->coins_week,
+                'coin' => $coinCore->getCoin() + auth()->user()->coin,
             ]);
 
             return response()->json(['coin' => $coinCore->getCoin(), 'time' => $coinCore->getTime()]);

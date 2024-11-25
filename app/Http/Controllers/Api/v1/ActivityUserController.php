@@ -15,7 +15,7 @@ class ActivityUserController extends Controller
     {
         return UserResource::collection(
            User::query()
-              ->orderBy('coin', 'desc')
+              ->orderBy('coins_week', 'desc')
               ->where('username_telegram', '!=', '')
               ->orWhere('username_vkontakte', '!=', '')
               ->take(5)

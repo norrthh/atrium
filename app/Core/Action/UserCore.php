@@ -28,7 +28,8 @@ class UserCore
       }
 
       User::query()->where($typeSocial, $userID)->update([
-         'coin' => User::query()->where($typeSocial, $userID)->first()->coin + $coin
+         'coins_week' => User::query()->where($typeSocial, $userID)->first()->coins_week + $coin,
+         'coin' => User::query()->where($typeSocial, $userID)->first()->coin + $coin,
       ]);
    }
    public function resetAmount(int $userID, int $coin, string $typeSocial): void
@@ -38,7 +39,8 @@ class UserCore
       }
 
       User::query()->where($typeSocial, $userID)->update([
-         'coin' => User::query()->where($typeSocial, $userID)->first()->coin - $coin
+         'coins_week' => User::query()->where($typeSocial, $userID)->first()->coin - $coin,
+         'coin' => User::query()->where($typeSocial, $userID)->first()->coin - $coin,
       ]);
    }
    public function storeUser(int $userID, string $typeSocial): void

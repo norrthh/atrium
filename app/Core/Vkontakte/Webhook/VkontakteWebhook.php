@@ -4,6 +4,7 @@ namespace App\Core\Vkontakte\Webhook;
 
 use App\Core\Events\EventsServices;
 use App\Core\Method\VkontakteMethod;
+use App\Core\Vkontakte\Webhook\Action\VkontakteDonateMethod;
 use App\Core\Vkontakte\Webhook\Action\VkontakteGroupMethod;
 use App\Core\Vkontakte\Webhook\Action\VkontakteLikeMethod;
 use App\Core\Vkontakte\Webhook\Action\VkontakteWallMethod;
@@ -38,6 +39,17 @@ class VkontakteWebhook
             break;
          case 'group_join':
             (new VkontakteGroupMethod())->groupJoin($data);
+            break;
+         case 'donut_subscription_prolonged':
+         case 'donut_subscription_create':
+            (new VkontakteDonateMethod())->premium($data);
+            break;
+         case 'donut_subscription_expired':
+         case 'donut_subscription_cancelled':
+            (new VkontakteDonateMethod())->removePremium($data);
+            break;
+         default:
+
             break;
       }
    }
