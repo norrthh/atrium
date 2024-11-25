@@ -15,7 +15,7 @@ class ItemsController extends Controller
     */
    public function index()
    {
-      return ItemResource::collection(Items::query()->where('id', '>', 2)->get());
+      return ItemResource::collection(Items::query()->where('id', '>', 4)->get());
    }
 
    public function all()
