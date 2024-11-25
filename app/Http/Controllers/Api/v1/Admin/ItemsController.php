@@ -21,7 +21,7 @@ class ItemsController extends Controller
          return response()->json([]);
       }
 
-      return ItemResource::collection();
+      return ItemResource::collection($items);
    }
 
    public function all()
