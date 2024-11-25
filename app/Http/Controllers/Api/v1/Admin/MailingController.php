@@ -13,11 +13,10 @@ class MailingController extends Controller
       $request->validate([
          'social' => ['required', 'int'],
          'text' => ['required', 'string'],
-         'link' => ['required', 'string'],
       ]);
 
       $data = $request->all();
-      $data['text'] = str_replace('{link}', $request->get('link'), $request->get('text'));
+      $data['text'] = $request->get('text');
       $data['status'] = 0;
       Mailing::query()->create($data);
 
