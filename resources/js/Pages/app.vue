@@ -805,7 +805,7 @@ const sendRequestCheckTask = () => {
                         @click="transferModal(0)">
                         <div class="flex items-center gap-4">
                            <div class="bg-[#FFFFFF0F] rounded-full p-4">
-                              <img src="/ayazik/icons/vk.svg" alt="" class="h-[18px]">
+                              <img src="/ayazik/icons/VK.svg" alt="" class="h-[18px]">
                            </div>
                            <h2 class="">ПРИВЯЗАТЬ ВК АККАУНТ</h2>
                         </div>
@@ -1280,7 +1280,7 @@ const sendRequestCheckTask = () => {
                            <div class="flex items-center gap-4">
                               <div class="bg-[#FFFFFF0F] rounded-full p-4">
                                  <img
-                                    src='/ayazik/icons/telegram.svg'
+                                    src='/ayazik/icons/VK.svg'
                                     alt="">
                               </div>
                               <div class="flex flex-col uppercase">
