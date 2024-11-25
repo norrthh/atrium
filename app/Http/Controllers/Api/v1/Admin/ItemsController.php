@@ -60,7 +60,7 @@ class ItemsController extends Controller
          Items::query()->where('id', $request->get('id'))->update([
             'name' => $request->get('name') ?? $item->name,
             'idItem' => $request->get('idItem') ?? $item->idItem,
-            'icon' => $request->get('icon') ?? $item->img,
+            'icon' => $request->get('icon') ?? $item->icon,
             'skin' => $request->get('skin') ?? $item->skin
          ]);
       }
