@@ -81,6 +81,10 @@ Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
             Route::post('/order', [\App\Http\Controllers\Api\v1\Admin\WithdrawController::class, 'order']);
             Route::post('/butonOrder', [\App\Http\Controllers\Api\v1\Admin\WithdrawController::class, 'butonOrder']);
          });
+
+         Route::prefix('users')->group(function () {
+            Route::post('/search', [\App\Http\Controllers\Api\v1\Admin\UsersController::class, 'search']);
+         });
       });
 
       Route::prefix('withdraw')->group(function () {

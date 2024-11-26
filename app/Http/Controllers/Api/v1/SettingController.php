@@ -19,7 +19,7 @@ class SettingController extends Controller
       ]);
    }
 
-   protected function countLike():int
+   public function countLike():int
    {
       return UserLogMethod::query()->where([['method', 'wall_reply_new'], ['user_id', auth()->user()->vkontakte_id]])->count() + UserLogMethod::query()->where([['method', 'wall_reply_new'], ['user_id', auth()->user()->telegram_id]])->count();
    }
