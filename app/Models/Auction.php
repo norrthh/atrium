@@ -13,6 +13,7 @@ class Auction extends Model
         'item_type',
         'start_price',
         'time',
+        'auction_end_time',
     ];
 
    protected $casts = [

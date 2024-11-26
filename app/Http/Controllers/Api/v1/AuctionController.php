@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AuctionResource;
 use App\Models\Auction;
+use App\Models\User\User;
 use App\Models\User\UserAuction;
 use Illuminate\Http\Request;
 
@@ -42,6 +43,11 @@ class AuctionController extends Controller
 
       if ($request->get('price') >= $amount + 10) {
          if (auth()->user()->coin >= $request->get('price')) {
+
+            User::query()->where('id', auth()->user()->id)->update([
+               'coin' => auth()->user()->coin - $request->get('price'),
+            ]);
+
             UserAuction::query()->create([
                'user_id' => auth()->user()->id,
                'auction_id' => $request->get('id'),

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Auction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class AuctionController extends Controller
 {
@@ -22,7 +23,10 @@ class AuctionController extends Controller
          'time' => ['required', 'int'],
       ]);
 
-      Auction::query()->create($request->all());
+      $data = $request->all();
+      $data['auction_end_time'] =  Carbon::now()->addHours((int) $request->get('time'));
+
+      Auction::query()->create($data);
 
       return response()->json(['success']);
    }
