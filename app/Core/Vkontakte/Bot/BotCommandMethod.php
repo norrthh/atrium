@@ -26,13 +26,9 @@ class BotCommandMethod
       switch ($this->vkData['object']['message']['text']) {
          case '/start':
 
-            $keyboard = $this->keyboard->createInlineKeyboard([
-               ['button1', ['test' => 'test1']]
-            ]);
-
-            $keyboard2 = $this->keyboard->createRegularKeyboard([
-               ['button2', ['test' => 'test1']]
-            ]);
+            $keyboard = $this->keyboard->regularKeyboard(
+               $this->keyboard->openLink('test', 'https://vk.com/'),
+            );
 
             $response2 = $this->message->sendAPIMessage(
                userId: $this->user_id,
@@ -40,12 +36,6 @@ class BotCommandMethod
                keyboard: $keyboard
             );
 
-            $response = $this->message->sendAPIMessage(
-               userId: $this->user_id,
-               keyboard: $keyboard2
-            );
-
-            Log::info($response);
             Log::info($response2);
             break;
          default:
