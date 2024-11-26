@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Core\Message\Message;
-use App\Core\Method\VkontakteMethod;
+use App\Core\EventMethod\EventVkontakteMethod;
 use App\Models\Event\Event;
 use App\Models\Event\EventCumbackPlayer;
 use App\Models\Event\EventPrize;
@@ -66,7 +66,7 @@ class CumbackPlayerEvent extends Command
 
                      if ($event->social_type == 'vk') {
                         $this->info("Пользователь: {$userAttempt->user_id} успешно получил дополнительную попытку}");
-                        (new VkontakteMethod())->sendMessage(
+                        (new EventVkontakteMethod())->sendMessage(
                            User::query()->where('id', $userAttempt->user_id)->first()->vkontakte_id,
                            Message::getMessage('event_cumback', ['count' => $event->cumebackPlayer['attempt']])
                         );

@@ -3,7 +3,7 @@
 namespace App\Core\Events;
 
 use App\Core\Message\Message;
-use App\Core\Method\SocialMethod;
+use App\Core\EventMethod\EventSocialMethod;
 use App\Facades\WithdrawUser;
 use App\Models\Event\Event;
 use App\Models\Event\EventPrize;
@@ -15,7 +15,7 @@ use Illuminate\Support\Carbon;
 
 class EventsServices
 {
-   public function events($post_id, $user_id, $comment_id, $sendMessageUser, SocialMethod $socialMethod): void
+   public function events($post_id, $user_id, $comment_id, $sendMessageUser, EventSocialMethod $socialMethod): void
    {
       $findEvent = Event::query()->where('post_id', $post_id)->first();
       if ($findEvent) {
@@ -77,7 +77,7 @@ class EventsServices
       return mt_rand() / mt_getrandmax() < $prizeChance;
    }
 
-   public function winPrize(int $userID, int $event_id, array $prizes, SocialMethod $socialMethod, string $word, $typeSocial): bool
+   public function winPrize(int $userID, int $event_id, array $prizes, EventSocialMethod $socialMethod, string $word, $typeSocial): bool
    {
       $findPrize = EventPrize::query()->where([['event_id', $event_id], ['status', 0], ['word', $word]])->first();
 
@@ -95,7 +95,7 @@ class EventsServices
       return in_array($word, array_map('trim', explode(',', $words)));
    }
 
-   public function giveItemUser($user_id, int $event_id, int $item_id, int $count, string $actionText, SocialMethod $socialMethod = null, $type = null): void
+   public function giveItemUser($user_id, int $event_id, int $item_id, int $count, string $actionText, EventSocialMethod $socialMethod = null, $type = null): void
    {
       $withdraw = WithdrawUser::store($item_id, $count, $user_id);
 
@@ -106,7 +106,7 @@ class EventsServices
       }
    }
 
-   public function checkLastMessage(int $post_id, Event $event, int $comment_id, SocialMethod $socialMethod): bool
+   public function checkLastMessage(int $post_id, Event $event, int $comment_id, EventSocialMethod $socialMethod): bool
    {
       $lastMessage = EventSocialLogs::query()->where([['post_id', $post_id]])->orderBy('id', 'desc')->first();
 
@@ -123,7 +123,7 @@ class EventsServices
       return true;
    }
 
-   public function checkMailing(int $user_id, Event $event, int $post_id, int $comment_id, SocialMethod $socialMethod): bool
+   public function checkMailing(int $user_id, Event $event, int $post_id, int $comment_id, EventSocialMethod $socialMethod): bool
    {
       if ($event->subscribe and !$socialMethod->checkSubscriptionGroup($user_id)) {
          $socialMethod->replyWallComment($post_id, Message::getMessage('event_subscription', ['type' => 'группу']), $comment_id);
@@ -138,7 +138,7 @@ class EventsServices
       return true;
    }
 
-   public function checkAttempt(int $user_id, Event $event, int $post_id, int $comment_id, SocialMethod $socialMethod): bool
+   public function checkAttempt(int $user_id, Event $event, int $post_id, int $comment_id, EventSocialMethod $socialMethod): bool
    {
       $eventUser = EventUsers::query()->where([['user_id', $user_id], ['event_id', $event->id]])->first();
 

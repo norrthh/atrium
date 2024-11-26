@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Core\Method\VkontakteMethod;
+use App\Core\EventMethod\EventVkontakteMethod;
 use App\Models\Event\Event;
 use App\Models\Event\EventPromocode;
 use App\Models\Items\Items;
@@ -56,7 +56,7 @@ class EventPromocodeServices
                '{prizes}', Items::query()->where('id', $data['prizes'][0]['id'])->first()->name, // Замена {prizes}
                str_replace('{promocode}', $data['name'], $data['text']) // Замена {promocode}
             );
-            $data['post_id'] = (new VkontakteMethod())->sendWallMessage($data['image'], $data['text'])['response']['post_id'];
+            $data['post_id'] = (new EventVkontakteMethod())->sendWallMessage($data['image'], $data['text'])['response']['post_id'];
             $data['social_type'] = $data['social'];
             $data['type'] = 5;
             $data['event_id'] = (new EventServices())->store($data)->id;

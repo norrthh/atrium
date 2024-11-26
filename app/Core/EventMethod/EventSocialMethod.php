@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Method;
+namespace App\Core\EventMethod;
 
-interface SocialMethod
+interface EventSocialMethod
 {
    public function sendMessage(int $userId, string $message);
    public function sendWallMessage($filePath, $message);

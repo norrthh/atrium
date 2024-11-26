@@ -3,10 +3,11 @@
 namespace App\Core\Vkontakte\Webhook;
 
 use App\Core\Events\EventsServices;
-use App\Core\Method\VkontakteMethod;
+use App\Core\EventMethod\EventVkontakteMethod;
 use App\Core\Vkontakte\Webhook\Action\VkontakteDonateMethod;
 use App\Core\Vkontakte\Webhook\Action\VkontakteGroupMethod;
 use App\Core\Vkontakte\Webhook\Action\VkontakteLikeMethod;
+use App\Core\Vkontakte\Webhook\Action\VkontakteMessageMethod;
 use App\Core\Vkontakte\Webhook\Action\VkontakteWallMethod;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -25,11 +26,11 @@ class VkontakteWebhook
             break;
          case 'like_add':
             (new VkontakteLikeMethod())->addLike($data);
-            (new EventServices())->addAttempt($data['object']['liker_id'], $data['object']['object_id'], 1, new VkontakteMethod());
+            (new EventServices())->addAttempt($data['object']['liker_id'], $data['object']['object_id'], 1, new EventVkontakteMethod());
             break;
          case 'wall_reply_new':
             (new VkontakteWallMethod())->addComment($data);
-            (new EventsServices())->events($data['object']['post_id'], $data['object']['from_id'], $data['object']['id'], $data['object']['text'], (new VkontakteMethod()));
+            (new EventsServices())->events($data['object']['post_id'], $data['object']['from_id'], $data['object']['id'], $data['object']['text'], (new EventVkontakteMethod()));
             break;
          case 'wall_reply_delete':
             (new VkontakteWallMethod())->removeComment($data);
@@ -48,8 +49,10 @@ class VkontakteWebhook
          case 'donut_subscription_cancelled':
             (new VkontakteDonateMethod())->removePremium($data);
             break;
+         case 'message_new':
+            (new VkontakteMessageMethod())->message($data);
+            break;
          default:
-
             break;
       }
    }

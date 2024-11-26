@@ -5,7 +5,7 @@ namespace App\Core\Vkontakte\Webhook\Action;
 use App\Core\Action\Coin\CoinInfoCore;
 use App\Core\Action\UserCore;
 use App\Core\Message\Message;
-use App\Core\Method\VkontakteMethod;
+use App\Core\EventMethod\EventVkontakteMethod;
 use App\Core\Vkontakte\Webhook\EventServices;
 
 class VkontakteWallMethod extends UserCore
@@ -23,7 +23,7 @@ class VkontakteWallMethod extends UserCore
         if (!$this->checkAction($data['object']['from_id'], $data['type'], $data['object']['post_id'])) {
             $this->setCoin($data['object']['from_id'], $data['type'], 'comment', $data['object']['post_id'], 'vkontakte_id');
 
-           (new VkontakteMethod())
+           (new EventVkontakteMethod())
               ->sendMessage(
                  $data['object']['from_id'],
                  Message::getMessage('comment_add', ['count' => (new CoinInfoCore())->getDataType('comment')])
@@ -36,7 +36,7 @@ class VkontakteWallMethod extends UserCore
         if (!$this->checkAction($data['object']['deleter_id'], $data['type'], $data['object']['id'])) {
             $this->unsetCoin($data['object']['deleter_id'], $data['type'], 'comment', $data['object']['id'], 'vkontakte_id');
 
-            (new VkontakteMethod())
+            (new EventVkontakteMethod())
               ->sendMessage(
                  $data['object']['from_id'],
                  Message::getMessage('comment_remove', ['count' => (new CoinInfoCore())->getDataType('comment')])
@@ -49,13 +49,13 @@ class VkontakteWallMethod extends UserCore
         if (!$this->checkAction($data['object']['from_id'], $data['type'], $data['object']['id'])) {
             $this->setCoin($data['object']['from_id'], $data['type'], 'wall', $data['object']['id'], 'vkontakte_id');
 
-            (new VkontakteMethod())
+            (new EventVkontakteMethod())
               ->sendMessage(
                  $data['object']['from_id'],
                  Message::getMessage('repost_add', ['count' => (new CoinInfoCore())->getDataType('like')])
               );
 
-           (new EventServices())->addAttempt($data['object']['from_id'], $data['object']['id'], 2, new VkontakteMethod());
+           (new EventServices())->addAttempt($data['object']['from_id'], $data['object']['id'], 2, new EventVkontakteMethod());
         }
     }
 }

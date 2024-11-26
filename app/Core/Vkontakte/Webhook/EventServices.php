@@ -3,14 +3,14 @@
 namespace App\Core\Vkontakte\Webhook;
 
 use App\Core\Message\Message;
-use App\Core\Method\SocialMethod;
+use App\Core\EventMethod\EventSocialMethod;
 use App\Models\Event\Event;
 use App\Models\Event\EventUsers;
 use App\Models\User\User;
 
 class EventServices
 {
-   public function addAttempt(int $user_id, int $post_id, int $typeAction, SocialMethod $socialMethod): void
+   public function addAttempt(int $user_id, int $post_id, int $typeAction, EventSocialMethod $socialMethod): void
    {
       $event = Event::query()->where('post_id', $post_id)->first();
       $user = User::query()->where('vkontakte_id', $user_id)->first();

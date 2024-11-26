@@ -3,7 +3,7 @@
 namespace App\Core\Events;
 
 use App\Core\Message\Message;
-use App\Core\Method\SocialMethod;
+use App\Core\EventMethod\EventSocialMethod;
 use App\Models\Event\Event;
 use App\Models\Event\EventPrize;
 use App\Models\Event\EventSocialLogs;
@@ -19,7 +19,7 @@ use App\Models\User\User;
 
 class EventTwo extends EventsServices
 {
-   public function event($post_id, $user_id, $comment_id, $sendMessageUser, SocialMethod $socialMethod, $typeSocial): void
+   public function event($post_id, $user_id, $comment_id, $sendMessageUser, EventSocialMethod $socialMethod, $typeSocial): void
    {
       $findEvent = Event::query()->where('post_id', $post_id)->first();
 

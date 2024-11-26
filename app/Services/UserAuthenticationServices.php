@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Core\Method\VkontakteMethod;
+use App\Core\EventMethod\EventVkontakteMethod;
 use App\Http\Resources\UserResource;
 use App\Models\User\User;
 use App\Services\Telegram\TelegramMethodServices;
@@ -68,7 +68,7 @@ class UserAuthenticationServices
          return [
             'user' => new UserResource(auth()->user()),
             'token' => $user->createToken('authToken')->plainTextToken,
-            'vk_donut' => (new VkontakteMethod())->checkVkDonutSubscription($data['vkontakte_id'] ?? 0),
+            'vk_donut' => (new EventVkontakteMethod())->checkVkDonutSubscription($data['vkontakte_id'] ?? 0),
             'notification' => (new NotificationServices())->getNotification(isset($data['vkontakte_id']) ? 'vkontakte' : 'telegram'),
             'telegram_check' => auth()->user()->telegram_id && $this->checkSubscriptionTelegramAndNickname(),
          ];
