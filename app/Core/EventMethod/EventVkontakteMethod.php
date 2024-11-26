@@ -2,12 +2,10 @@
 
 namespace App\Core\EventMethod;
 
-use App\Core\Vkontakte\Method\Subscribe;
-use App\Core\Vkontakte\Method\Message;
+use App\Vkontakte\Method\Message;
+use App\Vkontakte\Method\Subscribe;
 use GuzzleHttp\Client;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 
 class EventVkontakteMethod extends Message implements EventSocialMethod
 {

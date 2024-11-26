@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Vkontakte\Webhook\Action;
+namespace App\Vkontakte\Webhook\Hook;
 
-use App\Core\Vkontakte\Bot\BotCommandMethod;
+use App\Vkontakte\Bot\BotCommandMethod;
 
 class VkontakteMessageMethod
 {

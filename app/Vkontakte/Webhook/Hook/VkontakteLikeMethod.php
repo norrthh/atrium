@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Core\Vkontakte\Webhook\Action;
+namespace App\Vkontakte\Webhook\Hook;
 
 use App\Core\Action\Coin\CoinInfoCore;
 use App\Core\Action\UserCore;
-use App\Core\Message\Message;
 use App\Core\EventMethod\EventVkontakteMethod;
-use App\Core\Vkontakte\Webhook\EventServices;
+use App\Core\Message\Message;
 
 class VkontakteLikeMethod extends UserCore
 {

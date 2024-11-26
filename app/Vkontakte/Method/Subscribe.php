@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Vkontakte\Method;
+namespace App\Vkontakte\Method;
 
 use GuzzleHttp\Client;
 

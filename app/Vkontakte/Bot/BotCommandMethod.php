@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Core\Vkontakte\Bot;
+namespace App\Vkontakte\Bot;
 
-use App\Core\Vkontakte\Method\Keyboard;
-use App\Core\Vkontakte\Method\Message;
+use App\Vkontakte\Method\Keyboard;
+use App\Vkontakte\Method\Message;
 use Illuminate\Support\Facades\Log;
 
 class BotCommandMethod

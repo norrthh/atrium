@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Core\Vkontakte\Webhook;
+namespace App\Vkontakte\Webhook;
 
-use App\Core\Message\Message;
 use App\Core\EventMethod\EventSocialMethod;
+use App\Core\Message\Message;
 use App\Models\Event\Event;
 use App\Models\Event\EventUsers;
 use App\Models\User\User;
@@ -30,14 +30,12 @@ class EventServices
             case 1:
                if ($event->like) {
                   EventUsers::query()->where('id', $findAttempt->id)->update(['countAttempt' => $findAttempt->countAttempt + $event->like['count']]);
-//                     $this->storeLog($event->id, $user->id, 2);
                   $socialMethod->sendMessage($user_id, Message::getMessage('addAttemptLike', ['count' => $event->like['count']]));
                }
                break;
             case 2:
                if ($event->repost) {
                   EventUsers::query()->where('id', $findAttempt->id)->update(['countAttempt' => $findAttempt->countAttempt + $event->repost['count']]);
-//                     $this->storeLog($event->id, $user->id, 2);
                   $socialMethod->sendMessage($user_id, Message::getMessage('addAttemptRepost', ['count' => $event->repost['count']]));
                }
                break;

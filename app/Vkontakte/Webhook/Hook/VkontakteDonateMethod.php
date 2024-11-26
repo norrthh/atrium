@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Vkontakte\Webhook\Action;
+namespace App\Vkontakte\Webhook\Hook;
 
 use App\Facades\WithdrawUser;
 use App\Models\User\User;

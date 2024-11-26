@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Core\Vkontakte\Webhook;
+namespace App\Vkontakte\Webhook;
 
-use App\Core\Events\EventsServices;
 use App\Core\EventMethod\EventVkontakteMethod;
-use App\Core\Vkontakte\Webhook\Action\VkontakteDonateMethod;
-use App\Core\Vkontakte\Webhook\Action\VkontakteGroupMethod;
-use App\Core\Vkontakte\Webhook\Action\VkontakteLikeMethod;
-use App\Core\Vkontakte\Webhook\Action\VkontakteMessageMethod;
-use App\Core\Vkontakte\Webhook\Action\VkontakteWallMethod;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use App\Core\Events\EventsServices;
+use App\Vkontakte\Webhook\Hook\VkontakteDonateMethod;
+use App\Vkontakte\Webhook\Hook\VkontakteGroupMethod;
+use App\Vkontakte\Webhook\Hook\VkontakteLikeMethod;
+use App\Vkontakte\Webhook\Hook\VkontakteMessageMethod;
+use App\Vkontakte\Webhook\Hook\VkontakteWallMethod;
 
 class VkontakteWebhook
 {
