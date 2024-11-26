@@ -46,16 +46,16 @@ class VkontakteWallMethod extends UserCore
 
     public function repost(array $data): void
     {
-        if (!$this->checkAction($data['object']['from_id'], $data['type'], $data['object']['id'])) {
-            $this->setCoin($data['object']['from_id'], $data['type'], 'wall', $data['object']['id'], 'vkontakte_id');
+        if (!$this->checkAction($data['object']['from_id'], $data['type'], $data['object']['copy_history'][0]['id'])) {
+            $this->setCoin($data['object']['from_id'], $data['type'], 'wall', $data['object']['copy_history'][0]['id'], 'vkontakte_id');
 
             (new EventVkontakteMethod())
-              ->sendMessage(
+               ->sendMessage(
                  $data['object']['from_id'],
-                 Message::getMessage('repost_add', ['count' => (new CoinInfoCore())->getDataType('like')])
-              );
+                 Message::getMessage('repost_add', ['count' => (new CoinInfoCore())->getDataType('wall')])
+               );
 
-           (new EventServices())->addAttempt($data['object']['from_id'], $data['object']['id'], 2, new EventVkontakteMethod());
+           (new EventServices())->addAttempt($data['object']['from_id'], $data['object']['copy_history'][0]['id'], 2, new EventVkontakteMethod());
         }
     }
 }

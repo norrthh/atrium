@@ -47,9 +47,9 @@ class VkontakteWebhook
          case 'donut_subscription_cancelled':
             (new VkontakteDonateMethod())->removePremium($data);
             break;
-         case 'message_new':
-            (new VkontakteMessageMethod())->message($data);
-            break;
+//         case 'message_new':
+//            (new VkontakteMessageMethod())->message($data);
+//            break;
          default:
             break;
       }
