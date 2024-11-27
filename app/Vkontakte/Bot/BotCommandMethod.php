@@ -11,7 +11,7 @@ class BotCommandMethod
    protected Message $message;
    protected Keyboard $keyboard;
    protected array $vkData;
-   protected int $user_id;
+   protected int $user_id = 0;
 
    public function __construct(array $data)
    {
@@ -26,7 +26,7 @@ class BotCommandMethod
 
    public function command(): void
    {
-      if (isset($this->vkData['object']['message']['text'])) {
+      if (isset($this->vkData['object']['message']['text']) and $this->user_id > 0) {
          switch ($this->vkData['object']['message']['text']) {
             case '/start':
             case 'Начать':
