@@ -4,6 +4,8 @@ namespace App\Vkontakte\Bot;
 
 class BotCommandOtherMethod extends BotCommandMethod
 {
+   protected array $targetPromo = ["free", "freecar"];
+
    public function other(): void
    {
       if (isset($this->vkData['object']['message']['payload'])) {
@@ -18,12 +20,16 @@ class BotCommandOtherMethod extends BotCommandMethod
                break;
          }
       } else {
-         $this->message->sendAPIMessage(
-            userId: $this->user_id,
-            message: 'Такой команды не существует. Перенаправляю в меню... 😃',
-         );
+         if (in_array($this->vkData['object']['message']['text'], $this->targetPromo)) {
+            (new BotCommandPrizeMethod($this->vkData))->sendCarChoiceMessage();
+         } else {
+            $this->message->sendAPIMessage(
+               userId: $this->user_id,
+               message: 'Такой команды не существует. Перенаправляю в меню... 😃',
+            );
 
-         (new BotCommandMainMethod($this->vkData))->start();
+            (new BotCommandMainMethod($this->vkData))->start();
+         }
       }
    }
 }

@@ -69,9 +69,6 @@ class BotCommandMethod
             case 'BMW M4 ЛИТВИНА':
                (new BotCommandPrizeMethod($this->vkData))->sendBonusInfo();
                break;
-            case 'free':
-               (new BotCommandPrizeMethod($this->vkData))->sendCarChoiceMessage();
-               break;
             case 'Актуальные вакансии':
                (new BotCommandVacancyMethod($this->vkData))->sendVacancyInfo();
                break;
