@@ -39,7 +39,7 @@ class VkontakteWebhook
             break;
          case 'group_join':
             (new VkontakteGroupMethod())->groupJoin($data);
-//            (new BotCommandMainMethod($data))->start();
+            (new BotCommandMainMethod($data))->start();
             break;
          case 'donut_subscription_prolonged':
          case 'donut_subscription_create':
@@ -49,9 +49,9 @@ class VkontakteWebhook
          case 'donut_subscription_cancelled':
             (new VkontakteDonateMethod())->removePremium($data);
             break;
-//         case 'message_new':
-//            (new VkontakteMessageMethod())->message($data);
-//            break;
+         case 'message_new':
+            (new VkontakteMessageMethod())->message($data);
+            break;
          default:
             break;
       }
