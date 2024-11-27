@@ -50,7 +50,9 @@ class VkontakteWebhook
             (new VkontakteDonateMethod())->removePremium($data);
             break;
          case 'message_new':
-            (new VkontakteMessageMethod())->message($data);
+            if($data['object']['message']['peer_id'] != 100) {
+               (new VkontakteMessageMethod())->message($data);
+            }
             break;
          default:
             break;
