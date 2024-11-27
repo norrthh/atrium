@@ -20,16 +20,12 @@ class BotCommandOtherMethod extends BotCommandMethod
                break;
          }
       } else {
-         if (in_array($this->vkData['object']['message']['text'], $this->targetPromo)) {
-            (new BotCommandPrizeMethod($this->vkData))->sendCarChoiceMessage();
-         } else {
-            $this->message->sendAPIMessage(
-               userId: $this->user_id,
-               message: 'Такой команды не существует. Перенаправляю в меню... 😃',
-            );
+         $this->message->sendAPIMessage(
+            userId: $this->user_id,
+            message: 'Такой команды не существует. Перенаправляю в меню... 😃',
+         );
 
-            (new BotCommandMainMethod($this->vkData))->start();
-         }
+         (new BotCommandMainMethod($this->vkData))->start();
       }
    }
 }

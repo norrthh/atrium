@@ -27,13 +27,9 @@ class BotCommandMethod
    public function command(): void
    {
       if (isset($this->vkData['object']['message']['text']) and $this->user_id > 0 and $this->vkData['object']['message']['peer_id'] != env('VKONTAKTE_CHAT_ID')) {
-         switch ($this->vkData['object']['message']['text']) {
-            case '/start':
-            case 'Начать':
-            case 'меню':
-            case 'Меню':
-            case 'начать':
-            case 'старт':
+         $messageText = $this->vkData['object']['message']['text'];
+         switch ($messageText) {
+            case in_array($messageText, ['/start', 'Начать', 'меню', 'Меню', 'начать', 'старт']):
                (new BotCommandMainMethod($this->vkData))->start();
                break;
             case 'СКАЧАТЬ ИГРУ':
@@ -63,11 +59,11 @@ class BotCommandMethod
             case 'Получать новости и подарки 💓':
                (new BotCommandPrizeMethod($this->vkData))->sendThankYouMessage();
                break;
-            case '1000 монет':
-            case 'BMW M5 F90 АСХАБА':
-            case 'MERCEDES GTS ВЕНГАЛБИ':
-            case 'BMW M4 ЛИТВИНА':
+            case in_array($messageText, ['1000 монет', 'BMW M5 F90 АСХАБА', 'MERCEDES GTS ВЕНГАЛБИ', 'BMW M4 ЛИТВИНА']):
                (new BotCommandPrizeMethod($this->vkData))->sendBonusInfo();
+               break;
+            case in_array($messageText, ["free", "freecar"]):
+               (new BotCommandPrizeMethod($this->vkData))->sendCarChoiceMessage();
                break;
             case 'Актуальные вакансии':
                (new BotCommandVacancyMethod($this->vkData))->sendVacancyInfo();
