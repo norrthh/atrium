@@ -17,6 +17,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
+Route::get('/', function (Request $request) {
+   return (new \App\Vkontakte\Method\Message())->uploadAPIPhoto('bot/bg.jpg');
+});
+
 Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
    Route::post('auth', [AuthController::class, 'auth']);
    Route::post('getAvatar', [AuthController::class, 'avatar']);

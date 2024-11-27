@@ -5,6 +5,7 @@ namespace App\Vkontakte\Method;
 use GuzzleHttp\Client;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class Message
@@ -22,7 +23,7 @@ class Message
       $this->vkVersion = env('VKONTAKTE_VERSION');
    }
 
-   public function sendAPIMessage(int $userId, string|bool $message = false, $keyboard = false): Response
+   public function sendAPIMessage(int $userId, string|bool $message = false, $keyboard = false, string|bool $attachment = false): Response
    {
       $params = [
          'user_id' => $userId,
@@ -39,7 +40,11 @@ class Message
          $params['message'] = $message;
       }
 
-      // Используем POST вместо GET
+      if ($attachment) {
+         $params['attachment'] = $attachment;
+      }
+
+
       return Http::get(self::VK_API_URL, $params);
    }
 

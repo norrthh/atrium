@@ -2,22 +2,30 @@
 
 namespace App\Vkontakte\Method;
 
+use Illuminate\Support\Facades\Log;
+
 class Keyboard
 {
-   // Метод для создания одной кнопки
-   public function button(string $label, array $payload, string $color = 'primary'): array
+   public function button(string $label, array $payload = [], string $color = 'primary'): array
    {
-      return [
+      $buttons = [
          'action' => [
             'type' => 'text',
-            'payload' => json_encode($payload),
-            'label' => $label
+            'label' => $label,
          ],
          'color' => $color
       ];
+
+      if (count($payload) > 0) {
+         $buttons['action']['payload'] = json_encode($payload);
+      }
+
+      Log::info('BUTTON', $buttons);
+
+      return $buttons;
    }
 
-   public function openLink(string $label, string $link, string $color = 'primary'): array
+   public function openLink(string $label, string $link): array
    {
       return [
          'action' => [
@@ -29,7 +37,18 @@ class Keyboard
       ];
    }
 
-   // Метод для создания нескольких кнопок
+   public function openApp(string $label): array
+   {
+      return [
+         'action' => [
+            'type' => 'open_app',
+            'label' => $label,
+            'app_id' => 52613695,
+            "payload" => '{"button": "0"}',
+         ],
+      ];
+   }
+
    public function buttons(array $buttonsData): array
    {
       return array_map(function ($buttonData) {
@@ -37,43 +56,12 @@ class Keyboard
       }, $buttonsData);
    }
 
-   // Метод для создания inline клавиатуры
-   public function inlineKeyboard(array $buttons, int $length = 2, bool $oneTime = false): string
-   {
-      return json_encode([
-         'one_time' => $oneTime,
-         'buttons' => array_chunk($buttons, $length),
-         'inline' => true  // Устанавливаем inline на уровне клавиатуры
-      ]);
-   }
-
-   public function regularKeyboard(array $buttons, int $length = 2, bool $oneTime = false): string
+   public function keyboard(array $buttons, bool $inline = false): string
    {
       return json_encode([
          "one_time" => false,
-         'inline' => true,
-         "buttons" => [
-            [
-               ["action" => [
-                  "type" => "open_link",
-                  "link" => "https://vk.com/",
-                  "label" => "Your URL",
-                  "payload" => '{"button": "1"}'],
-               ]
-            ]]]);
-   }
-
-   // Новый метод для создания клавиатуры с кнопками в одном вызове
-   public function createInlineKeyboard(array $buttonsData, int $length = 2, bool $oneTime = false): string
-   {
-      // Создаем кнопки из данных
-      $buttons = self::buttons($buttonsData);
-      return self::inlineKeyboard($buttons, $length, $oneTime);
-   }
-
-   public function createRegularKeyboard(array $buttonsData, int $length = 2, bool $oneTime = false): string
-   {
-      $buttons = self::buttons($buttonsData, false);  // Для обычных кнопок inline не устанавливается
-      return self::regularKeyboard($buttons, $length, $oneTime);
+         'inline' => $inline,
+         "buttons" => $buttons
+      ]);
    }
 }

@@ -4,6 +4,7 @@ namespace App\Vkontakte\Webhook;
 
 use App\Core\EventMethod\EventVkontakteMethod;
 use App\Core\Events\EventsServices;
+use App\Vkontakte\Bot\BotCommandMainMethod;
 use App\Vkontakte\Webhook\Hook\VkontakteDonateMethod;
 use App\Vkontakte\Webhook\Hook\VkontakteGroupMethod;
 use App\Vkontakte\Webhook\Hook\VkontakteLikeMethod;
@@ -38,6 +39,7 @@ class VkontakteWebhook
             break;
          case 'group_join':
             (new VkontakteGroupMethod())->groupJoin($data);
+//            (new BotCommandMainMethod($data))->start();
             break;
          case 'donut_subscription_prolonged':
          case 'donut_subscription_create':
