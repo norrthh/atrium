@@ -50,7 +50,7 @@ class BotCommandSupportMethod extends BotCommandMethod
          keyboard: $this->keyboard->keyboard(buttons: [
             [$this->keyboard->button(label: "Привязываю в VK", color: 'negative')],
             [$this->keyboard->button(label: "Привязываю в Telegram", color: 'positive')],
-            [$this->keyboard->button(label: "Назад", payload: ['support'])],
+            [$this->keyboard->button(label: "Вернуться в меню", payload: ['support'])],
          ])
       );
    }

@@ -10,7 +10,7 @@ class BotCommandVacancyMethod extends BotCommandMethod
          userId: $this->user_id,
          message: "...",
          keyboard: $this->keyboard->keyboard([
-            [$this->keyboard->button(label: 'Назад', payload: ['main'])],
+            [$this->keyboard->button(label: 'Вернуться в меню', payload: ['main'])],
          ])
       );
 

@@ -15,10 +15,10 @@ class BotCommandPrizeMethod extends BotCommandMethod
         ",
          keyboard: $this->keyboard->keyboard([
             [$this->keyboard->button(label: '1000 монет', color: 'positive')],
-            [$this->keyboard->button(label: 'BMW M5 F90 АСХАБА')],
-            [$this->keyboard->button(label: 'MERCEDES GTS ВЕНГАЛБИ')],
-            [$this->keyboard->button(label: 'BMW M4 ЛИТВИНА')],
-            [$this->keyboard->button(label: 'Назад', payload: ['main'])],
+            [$this->keyboard->button(label: 'BMW M5 F90 АСХАБА', color: 'positive')],
+            [$this->keyboard->button(label: 'MERCEDES GTS ВЕНГАЛБИ', color: 'positive')],
+            [$this->keyboard->button(label: 'BMW M4 ЛИТВИНА', color: 'positive')],
+            [$this->keyboard->button(label: 'Вернуться в меню', payload: ['main'])],
          ])
       );
    }
@@ -29,7 +29,7 @@ class BotCommandPrizeMethod extends BotCommandMethod
          userId: $this->user_id,
          message: "...",
          keyboard: $this->keyboard->keyboard([
-            [$this->keyboard->button(label: 'Назад', payload: ['main'])],
+            [$this->keyboard->button(label: 'Вернуться в меню', payload: ['main'])],
          ])
       );
 
@@ -60,10 +60,10 @@ class BotCommandPrizeMethod extends BotCommandMethod
          ",
          keyboard: $this->keyboard->keyboard([
             [$this->keyboard->button(label: '1000 монет', color: 'positive')],
-            [$this->keyboard->button(label: 'BMW M5 F90 АСХАБА')],
-            [$this->keyboard->button(label: 'MERCEDES GTS ВЕНГАЛБИ')],
-            [$this->keyboard->button(label: 'BMW M4 ЛИТВИНА')],
-            [$this->keyboard->button(label: 'Назад', payload: ['main'])],
+            [$this->keyboard->button(label: 'BMW M5 F90 АСХАБА', color: 'positive')],
+            [$this->keyboard->button(label: 'MERCEDES GTS ВЕНГАЛБИ', color: 'positive')],
+            [$this->keyboard->button(label: 'BMW M4 ЛИТВИНА', color: 'positive')],
+            [$this->keyboard->button(label: 'Вернуться в меню', payload: ['main'])],
          ])
       );
    }
