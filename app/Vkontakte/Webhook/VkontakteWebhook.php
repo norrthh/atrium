@@ -10,6 +10,7 @@ use App\Vkontakte\Webhook\Hook\VkontakteGroupMethod;
 use App\Vkontakte\Webhook\Hook\VkontakteLikeMethod;
 use App\Vkontakte\Webhook\Hook\VkontakteMessageMethod;
 use App\Vkontakte\Webhook\Hook\VkontakteWallMethod;
+use Illuminate\Support\Facades\Log;
 
 class VkontakteWebhook
 {
@@ -18,6 +19,8 @@ class VkontakteWebhook
       if (isset($data['object']['from_id']) < 0) {
          return;
       }
+
+      Log::info("request", $data);
 
       switch ($data['type']) {
          case 'like_remove':
@@ -50,9 +53,9 @@ class VkontakteWebhook
             (new VkontakteDonateMethod())->removePremium($data);
             break;
          case 'message_new':
-            if($data['object']['message']['peer_id'] != 100) {
+//            if($data['object']['message']['peer_id'] != 100) {
                (new VkontakteMessageMethod())->message($data);
-            }
+//            }
             break;
          default:
             break;
