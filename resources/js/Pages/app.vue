@@ -711,7 +711,9 @@ const sendRequestCheckTask = () => {
                      <img :src="user?.avatar" alt="avatar" class="w-[70px] h-[70px]  rounded-full">
                      <div class="text-white flex flex-col font-bold">
                         <h1 class="uppercase text-2xl">
-                           {{ telegramData.initDataUnsafe.user.first_name + ' ' + telegramData.initDataUnsafe.user.last_name }}</h1>
+                           {{
+                              telegramData.initDataUnsafe.user.first_name + ' ' + telegramData.initDataUnsafe.user.last_name
+                           }}</h1>
                         <div class="uppercaseflex gap-3 text-lg flex">
                            <p class="opacity-50 uppercase">ВАШ БАЛАНС:</p>
                            <p class="flex items-center gap-2">
@@ -723,7 +725,7 @@ const sendRequestCheckTask = () => {
                            <p class="opacity-50 uppercase">Билетов:</p>
                            <p class="flex items-center gap-2">
                               <img src="/ayazik/bilet.svg" alt="" class="h-6">
-                              <span style="color: #f3a418" class="uppercase">{{ user.bilet }}</span> <!-- bilet data !-->
+                              <span style="color: #f3a418" class="uppercase">{{ user.bilet }}</span><!-- bilet data !-->
                            </p>
                         </div>
                      </div>
@@ -1300,7 +1302,7 @@ const sendRequestCheckTask = () => {
                                     alt="">
                               </div>
                               <div class="flex flex-col uppercase">
-                                 <span>{{  user.vk_name }}</span>
+                                 <span>{{ user.vk_name }}</span>
                                  <span style="color: #FFFFFFA3;">ПРИВЯЗАН</span>
                               </div>
                            </div>
@@ -1515,9 +1517,8 @@ const sendRequestCheckTask = () => {
             </div>
 
             <p class="footer" v-if="auctionItem.item_type == 1">
-                    <span
-                       style="opacity: 65%">Внимание, временный предмет! В случае покупки, предмет будет выдан на </span>
-               <span style="color: #fff !important;"> {{ auctionItem.item_count }} часов</span>.
+               <span style="opacity: 65%">Внимание, временный предмет! В случае покупки, предмет будет выдан на </span>
+               <span style="color: #fff !important; margin-left: 5px"> {{ auctionItem.item_count }} часов</span>.
             </p>
 
             <InputZ v-model="auctionInput" placeholder="мин. 5 000"
@@ -1675,7 +1676,9 @@ const sendRequestCheckTask = () => {
                          readonly
                          @click="transferCopyToClipboard"
                   >
-                  <p class="text-green-500 font-black text-xm" v-if="transferResponse">{{transferResponse.message }}</p>
+                  <p class="text-green-500 font-black text-xm" v-if="transferResponse">{{
+                        transferResponse.message
+                     }}</p>
                </div>
 
                <button
@@ -1729,10 +1732,11 @@ const sendRequestCheckTask = () => {
             <div class="modal-header"></div>
             <div class="modal-title">
                <div>
-                  <img :src="(selectTask.icon == 'VK' ? '/ayazik/icons/VK.svg' : '/ayazik/icons/telegram.svg')" width="90" height="90" alt="">
+                  <img :src="(selectTask.icon == 'VK' ? '/ayazik/icons/VK.svg' : '/ayazik/icons/telegram.svg')"
+                       width="90" height="90" alt="">
                </div>
                <div class="content">
-                  <span>Выполнение задания ({{ selectTask.task}})</span>
+                  <span>Выполнение задания ({{ selectTask.task }})</span>
                </div>
             </div>
 
@@ -1837,9 +1841,8 @@ const sendRequestCheckTask = () => {
             </div>
 
             <p class="footer" v-if="buyItem.item_type == 1">
-                    <span
-                       style="opacity: 65%">Внимание, временный предмет! В случае покупки, предмет будет выдан на</span>
-               <span style="color: #fff !important;"> {{ buyItem.item_count }} часов</span>.
+               <span style="opacity: 65%">Внимание, временный предмет! В случае покупки, предмет будет выдан на</span>
+               <span style="color: #fff !important; margin-left: 5px"> {{ buyItem.item_count }} часов</span>.
             </p>
 
             <button
