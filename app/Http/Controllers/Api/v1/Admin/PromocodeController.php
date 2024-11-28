@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PromocodeResource;
 use App\Models\Promocode\Promocode;
 use App\Services\EventPromocodeServices;
 use Illuminate\Database\Eloquent\Collection;
@@ -29,9 +30,15 @@ class PromocodeController extends Controller
       return response()->json($eventPromocodeServices->create($request->all()));
    }
 
-   public function index(): Collection
+   public function index()
    {
-      return Promocode::query()->with('items')->get();
+      $promocodes = Promocode::query()->with('item')->get();
+
+      if (count($promocodes) == 0) {
+         return response()->json([]);
+      }
+
+      return PromocodeResource::collection($promocodes);
    }
 
    public function destroy(Request $request): JsonResponse

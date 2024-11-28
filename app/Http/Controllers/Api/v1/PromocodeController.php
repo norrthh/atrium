@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Facades\WithdrawUser;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PromocodeItemResource;
 use App\Http\Resources\PromocodeResource;
 use App\Models\Event\EventPromocode;
 use App\Models\Event\EventPromocodeActivate;
@@ -46,7 +47,7 @@ class PromocodeController extends Controller
 
             return response()->json([
                'message' => 'Промокод активирован',
-               'item' => PromocodeResource::collection(PromocodeItem::query()->where('promocode_id', $promocode->id)->with('item')->get()),
+               'item' => PromocodeItemResource::collection(PromocodeItem::query()->where('promocode_id', $promocode->id)->with('item')->get()),
                'select' => $promocode->countPrize,
                'status' => 200,
                'promo_id' => $promocode->id
@@ -61,7 +62,7 @@ class PromocodeController extends Controller
 
             return response()->json([
                'message' => 'Промокод активирован',
-               'item' => PromocodeResource::collection(PromocodeItem::query()->where('promocode_id', $promocode->id)->with('item')->get()),
+               'item' => PromocodeItemResource::collection(PromocodeItem::query()->where('promocode_id', $promocode->id)->with('item')->get()),
                'select' => $promocode->countPrize,
                'status' => 200,
                'promo_id' => $promocode->id

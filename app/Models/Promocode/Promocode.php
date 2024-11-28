@@ -18,7 +18,7 @@ class Promocode extends Model
       'expiration' => 'array',
    ];
 
-   public function items(): HasMany
+   public function item(): HasMany
    {
       return $this->hasMany(PromocodeItem::class, 'promocode_id', 'id');
    }
