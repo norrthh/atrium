@@ -826,15 +826,15 @@ const sendRequestCheckTask = () => {
                         <img src="/ayazik/arrow-right.svg" alt="">
                      </div>
 
-                     <div @click="boustModal"
-                          class="flex gap-4 items-center bg-black opacity-20 p-4 rounded-full text-white justify-between">
-                        <div class="flex items-center gap-4">
-                           <div class="bg-[#FFFFFF0F] rounded-full p-4"><img src="/ayazik/secret.svg" alt=""
-                                                                             class="h-[18px]"></div>
-                           <h2 class="">СЕКРЕТНЫЙ БУСТ</h2>
-                        </div>
-                        <img src="/ayazik/arrow-right.svg" alt="">
-                     </div>
+<!--                     <div @click="boustModal"-->
+<!--                          class="flex gap-4 items-center bg-black opacity-20 p-4 rounded-full text-white justify-between">-->
+<!--                        <div class="flex items-center gap-4">-->
+<!--                           <div class="bg-[#FFFFFF0F] rounded-full p-4"><img src="/ayazik/secret.svg" alt=""-->
+<!--                                                                             class="h-[18px]"></div>-->
+<!--                           <h2 class="">СЕКРЕТНЫЙ БУСТ</h2>-->
+<!--                        </div>-->
+<!--                        <img src="/ayazik/arrow-right.svg" alt="">-->
+<!--                     </div>-->
                   </div>
                </section>
                <section class="flex flex-col w-full gap-12"
