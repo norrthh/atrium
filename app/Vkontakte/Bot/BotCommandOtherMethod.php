@@ -18,6 +18,13 @@ class BotCommandOtherMethod extends BotCommandMethod
             case 'support':
                (new BotCommandSupportMethod($this->vkData))->support();
                break;
+            default:
+               $this->message->sendAPIMessage(
+                  userId: $this->user_id,
+                  message: 'Такой кнопки не существует. Перенаправляю в меню... 😃',
+               );
+
+               (new BotCommandMainMethod($this->vkData))->start();
          }
       } else {
          $this->message->sendAPIMessage(
