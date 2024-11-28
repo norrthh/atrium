@@ -41,13 +41,9 @@ class PromocodeController extends Controller
       return PromocodeResource::collection($promocodes);
    }
 
-   public function destroy(Request $request): JsonResponse
+   public function destroy($id): JsonResponse
    {
-      $request->validate([
-         'id' => ['required', 'int']
-      ]);
-
-      Promocode::query()->where('id', $request->get('id'))->delete();
+      Promocode::query()->where('id', $id)->delete();
       return response()->json([]);
    }
 }
