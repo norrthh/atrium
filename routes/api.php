@@ -77,7 +77,9 @@ Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
          });
 
          Route::prefix('promocode')->group(function () {
+            Route::post('/', [PromocodeController::class, 'index']);
             Route::post('/store', [PromocodeController::class, 'store']);
+            Route::delete('/delete', [PromocodeController::class, 'destroy']);
          });
 
          Route::prefix('withdraw')->group(function () {

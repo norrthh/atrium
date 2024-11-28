@@ -3,6 +3,7 @@
 namespace App\Models\Promocode;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Promocode extends Model
 {
@@ -13,8 +14,12 @@ class Promocode extends Model
       'countPrize',
       'event_id',
    ];
-
    protected $casts = [
       'expiration' => 'array',
    ];
+
+   public function items(): HasMany
+   {
+      return $this->hasMany(PromocodeItem::class, 'promocode_id', 'id');
+   }
 }

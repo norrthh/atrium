@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api\v1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Promocode\Promocode;
 use App\Services\EventPromocodeServices;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PromocodeController extends Controller
@@ -24,5 +27,20 @@ class PromocodeController extends Controller
       ]);
 
       return response()->json($eventPromocodeServices->create($request->all()));
+   }
+
+   public function index(): Collection
+   {
+      return Promocode::query()->with('items')->get();
+   }
+
+   public function destroy(Request $request): JsonResponse
+   {
+      $request->validate([
+         'id' => ['required', 'int']
+      ]);
+
+      Promocode::query()->where('id', $request->get('id'))->delete();
+      return response()->json([]);
    }
 }
