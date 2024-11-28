@@ -28,21 +28,10 @@ class PromocodeResource extends JsonResource
    {
       $expiration = $this->expiration[0] ?? null;
 
-      $expiresAt = $expiration
-         ? $this->created_at->addHours((int)$expiration['value'])
-         : null;
-
-      $now = Carbon::now();
-      $hoursLeft = $expiresAt && $now->lessThan($expiresAt)
-         ? $expiresAt->diff($now)->format('%H:%I')
-         : '00:00';
-
       return [
          'id' => $this->id,
          'code' => $this->code,
-         'expiration' => $expiration && (int)$expiration['type'] == 1
-            ? $expiration['value']
-            : $hoursLeft,
+         'expiration' => $expiration['value'],
          'expiration_type' => $expiration ? (int)$expiration['type'] : null,
          'items' => PromocodeItemResource::collection($this->item),
          'used' => UserActivatePromocode::query()->where('promocode_id', $this->id)->count(),
