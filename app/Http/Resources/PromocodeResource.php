@@ -35,6 +35,7 @@ class PromocodeResource extends JsonResource
          'expiration_type' => $expiration ? (int)$expiration['type'] : null,
          'items' => PromocodeItemResource::collection($this->item),
          'used' => UserActivatePromocode::query()->where('promocode_id', $this->id)->count(),
+         'created_at' => $this->created_at
       ];
    }
 
