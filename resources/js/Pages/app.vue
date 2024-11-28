@@ -1839,7 +1839,7 @@ const sendRequestCheckTask = () => {
             <p class="footer" v-if="buyItem.item_type == 1">
                     <span
                        style="opacity: 65%">Внимание, временный предмет! В случае покупки, предмет будет выдан на</span>
-               <span style="color: #fff !important;">{{ buyItem.item_count }} часов</span>.
+               <span style="color: #fff !important;"> {{ buyItem.item_count }} часов</span>.
             </p>
 
             <button
