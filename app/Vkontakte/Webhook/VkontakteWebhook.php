@@ -20,8 +20,6 @@ class VkontakteWebhook
          return;
       }
 
-      Log::info("request", $data);
-
       switch ($data['type']) {
          case 'like_remove':
             (new VkontakteLikeMethod())->removeLike($data);

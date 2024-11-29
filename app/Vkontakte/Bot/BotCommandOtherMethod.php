@@ -13,8 +13,6 @@ class BotCommandOtherMethod extends BotCommandMethod
       if (isset($this->vkData['object']['message']['payload'])) {
          $payload = json_decode($this->vkData['object']['message']['payload'], true);
 
-         Log::info(isset($payload['name']) ? 1 : 2);
-
          if(isset($payload['name'])) {
             $this->message->sendAPIMessage(
                userId: $this->user_id,
@@ -23,7 +21,7 @@ class BotCommandOtherMethod extends BotCommandMethod
 
             (new BotCommandMainMethod($this->vkData))->start();
          } else {
-            switch ($payload) {
+            switch ($payload[0]) {
                case 'main':
                   (new BotCommandMainMethod($this->vkData))->start();
                   break;

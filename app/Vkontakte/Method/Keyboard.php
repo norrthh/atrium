@@ -20,8 +20,6 @@ class Keyboard
          $buttons['action']['payload'] = json_encode($payload);
       }
 
-      Log::info('BUTTON', $buttons);
-
       return $buttons;
    }
 
