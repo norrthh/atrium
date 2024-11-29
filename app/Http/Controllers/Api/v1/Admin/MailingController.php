@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mailing;
+use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Http\Request;
 
 class MailingController extends Controller
@@ -26,7 +27,7 @@ class MailingController extends Controller
    public function info()
    {
       return response()->json([
-         'user_mailing' => 0
+         'user_mailing' => TelegraphChat::query()->count()
       ]);
    }
 }
