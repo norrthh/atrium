@@ -2,6 +2,8 @@
 
 namespace App\Vkontakte\Bot;
 
+use Illuminate\Support\Facades\Log;
+
 class BotCommandOtherMethod extends BotCommandMethod
 {
    protected array $targetPromo = ["free", "freecar"];
@@ -10,6 +12,8 @@ class BotCommandOtherMethod extends BotCommandMethod
    {
       if (isset($this->vkData['object']['message']['payload'])) {
          $payload = json_decode($this->vkData['object']['message']['payload'], true);
+
+         Log::info('Payload', $payload);
 
          if(isset($payload['name'])) {
             $this->message->sendAPIMessage(
