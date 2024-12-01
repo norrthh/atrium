@@ -72,6 +72,13 @@ class BotCommandMethod
                (new BotCommandOtherMethod($this->vkData))->other();
                break;
          }
+      } else {
+         $this->message->sendAPIMessage(
+            userId: $this->user_id,
+            message: 'Такой кнопки не существует. Перенаправляю в меню... 😃',
+         );
+
+         (new BotCommandMainMethod($this->vkData))->start();
       }
    }
 }
