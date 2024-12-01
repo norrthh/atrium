@@ -33,9 +33,9 @@ class TelegraphMessage extends WebhookHandler
             $userCore = new UserCore();
             $objectId = (string)$replyToMessage->id();
 
-            if (!$userCore->checkAction($userTelegram->id, 'wall_reply_new', $objectId)) {
-               if ($userTelegram && $userTelegraph) {
-                  $userCore->setCoin($userTelegram->id, 'wall_reply_new', 'comment', $objectId, 'telegram_id');
+            if (!$userCore->checkAction($userTelegram->telegram_id, 'wall_reply_new', $objectId)) {
+               if ($userTelegraph) {
+                  $userCore->setCoin($userTelegram->telegram_id, 'wall_reply_new', 'comment', $objectId, 'telegram_id');
                   $userTelegraph->message(Message::getMessage('comment_add', ['count' => (new CoinInfoCore())->getDataType('comment')]))->send();
                }
             }
