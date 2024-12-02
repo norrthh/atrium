@@ -73,12 +73,14 @@ class BotCommandMethod
                break;
          }
       } else {
-         $this->message->sendAPIMessage(
-            userId: $this->user_id,
-            message: 'Такой кнопки не существует. Перенаправляю в меню... 😃',
-         );
+         if ($this->vkData['object']['message']['peer_id'] != env('VKONTAKTE_CHAT_ID')) {
+            $this->message->sendAPIMessage(
+               userId: $this->user_id,
+               message: 'Такой кнопки не существует. Перенаправляю в меню... 😃',
+            );
 
-         (new BotCommandMainMethod($this->vkData))->start();
+            (new BotCommandMainMethod($this->vkData))->start();
+         }
       }
    }
 }
