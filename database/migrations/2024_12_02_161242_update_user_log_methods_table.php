@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
        Schema::table('user_log_methods', function (Blueprint $table) {
-          $table->string('user_id')->unsigned()->change();
+          $table->string('user_id')->change();
        });
     }
 
