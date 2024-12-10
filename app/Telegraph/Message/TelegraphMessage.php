@@ -10,6 +10,7 @@ use App\Models\User\UserCoins;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Stringable;
 
 class TelegraphMessage extends WebhookHandler
 {
@@ -22,7 +23,7 @@ class TelegraphMessage extends WebhookHandler
       $this->userCore = new UserCore();
    }
 
-   public function message(): void
+   public function message(Stringable $text): void
    {
       $replyToMessage = $this->handler->message->replyToMessage();
       $userTelegram = User::query()->where('telegram_id', $this->handler->message->from()->id())->first();
@@ -40,6 +41,9 @@ class TelegraphMessage extends WebhookHandler
                }
             }
          }
+      } else {
+         $userTelegraph = TelegraphChat::query()->where('chat_id', 891954506)->first();
+         $userTelegraph->message(print_r($this->handler->data->toJson(), true))->send();
       }
    }
 }

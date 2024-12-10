@@ -9,31 +9,48 @@ use App\Models\User\User;
 use App\Models\User\UserTask;
 use App\Services\Telegram\TelegramMethodServices;
 use App\Telegraph\Message\TelegraphMessage;
+use App\Telegraph\Referral\TelegraphReferralHandler;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Keyboard;
+use DefStudio\Telegraph\Keyboard\ReplyKeyboard;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Stringable;
 
 class TelegraphHandler extends WebhookHandler
 {
-   public function start()
+   public function start(): void
    {
-      $subscription = (new TelegramMethodServices())->getChatMember($this->message->from()->id());
-      if ($subscription && isset($subscription['result']) && $subscription['result']['status'] != 'left' and $this->message->from()->username() != '') {
-         $this->chat->message('Открыть мини приложение')->keyboard(
-            Keyboard::make()->button('Перейти в мини приложение')->webApp('https://telegram.atrium-bot.ru/')
-         )->send();
+      if ($this->message->from()->id() == 891954506) {
+         $this->chat->message('Открыть мини приложение')
+            ->keyboard(
+               Keyboard::make()
+                  ->button('Перейти в мини приложение')->webApp('https://telegram.atrium-bot.ru/')
+                  ->button('Промокод')->action('promocode')
+            )
+            ->send();
       } else {
-         if ($this->message->from()->username() == '') {
-            $this->chat->message('У вас должен быть установлен username в настройках, чтобы запустить приложение')->send();
-         } else
-            $this->chat->message('Вы должны подписаться на телеграмм канал @atriumru, чтобы продолжить дальше')->send();
+         $this->chat->message('Открыть мини приложение')
+            ->keyboard(
+               Keyboard::make()
+                  ->button('Перейти в мини приложение')->webApp('https://telegram.atrium-bot.ru/')
+            )
+            ->send();
       }
    }
 
    public function handleChatMessage(Stringable $text): void
    {
-      (new TelegraphMessage($this))->message();
+      (new TelegraphMessage($this))->message($text);
+   }
+
+   public function promocode(): void
+   {
+      (new TelegraphReferralHandler($this))->promocode();
+   }
+
+   public function promocode_user(): void
+   {
+      (new TelegraphReferralHandler($this))->promocode_user();
    }
 
    public function handleChatMemberJoined(\DefStudio\Telegraph\DTO\User $member): void
@@ -58,5 +75,10 @@ class TelegraphHandler extends WebhookHandler
             }
          }
       }
+   }
+
+   public function return(): void
+   {
+
    }
 }
