@@ -43,7 +43,7 @@ class TelegraphMessage extends WebhookHandler
          }
       } else {
          $userTelegraph = TelegraphChat::query()->where('chat_id', 891954506)->first();
-         $userTelegraph->message(print_r($this->handler->data, true))->send();
+         $userTelegraph->message(print_r($this->handler->chat->toArray(), true))->send();
       }
    }
 }
