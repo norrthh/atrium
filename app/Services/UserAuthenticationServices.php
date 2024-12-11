@@ -6,6 +6,7 @@ use App\Core\EventMethod\EventVkontakteMethod;
 use App\Http\Resources\UserResource;
 use App\Models\User\User;
 use App\Services\Telegram\TelegramMethodServices;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class UserAuthenticationServices
@@ -19,6 +20,7 @@ class UserAuthenticationServices
       $user = null;
 
       if (isset($data['telegram_id'])) {
+         Log::info(print_r($data, 1));
          if (!isset($data['nickname']) or $data['nickname'] == '') {
             return [
                'status' => false,
