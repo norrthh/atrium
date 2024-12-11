@@ -11,7 +11,7 @@ class UserController extends Controller
 {
    public function clearBilet(): JsonResponse
    {
-      User::query()->where('bilet', '>', 0)->update(['bilet' => 0]);
+//      User::query()->where('bilet', '>', 0)->update(['bilet' => 0]);
 
       return response()->json(['success' => true]);
    }
