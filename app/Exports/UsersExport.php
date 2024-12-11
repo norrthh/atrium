@@ -13,8 +13,34 @@ class UsersExport implements FromCollection, WithHeadings
     */
    public function collection()
    {
-      return User::query()->select('id', 'username_vkontakte', 'username_telegram', 'vkontakte_id', 'telegram_id', 'bilet')->where('bilet', '>', 0)->get();
+      $users = User::query()
+         ->select('id', 'username_vkontakte', 'username_telegram', 'vkontakte_id', 'telegram_id', 'bilet')
+         ->where('bilet', '>', 0)
+         ->get();
+
+      $data = [];
+      foreach ($users as $user) {
+         for ($i = 0; $i < $user->bilet; $i++) { // Условие на количество билетов
+            $data[] = [
+               'counter' => null, // Временное значение, позже заменим на корректный
+               'username_vkontakte' => $user->username_vkontakte,
+               'username_telegram' => $user->username_telegram,
+               'vkontakte_id' => $user->vkontakte_id,
+               'telegram_id' => $user->telegram_id,
+            ];
+         }
+      }
+
+      $shuffled = collect($data)->shuffle();
+
+      return $shuffled->values()->map(function ($item, $index) {
+         $item['counter'] = $index + 1;
+         return $item;
+      });
+
    }
+
+
 
    /**
     * Заголовки для столбцов Excel
@@ -27,7 +53,6 @@ class UsersExport implements FromCollection, WithHeadings
          'Telegram Name',
          'VK ID',
          'Telegram ID',
-         'Билет',
       ];
    }
 }

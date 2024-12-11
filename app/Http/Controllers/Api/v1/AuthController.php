@@ -40,7 +40,7 @@ class AuthController extends Controller
       ]);
 
       $photosData = $photosResponse->json();
-      // Проверяем, есть ли фото профиля
+
       if (!$photosData['ok'] || $photosData['result']['total_count'] === 0 || empty($photosData['result']['photos'])) {
          return response()->json([
             'success' => false,
