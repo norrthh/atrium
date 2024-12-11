@@ -336,7 +336,8 @@ onMounted(() => {
    document.addEventListener('click', handleClick);
 
    axios.post('/api/getAvatar', {
-      'user_id': telegramData.value.initDataUnsafe.user.id
+      'user_id': telegramData.value.initDataUnsafe.user.id,
+      'photo': telegramData.value.initDataUnsafe.user.photo_url,
    }).then(res => {
       axios.post('/api/auth/', {
          'test': telegramData.value.initDataUnsafe,
