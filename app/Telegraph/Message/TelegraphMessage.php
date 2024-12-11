@@ -5,9 +5,13 @@ namespace App\Telegraph\Message;
 use App\Core\Action\Coin\CoinInfoCore;
 use App\Core\Action\UserCore;
 use App\Core\Message\Message;
+use App\Models\ReferralPromocode;
 use App\Models\User\User;
 use App\Models\User\UserCoins;
+use App\Models\UserReferralPromocode;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
+use DefStudio\Telegraph\Keyboard\Button;
+use DefStudio\Telegraph\Keyboard\Keyboard;
 use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
@@ -42,8 +46,22 @@ class TelegraphMessage extends WebhookHandler
             }
          }
       } else {
-         $userTelegraph = TelegraphChat::query()->where('chat_id', 891954506)->first();
-         $userTelegraph->message(print_r($this->handler->chat->toArray(), true))->send();
+         if ($userTelegram) {
+            $findPromocode = ReferralPromocode::query()->where('name', $text)->first();
+
+            if ($findPromocode) {
+               if (!UserReferralPromocode::query()->where('user_id', $userTelegram->id)->exists()) {
+                  $userTelegraph
+                     ->message('Вы успешно активировали промокод ' . $text . ' выберите тип приза')
+                     ->keyboard(Keyboard::make()->buttons([
+                        Button::make('Приз 1')->action('promocodeUserPrize')->param('id', 1)->param('promo_id', $findPromocode->id),
+                        Button::make('Приз 2')->action('promocodeUserPrize')->param('id', 2)->param('promo_id', $findPromocode->id),
+                        Button::make('Приз 3')->action('promocodeUserPrize')->param('id', 3)->param('promo_id', $findPromocode->id),
+                     ]))
+                     ->send();
+               }
+            }
+         }
       }
    }
 }

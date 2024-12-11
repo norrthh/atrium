@@ -91,6 +91,14 @@ Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
          Route::prefix('users')->group(function () {
             Route::post('/search', [\App\Http\Controllers\Api\v1\Admin\UsersController::class, 'search']);
          });
+
+         Route::prefix('export')->group(function () {
+            Route::post('/', [\App\Http\Controllers\Api\v1\Export\UserExportController::class, 'index']);
+         });
+
+         Route::prefix('user')->group(function () {
+            Route::post('/clear/bilet', [\App\Http\Controllers\Api\v1\Admin\UserController::class, 'clearBilet']);
+         });
       });
 
       Route::prefix('withdraw')->group(function () {

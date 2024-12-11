@@ -3,6 +3,7 @@
 namespace App\Telegraph\Referral;
 
 use App\Core\Action\UserCore;
+use App\Facades\WithdrawUser;
 use App\Models\ReferralPromocode;
 use App\Models\User\User;
 use App\Models\UserReferralPromocode;
@@ -82,6 +83,73 @@ class TelegraphReferralHandler extends WebhookHandler
             ->edit($this->handler->messageId)
             ->message('Ваши реферралы')->keyboard(Keyboard::make()->buttons($buttons))
             ->send();
+      }
+   }
+
+   public function promocodeUserPrize(): void
+   {
+      $prizes = [
+         1 => [
+            'Приз 1',
+            'Приз 2',
+            'Приз 3',
+         ],
+         2 => [
+            'Приз 3',
+            'Приз 4',
+            'Приз 5',
+         ],
+         3 => [
+            'Приз 6',
+            'Приз 7',
+            'Приз 8',
+         ],
+      ];
+
+      $this->handler->chat
+         ->edit($this->handler->messageId)
+         ->message(
+            "Вы выбрали приз " . $this->handler->data['id'] .
+            "\nТип призов:\n" . implode("\n", $prizes[$this->handler->data['id']])
+         )
+         ->keyboard(Keyboard::make()->buttons([
+            Button::make('Выбрать приз' . ($this->handler->data['id'] == 1 ? 2 : ($this->handler->data['id'] == 2 ? 3 : 1)))
+               ->action('promocodeUserPrizeActivate')
+               ->param('id', ($this->handler->data['id'] == 1 ? 2 : ($this->handler->data['id'] == 2 ? 3: 1)))->param('promo_id', $this->handler->data['promo_id']),
+
+            Button::make('Выбрать приз' . ($this->handler->data['id'] == 1 ? 3 : ($this->handler->data['id'] == 2 ? 1 : 2)))
+               ->action('promocodeUserPrizeActivate')
+               ->param('id', $this->handler->data['id'] == 1 ? 3 : ($this->handler->data['id'] == 2 ? 1 : 2))->param('promo_id', $this->handler->data['promo_id']),
+
+            Button::make('Активировать')->action('promocodeUserPrizeActivate')->param('id', $this->handler->data['id'])->param('promo_id', $this->handler->data['promo_id']),
+         ]))
+         ->send();
+   }
+
+   public function promocodeUserPrizeActivate(): void
+   {
+      $userTelegram = User::query()->where('telegram_id', $this->handler->callbackQuery->from()->id())->first();
+
+      if (!UserReferralPromocode::query()->where('user_id', $userTelegram->id)->exists()) {
+         $prizes = [
+            1 => [1, 2, 3],
+            2 => [1, 2, 3],
+            3 => [1, 2, 3],
+         ];
+
+         foreach ($prizes[$this->handler->data['id']] as $prize) {
+            WithdrawUser::store($prize, 1, $userTelegram->id);
+
+         }
+
+         UserReferralPromocode::query()->create([
+            'user_id' => $userTelegram->id,
+            'referral_promocode_id' => $this->handler->data['promo_id']
+         ]);
+
+         $this->handler->chat->edit($this->handler->messageId)->message('Вы успешно активировали приз')->send();
+      } else {
+         $this->handler->chat->edit($this->handler->messageId)->message('Вы уже активировали приз')->send();
       }
    }
 }

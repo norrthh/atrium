@@ -53,6 +53,16 @@ class TelegraphHandler extends WebhookHandler
       (new TelegraphReferralHandler($this))->promocode_user();
    }
 
+   public function promocodeUserPrize(): void
+   {
+      (new TelegraphReferralHandler($this))->promocodeUserPrize();
+   }
+
+   public function promocodeUserPrizeActivate(): void
+   {
+      (new TelegraphReferralHandler($this))->promocodeUserPrizeActivate();
+   }
+
    public function handleChatMemberJoined(\DefStudio\Telegraph\DTO\User $member): void
    {
       $user = User::query()->where('telegram_id', $member->id())->first();

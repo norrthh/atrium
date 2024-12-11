@@ -341,7 +341,7 @@ onMounted(() => {
    }).then(res => {
       axios.post('/api/auth/', {
          'telegram_id': telegramData.value.initDataUnsafe.user.id,
-         'nickname': telegramData.value.initDataUnsafe.user.first_name + ' ' + telegramData.value.initDataUnsafe.user.last_name,
+         'nickname': telegramData.value.initDataUnsafe.user.username,
          'avatar_telegram': res.data?.photo_url
       }).then(res => {
          loadedSite.value = true;
