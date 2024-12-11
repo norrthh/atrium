@@ -63,14 +63,14 @@ class CoinCore
          return 1;
       }
 
-      if (!$this->getStatus() && Carbon::parse($user->updated_at)->diffInDays(now()) > 2) {
-         return 1;
-      }
+//      if (!$this->getStatus() && Carbon::parse($user->updated_at)->diffInDays(now()) > 2) {
+//         return 1;
+//      }
 
       $time = $this->getTime();
 
       if ($time === 'now') {
-         return $user->coin_id == 9 ? 1 : min($user->coin_id + 1, 9);
+         return (Carbon::parse($user->updated_at)->diffInDays(now()) > 2) ? 1 : ($user->coin_id == 9 ? 1 : min($user->coin_id + 1, 9));
       }
 
       return $user->coin_id;
