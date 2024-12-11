@@ -26,7 +26,7 @@ class AuthController extends Controller
       $userId = $request->get('user_id');
       $photo = $request->get('photo');
 
-      if ($photo) {
+      if (isset($photo)) {
             return response()->json([
                'success' => true,
                'message' => 'Фото успешно сохранено!',
