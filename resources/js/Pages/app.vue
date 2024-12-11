@@ -241,95 +241,94 @@ const telegramData = ref(null);
 if (Object.keys(window.Telegram.WebApp.initDataUnsafe).length !== 0) {
    telegramData.value = window.Telegram.WebApp; // Если данные есть, используем их
 } else {
-   // Если данных нет, устанавливаем тестовые значения
-   // telegramData.value = {
-   //    "initData": "user=%7B%22id%22%3A891954506%2C%22first_name%22%3A%22%D0%90%D1%8F%D0%B7%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22norrthh%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-7945443225735177088&chat_type=private&auth_date=1726175825&hash=e75f3598d93782f6c71daff1bb41db674233f3eb55261e254dd7b1c1fedb19fb",
-   //    "initDataUnsafe": {
-   //       "user": {
-   //          "id": 891954506,
-   //          "first_name": "Аяз",
-   //          "last_name": "",
-   //          "username": "",
-   //          "language_code": "ru",
-   //          "is_premium": true,
-   //          "allows_write_to_pm": true
-   //       },
-   //       "chat_instance": "-7945443225735177088",
-   //       "chat_type": "private",
-   //       "auth_date": "1726175825",
-   //       "hash": "e75f3598d93782f6c71daff1bb41db674233f3eb55261e254dd7b1c1fedb19fb"
-   //    },
-   //    "version": "7.10",
-   //    "platform": "tdesktop",
-   //    "colorScheme": "dark",
-   //    "themeParams": {
-   //       "accent_text_color": "#79e8da",
-   //       "bg_color": "#282e33",
-   //       "bottom_bar_bg_color": "#282e33",
-   //       "button_color": "#3fc1b0",
-   //       "button_text_color": "#ffffff",
-   //       "destructive_text_color": "#f57474",
-   //       "header_bg_color": "#282e33",
-   //       "hint_color": "#82868a",
-   //       "link_color": "#4be1c3",
-   //       "secondary_bg_color": "#313b43",
-   //       "section_bg_color": "#282e33",
-   //       "section_header_text_color": "#4be1c3",
-   //       "section_separator_color": "#242a2e",
-   //       "subtitle_text_color": "#82868a",
-   //       "text_color": "#f5f5f5"
-   //    },
-   //    "isExpanded": true,
-   //    "viewportHeight": 590,
-   //    "viewportStableHeight": 590,
-   //    "isClosingConfirmationEnabled": false,
-   //    "isVerticalSwipesEnabled": true,
-   //    "headerColor": "#282e33",
-   //    "backgroundColor": "#282e33",
-   //    "bottomBarColor": "#282e33",
-   //    "BackButton": {
-   //       "isVisible": false
-   //    },
-   //    "MainButton": {
-   //       "type": "main",
-   //       "text": "Continue",
-   //       "color": "#3fc1b0",
-   //       "textColor": "#ffffff",
-   //       "isVisible": false,
-   //       "isProgressVisible": false,
-   //       "isActive": true,
-   //       "hasShineEffect": false
-   //    },
-   //    "SecondaryButton": {
-   //       "type": "secondary",
-   //       "text": "Cancel",
-   //       "color": "#282e33",
-   //       "textColor": "#3fc1b0",
-   //       "isVisible": false,
-   //       "isProgressVisible": false,
-   //       "isActive": true,
-   //       "hasShineEffect": false,
-   //       "position": "left"
-   //    },
-   //    "SettingsButton": {
-   //       "isVisible": false
-   //    },
-   //    "HapticFeedback": {},
-   //    "CloudStorage": {},
-   //    "BiometricManager": {
-   //       "isInited": false,
-   //       "isBiometricAvailable": false,
-   //       "biometricType": "unknown",
-   //       "isAccessRequested": false,
-   //       "isAccessGranted": false,
-   //       "isBiometricTokenSaved": false,
-   //       "deviceId": ""
-   //    }
-   // };
+   telegramData.value = {
+      "initData": "user=%7B%22id%22%3A891954506%2C%22first_name%22%3A%22%D0%90%D1%8F%D0%B7%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22norrthh%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-7945443225735177088&chat_type=private&auth_date=1726175825&hash=e75f3598d93782f6c71daff1bb41db674233f3eb55261e254dd7b1c1fedb19fb",
+      "initDataUnsafe": {
+         "user": {
+            "id": 891954506,
+            "first_name": "Аяз",
+            "last_name": "",
+            "username": "",
+            "language_code": "ru",
+            "is_premium": true,
+            "allows_write_to_pm": true
+         },
+         "chat_instance": "-7945443225735177088",
+         "chat_type": "private",
+         "auth_date": "1726175825",
+         "hash": "e75f3598d93782f6c71daff1bb41db674233f3eb55261e254dd7b1c1fedb19fb"
+      },
+      "version": "7.10",
+      "platform": "tdesktop",
+      "colorScheme": "dark",
+      "themeParams": {
+         "accent_text_color": "#79e8da",
+         "bg_color": "#282e33",
+         "bottom_bar_bg_color": "#282e33",
+         "button_color": "#3fc1b0",
+         "button_text_color": "#ffffff",
+         "destructive_text_color": "#f57474",
+         "header_bg_color": "#282e33",
+         "hint_color": "#82868a",
+         "link_color": "#4be1c3",
+         "secondary_bg_color": "#313b43",
+         "section_bg_color": "#282e33",
+         "section_header_text_color": "#4be1c3",
+         "section_separator_color": "#242a2e",
+         "subtitle_text_color": "#82868a",
+         "text_color": "#f5f5f5"
+      },
+      "isExpanded": true,
+      "viewportHeight": 590,
+      "viewportStableHeight": 590,
+      "isClosingConfirmationEnabled": false,
+      "isVerticalSwipesEnabled": true,
+      "headerColor": "#282e33",
+      "backgroundColor": "#282e33",
+      "bottomBarColor": "#282e33",
+      "BackButton": {
+         "isVisible": false
+      },
+      "MainButton": {
+         "type": "main",
+         "text": "Continue",
+         "color": "#3fc1b0",
+         "textColor": "#ffffff",
+         "isVisible": false,
+         "isProgressVisible": false,
+         "isActive": true,
+         "hasShineEffect": false
+      },
+      "SecondaryButton": {
+         "type": "secondary",
+         "text": "Cancel",
+         "color": "#282e33",
+         "textColor": "#3fc1b0",
+         "isVisible": false,
+         "isProgressVisible": false,
+         "isActive": true,
+         "hasShineEffect": false,
+         "position": "left"
+      },
+      "SettingsButton": {
+         "isVisible": false
+      },
+      "HapticFeedback": {},
+      "CloudStorage": {},
+      "BiometricManager": {
+         "isInited": false,
+         "isBiometricAvailable": false,
+         "biometricType": "unknown",
+         "isAccessRequested": false,
+         "isAccessGranted": false,
+         "isBiometricTokenSaved": false,
+         "deviceId": ""
+      }
+   };
 }
 
 let userAvatar = ref()
-
+let checkNickName = ref(true)
 onMounted(() => {
    if (props.page) {
       selectPage.value = props.page;
@@ -344,18 +343,22 @@ onMounted(() => {
          'nickname': telegramData.value.initDataUnsafe.user.username,
          'avatar_telegram': res.data?.photo_url
       }).then(res => {
-         loadedSite.value = true;
-         user.value = res.data.user;
-         bearer_token.value = res.data.token;
-         localStorage.setItem('bearer', res.data.token);
+         if (res.data.status === false) {
+            checkNickName.value = false
+         } else {
+            loadedSite.value = true;
+            user.value = res.data.user;
+            bearer_token.value = res.data.token;
+            localStorage.setItem('bearer', res.data.token);
 
-         axios.defaults.headers.common["Authorization"] = "Bearer " + res.data.token;
+            axios.defaults.headers.common["Authorization"] = "Bearer " + res.data.token;
 
-         if (res.data.notification.status) {
-            checkNotification();
-            isCheckNotification.value = true;
-            notification.value = res.data.notification.data;
-            axios.post('/api/notification/ready');
+            if (res.data.notification.status) {
+               checkNotification();
+               isCheckNotification.value = true;
+               notification.value = res.data.notification.data;
+               axios.post('/api/notification/ready');
+            }
          }
       });
    })
@@ -826,15 +829,15 @@ const sendRequestCheckTask = () => {
                         <img src="/ayazik/arrow-right.svg" alt="">
                      </div>
 
-<!--                     <div @click="boustModal"-->
-<!--                          class="flex gap-4 items-center bg-black opacity-20 p-4 rounded-full text-white justify-between">-->
-<!--                        <div class="flex items-center gap-4">-->
-<!--                           <div class="bg-[#FFFFFF0F] rounded-full p-4"><img src="/ayazik/secret.svg" alt=""-->
-<!--                                                                             class="h-[18px]"></div>-->
-<!--                           <h2 class="">СЕКРЕТНЫЙ БУСТ</h2>-->
-<!--                        </div>-->
-<!--                        <img src="/ayazik/arrow-right.svg" alt="">-->
-<!--                     </div>-->
+                     <!--                     <div @click="boustModal"-->
+                     <!--                          class="flex gap-4 items-center bg-black opacity-20 p-4 rounded-full text-white justify-between">-->
+                     <!--                        <div class="flex items-center gap-4">-->
+                     <!--                           <div class="bg-[#FFFFFF0F] rounded-full p-4"><img src="/ayazik/secret.svg" alt=""-->
+                     <!--                                                                             class="h-[18px]"></div>-->
+                     <!--                           <h2 class="">СЕКРЕТНЫЙ БУСТ</h2>-->
+                     <!--                        </div>-->
+                     <!--                        <img src="/ayazik/arrow-right.svg" alt="">-->
+                     <!--                     </div>-->
                   </div>
                </section>
                <section class="flex flex-col w-full gap-12"
@@ -1909,6 +1912,17 @@ const sendRequestCheckTask = () => {
                   class="flex bg-white text-black items-center gap-4 justify-center w-full py-6 rounded-3xl mt-[20px]">
                   <p class="text-lg font-black text-center uppercase">подписаться на vk Donut</p>
                </a>
+            </div>
+         </div>
+      </div>
+
+      <div class="modal-promo" v-if="!checkNickName">
+         <div class="modal-content">
+            <div class="modal-header"></div>
+            <div class="modal-title justify-center">
+               <div class="content text-center">
+                  Чтобы воспользоваться приложением необходимо в настройках телеграмм указать никнейм
+               </div>
             </div>
          </div>
       </div>
