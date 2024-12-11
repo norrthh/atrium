@@ -33,11 +33,7 @@ class CumbackPlayerEvent extends Command
     */
    public function handle()
    {
-      while (true) {
-         $this->filterEvent(EventPrize::query()->where('status', 0)->get());
-
-         sleep(5);
-      }
+      $this->filterEvent(EventPrize::query()->where('status', 0)->get());
    }
 
    protected function storeEventCumback(int $user_id, int $event_id): void

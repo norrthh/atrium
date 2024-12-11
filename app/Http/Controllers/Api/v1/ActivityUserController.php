@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\LastActivityUserResource;
+use App\Http\Resources\UserActivityResource;
 use App\Http\Resources\UserResource;
 use App\Models\LastActivity;
 use App\Models\User\User;
@@ -13,7 +15,7 @@ class ActivityUserController extends Controller
 {
     public function now(Request $request)
     {
-        return UserResource::collection(
+        return UserActivityResource::collection(
            User::query()
               ->orderBy('coins_week', 'desc')
               ->where('username_telegram', '!=', '')
@@ -23,8 +25,12 @@ class ActivityUserController extends Controller
         );
     }
 
-    public function last(): Collection
+    public function last(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return LastActivity::query()->with('user')->take(5)->get();
+       return LastActivityUserResource::collection(
+          LastActivity::query()
+             ->orderBy('count', 'desc')
+             ->get()
+       );
     }
 }

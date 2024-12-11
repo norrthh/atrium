@@ -27,33 +27,29 @@ class Mailing extends Command
     */
    public function handle()
    {
-      while (true) {
-         $mailings = \App\Models\Mailing::query()->where('status', 0)->get();
+      $mailings = \App\Models\Mailing::query()->where('status', 0)->get();
 
-         foreach ($mailings as $mailing) {
-            $this->info('Mailings ' . $mailing->id . ' send start');
-            $telegraphs = TelegraphChat::query()->where('chat_id', '>', 0)->get()->filter(function ($user) use ($mailing) {
-               return !(UserMailingLogs::query()->where([['telegraph_id', $user->id], ['mailing_id', $mailing->id]])->first());
-            });
+      foreach ($mailings as $mailing) {
+         $this->info('Mailings ' . $mailing->id . ' send start');
+         $telegraphs = TelegraphChat::query()->where('chat_id', '>', 0)->get()->filter(function ($user) use ($mailing) {
+            return !(UserMailingLogs::query()->where([['telegraph_id', $user->id], ['mailing_id', $mailing->id]])->first());
+         });
 
-            foreach ($telegraphs as $telegraph) {
-               $response = TelegraphChat::query()->where('id', $telegraph->id)->first()->message($mailing->text)->send();
+         foreach ($telegraphs as $telegraph) {
+            $response = TelegraphChat::query()->where('id', $telegraph->id)->first()->message($mailing->text)->send();
 
-               UserMailingLogs::query()->create([
-                  'mailing_id' => $mailing->id,
-                  'telegraph_id' => $telegraph->id,
-                  'response' => $response->json(),
-               ]);
-            }
-
-            \App\Models\Mailing::query()->where('id', $mailing->id)->update([
-               'status' => 1
+            UserMailingLogs::query()->create([
+               'mailing_id' => $mailing->id,
+               'telegraph_id' => $telegraph->id,
+               'response' => $response->json(),
             ]);
-
-            $this->info('Mailings ' . $mailing->id . ' send end');
          }
 
-         sleep(5);
+         \App\Models\Mailing::query()->where('id', $mailing->id)->update([
+            'status' => 1
+         ]);
+
+         $this->info('Mailings ' . $mailing->id . ' send end');
       }
    }
 }

@@ -27,19 +27,16 @@ class Task extends Command
     */
    public function handle()
    {
-      while (true) {
-         $tasks = Tasks::query()->where('status', 0)->get();
+      $tasks = Tasks::query()->where('status', 0)->get();
 
-         foreach ($tasks as $item) {
-            if ($item->access['type'] == 1) {
-               if (Carbon::parse($item->created_at)->diffInMinutes(now()) >= $item->access['value']) {
-                  Tasks::query()->where('id', $item->id)->update([
-                     'status' => 1
-                  ]);
-               }
+      foreach ($tasks as $item) {
+         if ($item->access['type'] == 1) {
+            if (Carbon::parse($item->created_at)->diffInMinutes(now()) >= $item->access['value']) {
+               Tasks::query()->where('id', $item->id)->update([
+                  'status' => 1
+               ]);
             }
          }
-         sleep(5);
       }
    }
 }
