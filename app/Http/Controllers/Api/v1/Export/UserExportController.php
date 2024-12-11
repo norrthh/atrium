@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class UserExportController extends Controller
 {
-   public function index(): BinaryFileResponse
+   public function index()
    {
       return Excel::download(new UsersExport, 'users.xlsx');
    }
