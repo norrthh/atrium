@@ -32,16 +32,14 @@ class TestCommand extends Command
    {
       $now = Carbon::now();
 
-//      if ($now->isSunday()) {
+      if ($now->isSunday()) {
          $users = User::query()
             ->orderBy('coins_week', 'desc')
-            ->where('username_telegram', '!=', '')
-            ->orWhere('username_vkontakte', '!=', '')
             ->take(5)
             ->get();
 
-      LastActivity::query()->delete();
-      DB::statement('ALTER TABLE `last_activities` AUTO_INCREMENT = 1');
+         LastActivity::query()->delete();
+         DB::statement('ALTER TABLE `last_activities` AUTO_INCREMENT = 1');
 
          foreach ($users as $user) {
             LastActivity::query()->create([
@@ -53,7 +51,7 @@ class TestCommand extends Command
          User::query()->update([
             'coins_week' => 0
          ]);
-//      }
+      }
    }
 
 }

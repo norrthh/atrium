@@ -41,7 +41,7 @@ Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
          Route::post('/check', [TaskController::class, 'check']);
       });
 
-      Route::prefix('admin')->group(function () {
+      Route::prefix('admin')->middleware(\App\Http\Middleware\AdminMiddleware::class)->group(function () {
          Route::prefix('items')->group(function () {
             Route::get('/', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'index']);
             Route::get('/all', [\App\Http\Controllers\Api\v1\Admin\ItemsController::class, 'all']);
@@ -113,8 +113,6 @@ Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
       Route::prefix('shop')->group(function () {
          Route::post('/', [\App\Http\Controllers\Api\v1\ShopController::class, 'index']);
          Route::post('/buyItem', [\App\Http\Controllers\Api\v1\ShopController::class, 'buyItem']);
-         // buy
-         // list
       });
 
       Route::prefix('auction')->group(function () {

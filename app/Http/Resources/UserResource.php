@@ -38,7 +38,8 @@ class UserResource extends JsonResource
           'created_at' => $this->created_at,
           'connect_social' => $this->telegram_id and $this->vkontakte_id,
           'tg_name' => $this->username_telegram,
-          'vk_name' => $this->username_vkontakte
+          'vk_name' => $this->username_vkontakte,
+          'admin' => $this->admin
        ];
     }
 }
