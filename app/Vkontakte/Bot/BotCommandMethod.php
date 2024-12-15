@@ -27,7 +27,11 @@ class BotCommandMethod
    public function command(): void
    {
       $messageText = $this->vkData['object']['message']['text'];
-      if (isset($messageText) and $this->user_id > 0 and $this->vkData['object']['message']['peer_id'] != env('VKONTAKTE_CHAT_ID')) {
+      if (
+         isset($messageText) and $this->user_id > 0
+         and $this->vkData['object']['message']['peer_id'] != env('VKONTAKTE_CHAT_ID')
+         and $this->vkData['object']['message']['peer_id'] != env('VKONTAKTE_CHAT_ID2')
+      ) {
          switch ($messageText) {
             case in_array($messageText, ['/start', 'Начать', 'меню', 'Меню', 'начать', 'старт']):
                (new BotCommandMainMethod($this->vkData))->start();
