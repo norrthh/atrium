@@ -29,7 +29,7 @@ class VkontakteGroupMethod
                   ]);
 
                   $taskItem = TaskItems::query()->where('task_id', $task->id)->first();
-                  WithdrawUser::store($taskItem->item_id, $taskItem->count);
+                  WithdrawUser::store($taskItem->item_id, $taskItem->count, $user->id);
                }
             }
          }
