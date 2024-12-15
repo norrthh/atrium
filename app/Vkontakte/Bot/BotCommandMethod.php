@@ -77,13 +77,20 @@ class BotCommandMethod
                break;
          }
       } else {
-         if ($this->vkData['object']['message']['peer_id'] != env('VKONTAKTE_CHAT_ID')) {
+         if ($this->vkData['object']['message']['peer_id'] != env('VKONTAKTE_CHAT_ID') and $this->vkData['object']['message']['peer_id'] != env('VKONTAKTE_CHAT_ID2')) {
             $this->message->sendAPIMessage(
                userId: $this->user_id,
                message: 'Такой кнопки не существует. Перенаправляю в меню... 😃',
             );
 
             (new BotCommandMainMethod($this->vkData))->start();
+         }
+
+         if ($messageText == 'peer') {
+            $this->message->sendAPIMessage(
+               userId: $this->user_id,
+               message: 'peer_id: ' . $this->vkData['object']['message']['peer_id']
+            );
          }
       }
    }
