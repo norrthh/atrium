@@ -45,13 +45,13 @@ class ReferralServices
          ->get();
 
       // Логируем данные
-      Log::info('page:' . $page);
-      Log::info('skip:' . $offset);
-      Log::info('take:' . $perPage);
-      Log::info('totalPages:' . $totalPages);
-      Log::info('totalRecords:' . $totalRecords);
-      Log::info('userReferrals count:' . $userReferrals->count());
-      Log::info('referralPromocodeId:' . $referralPromocodeId);
+//      Log::info('page:' . $page);
+//      Log::info('skip:' . $offset);
+//      Log::info('take:' . $perPage);
+//      Log::info('totalPages:' . $totalPages);
+//      Log::info('totalRecords:' . $totalRecords);
+//      Log::info('userReferrals count:' . $userReferrals->count());
+//      Log::info('referralPromocodeId:' . $referralPromocodeId);
 
       return [
          'userReferrals' => $userReferrals,

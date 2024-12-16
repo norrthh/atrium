@@ -19,8 +19,6 @@ class UserAuthenticationServices
    {
       $user = null;
 
-      Log::info(print_r($data, 1));
-
       if (isset($data['telegram_id'])) {
          if (!isset($data['nickname']) or $data['nickname'] == '') {
             return [
