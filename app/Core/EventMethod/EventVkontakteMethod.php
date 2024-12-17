@@ -20,12 +20,10 @@ class EventVkontakteMethod extends Message implements EventSocialMethod
 
       $test = $client->get('https://api.vk.com/method/wall.post', [
          'query' => [
-//            'owner_id' => '-' . 226193787,
-            'owner_id' => '-' . 226193787,
+            'owner_id' => '-' . env('VKONTAKTE_GROUP_ID'),
             'message' => $message,
             'attachments' => $this->uploadPhoto($filePath),
-//            'access_token' =>'vk1.a.CtIyzdbSd5bxngHXosmGmH6U0wzlMDqfp6SP1bO8arxRnX3UfYRdylHQKai727wmPpFQURMjTXhog6d5AqwgUO0oUbqfn8d8OEodyQe_K2fjLuHS0c-B3-247PK2zwrkDJ3f2Z5RR-C-KEkhamFQ4oz3Q0PjnQcrfuCDZ9-z_LRu80Hx9WrF2Kku6ItbIEXloR_mlypc25RlEdFWbNCU5g',
-            'access_token' => 'vk1.a.CtIyzdbSd5bxngHXosmGmH6U0wzlMDqfp6SP1bO8arxRnX3UfYRdylHQKai727wmPpFQURMjTXhog6d5AqwgUO0oUbqfn8d8OEodyQe_K2fjLuHS0c-B3-247PK2zwrkDJ3f2Z5RR-C-KEkhamFQ4oz3Q0PjnQcrfuCDZ9-z_LRu80Hx9WrF2Kku6ItbIEXloR_mlypc25RlEdFWbNCU5g',
+            'access_token' => env('VKONTAKTE_TOKEN'),
             'v' => env('VKONTAKTE_VERSION'),
          ]
       ]);
@@ -44,9 +42,9 @@ class EventVkontakteMethod extends Message implements EventSocialMethod
 
       $response = $client->post('https://api.vk.com/method/wall.closeComments', [
          'form_params' => [
-            'owner_id' => '-' . 226193787,
+            'owner_id' => '-' . env('VKONTAKTE_GROUP_ID'),
             'post_id' => $postId,
-            'access_token' =>'vk1.a.CtIyzdbSd5bxngHXosmGmH6U0wzlMDqfp6SP1bO8arxRnX3UfYRdylHQKai727wmPpFQURMjTXhog6d5AqwgUO0oUbqfn8d8OEodyQe_K2fjLuHS0c-B3-247PK2zwrkDJ3f2Z5RR-C-KEkhamFQ4oz3Q0PjnQcrfuCDZ9-z_LRu80Hx9WrF2Kku6ItbIEXloR_mlypc25RlEdFWbNCU5g',
+            'access_token' =>env('VKONTAKTE_TOKEN'),
             'v' => env('VKONTAKTE_VERSION'),
          ],
       ]);
@@ -61,23 +59,23 @@ class EventVkontakteMethod extends Message implements EventSocialMethod
       if (!$image) {
          $client->post('https://api.vk.com/method/wall.createComment', [
             'form_params' => [
-               'owner_id' => '-' . 226193787,
+               'owner_id' => '-' . env('VKONTAKTE_GROUP_ID'),
                'post_id' => $postId,
                'message' => $message,
                'reply_to_comment' => $commentId,
-               'access_token' =>'vk1.a.CtIyzdbSd5bxngHXosmGmH6U0wzlMDqfp6SP1bO8arxRnX3UfYRdylHQKai727wmPpFQURMjTXhog6d5AqwgUO0oUbqfn8d8OEodyQe_K2fjLuHS0c-B3-247PK2zwrkDJ3f2Z5RR-C-KEkhamFQ4oz3Q0PjnQcrfuCDZ9-z_LRu80Hx9WrF2Kku6ItbIEXloR_mlypc25RlEdFWbNCU5g',
+               'access_token' =>env('VKONTAKTE_TOKEN'),
                'v' => env('VKONTAKTE_VERSION'),
             ],
          ]);
       } else {
          $client->post('https://api.vk.com/method/wall.createComment', [
             'form_params' => [
-               'owner_id' => '-' . 226193787,
+               'owner_id' => '-' . env('VKONTAKTE_GROUP_ID'),
                'post_id' => $postId,
                'message' => $message,
                'reply_to_comment' => $commentId,
                'attachments' => $image ? $this->uploadPhoto($image) : null,
-               'access_token' =>'vk1.a.CtIyzdbSd5bxngHXosmGmH6U0wzlMDqfp6SP1bO8arxRnX3UfYRdylHQKai727wmPpFQURMjTXhog6d5AqwgUO0oUbqfn8d8OEodyQe_K2fjLuHS0c-B3-247PK2zwrkDJ3f2Z5RR-C-KEkhamFQ4oz3Q0PjnQcrfuCDZ9-z_LRu80Hx9WrF2Kku6ItbIEXloR_mlypc25RlEdFWbNCU5g',
+               'access_token' =>env('VKONTAKTE_TOKEN'),
                'v' => env('VKONTAKTE_VERSION'),
             ],
          ]);
