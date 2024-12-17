@@ -52,6 +52,7 @@ class EventsServices
 
    public function calculatePrize(int $totalComments, int $baseThreshold): bool
    {
+      return true;
       $prizeChances = [
          10 => 0.10,
          20 => 0.20,
