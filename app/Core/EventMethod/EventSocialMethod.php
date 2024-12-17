@@ -11,6 +11,5 @@ interface EventSocialMethod
    public function replyWallComment(int $postId, string $message, int $commentId, $image = null);
    public function checkSubscriptionGroup(int $userId);
    public function checkSubscriptionMailing(int $userId);
-
    public function checkVkDonutSubscription(int $userId);
 }

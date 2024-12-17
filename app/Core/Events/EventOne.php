@@ -25,7 +25,7 @@ class EventOne extends EventsServices
 
       if ($findEvent) {
          if (EventPrize::query()->where([['event_id', $findEvent->id], ['status', 0]])->exists()) {
-            if ($sendMessageUser == $findEvent->word) {
+            if (mb_strtolower($sendMessageUser) == mb_strtolower($findEvent->word)) {
                if ($this->checkLastMessage($post_id, $findEvent, $comment_id, $socialMethod)) {
                   if ($this->checkMailing($user_id, $findEvent, $post_id, $comment_id, $socialMethod)) {
                      if ($this->checkAttempt($user_id, $findEvent, $post_id, $comment_id, $socialMethod)) {
