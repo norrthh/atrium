@@ -20,10 +20,12 @@ class EventVkontakteMethod extends Message implements EventSocialMethod
 
       $test = $client->get('https://api.vk.com/method/wall.post', [
          'query' => [
-            'owner_id' => '-' . env('VKONTAKTE_GROUP_ID'),
+//            'owner_id' => '-' . env('VKONTAKTE_GROUP_ID'),
+            'owner_id' => '-' . 226193787,
             'message' => $message,
             'attachments' => $this->uploadPhoto($filePath),
-            'access_token' => env('VKONTAKTE_TOKEN'),
+//            'access_token' => env('VKONTAKTE_TOKEN'),
+            'access_token' => 'vk1.a.CtIyzdbSd5bxngHXosmGmH6U0wzlMDqfp6SP1bO8arxRnX3UfYRdylHQKai727wmPpFQURMjTXhog6d5AqwgUO0oUbqfn8d8OEodyQe_K2fjLuHS0c-B3-247PK2zwrkDJ3f2Z5RR-C-KEkhamFQ4oz3Q0PjnQcrfuCDZ9-z_LRu80Hx9WrF2Kku6ItbIEXloR_mlypc25RlEdFWbNCU5g',
             'v' => env('VKONTAKTE_VERSION'),
          ]
       ]);

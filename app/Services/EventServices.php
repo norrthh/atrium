@@ -30,8 +30,8 @@ class EventServices
 
       $data['social_type'] = $type;
       $data['postMessage'] = $postMessage;
-//      $data['post_id'] = (new EventVkontakteMethod())->sendWallMessage($data['bg']['postImage'], $postMessage)['response']['post_id'];
-      $data['post_id'] = 123;
+      $data['post_id'] = (new EventVkontakteMethod())->sendWallMessage($data['bg']['postImage'], $postMessage)['response']['post_id'];
+//      $data['post_id'] = 123;
       $data['status'] = $data['type'] == 5 ? $data['typeActivate'] : 0;
       $event = $this->store($data);
 
