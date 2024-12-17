@@ -30,7 +30,8 @@ class EventServices
 
       $data['social_type'] = $type;
       $data['postMessage'] = $postMessage;
-      $data['post_id'] = (new EventVkontakteMethod())->sendWallMessage($data['bg']['postImage'], $postMessage)['response']['post_id'];
+//      $data['post_id'] = (new EventVkontakteMethod())->sendWallMessage($data['bg']['postImage'], $postMessage)['response']['post_id'];
+      $data['post_id'] = 123;
       $data['status'] = $data['type'] == 5 ? $data['typeActivate'] : 0;
       $event = $this->store($data);
 
@@ -70,7 +71,7 @@ class EventServices
       foreach ($prizes as $prize) {
          EventPrize::query()->create([
             'event_id' => $event_id,
-            'withdraw_items_id' => $prize['name']['id'],
+            'items_id' => $prize['name']['id'],
             'count_prize' => $prize['count'],
             'word' => $prize['word'] ?? $word
          ]);

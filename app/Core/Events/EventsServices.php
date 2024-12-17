@@ -82,7 +82,7 @@ class EventsServices
       $findPrize = EventPrize::query()->where([['event_id', $event_id], ['status', 0], ['word', $word]])->first();
 
       if ($findPrize) {
-         $this->giveItemUser($userID, $event_id, $findPrize->withdraw_items_id, $findPrize->count_prize, 'Победитель мероприятия', $socialMethod, $typeSocial);
+         $this->giveItemUser($userID, $event_id, $findPrize->items_id, $findPrize->count_prize, 'Победитель мероприятия', $socialMethod, $typeSocial);
          EventPrize::query()->where('id', $findPrize->id)->update(['status' => 1]);
          return true;
       }

@@ -8,7 +8,7 @@ class EventPrize extends Model
 {
    protected $fillable = [
       'event_id',
-      'withdraw_items_id',
+      'items_id',
       'count_prize',
       'word',
       'status'
