@@ -108,17 +108,17 @@ class EventsServices
 
    public function checkLastMessage(int $post_id, Event $event, int $comment_id, EventSocialMethod $socialMethod): bool
    {
-      $lastMessage = EventSocialLogs::query()->where([['post_id', $post_id]])->orderBy('id', 'desc')->first();
-
-      if ($lastMessage) {
-         $lastCollected = Carbon::parse($lastMessage->created_at)->setTimezone('Europe/Moscow');
-         $now = Carbon::now('Europe/Moscow');
-
-         if ($lastCollected->diffInSeconds($now) < $event->timeForAttempt) {
-            $socialMethod->replyWallComment($post_id, Message::getMessage('event_last_message', ['timeForAttempt' => $event->timeForAttempt]), $comment_id);
-            return false;
-         }
-      }
+//      $lastMessage = EventSocialLogs::query()->where([['post_id', $post_id]])->orderBy('id', 'desc')->first();
+//
+//      if ($lastMessage) {
+//         $lastCollected = Carbon::parse($lastMessage->created_at)->setTimezone('Europe/Moscow');
+//         $now = Carbon::now('Europe/Moscow');
+//
+//         if ($lastCollected->diffInSeconds($now) < $event->timeForAttempt) {
+//            $socialMethod->replyWallComment($post_id, Message::getMessage('event_last_message', ['timeForAttempt' => $event->timeForAttempt]), $comment_id);
+//            return false;
+//         }
+//      }
 
       return true;
    }
