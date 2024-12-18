@@ -64,17 +64,18 @@ class TelegraphMessage extends WebhookHandler
       }
 
       if ($replyToMessage) {
-         if ($replyToMessage->from()->id() == '777000' and $userTelegram) {
-            $userCore = new UserCore();
-            $objectId = (string)$replyToMessage->id();
-
-            if (!$userCore->checkAction($userTelegram->telegram_id, 'wall_reply_new', $objectId)) {
-               if ($userTelegraph) {
-                  $userCore->setCoin($userTelegram->telegram_id, 'wall_reply_new', 'comment', $objectId, 'telegram_id');
-                  $userTelegraph->message(Message::getMessage('comment_add', ['count' => (new CoinInfoCore())->getDataType('comment')]))->send();
-               }
-            }
-         }
+         Log::info(print_r($replyToMessage->toArray(), 1));
+//         if ($replyToMessage->from()->id() == '777000' and $userTelegram) {
+//            $userCore = new UserCore();
+//            $objectId = (string)$replyToMessage->id();
+//
+//            if (!$userCore->checkAction($userTelegram->telegram_id, 'wall_reply_new', $objectId)) {
+//               if ($userTelegraph) {
+//                  $userCore->setCoin($userTelegram->telegram_id, 'wall_reply_new', 'comment', $objectId, 'telegram_id');
+//                  $userTelegraph->message(Message::getMessage('comment_add', ['count' => (new CoinInfoCore())->getDataType('comment')]))->send();
+//               }
+//            }
+//         }
       } else {
          if ($userTelegram) {
             $findPromocode = ReferralPromocode::query()->where('name', $text)->first();
