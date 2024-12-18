@@ -63,7 +63,7 @@ class TelegraphMessage extends WebhookHandler
          }
       }
 
-      if ($replyToMessage && is_object($replyToMessage) && method_exists($replyToMessage, 'from')) {
+      if ($replyToMessage) {
          if ($replyToMessage->from()->id() == '777000' and $userTelegram) {
             $userCore = new UserCore();
             $objectId = (string)$replyToMessage->id();
