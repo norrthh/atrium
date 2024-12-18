@@ -58,7 +58,6 @@ class TelegraphMessage extends WebhookHandler
                if (isset($forwardOrigin['message_id'])) {
                   $post_id = $forwardOrigin['message_id'];
                   (new EventsServices())->events($post_id, $from_id, $message_id, $text, (new EventTelegramMethod()), 1, $this->handler->message->chat()->id());
-                  die();
                }
             }
          }
