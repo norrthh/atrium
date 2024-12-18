@@ -36,12 +36,6 @@ class TelegraphMessage extends WebhookHandler
     */
    public function message(Stringable $text): void
    {
-      (new EventTelegramMethod())->replyWallComment(
-         $this->handler->message->chat()->id(),
-         'qqq',
-         $this->handler->message->id()
-      );
-
       $replyToMessage = $this->handler->message->replyToMessage();
       $userTelegram = User::query()->where('telegram_id', $this->handler->message->from()->id())->first();
       $userTelegraph = TelegraphChat::query()->where('chat_id', $this->handler->message->from()->id())->first();

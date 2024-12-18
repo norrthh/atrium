@@ -47,23 +47,9 @@ class EventTelegramMethod implements EventSocialMethod
 
    }
 
-   public function closeWallComments(int $postId, int $user_id = null)
+   public function closeWallComments(int $postId, int $user_id = null):void
    {
-      $telegramBotToken = env('TELEGRAM_BOT_TOKEN');
-      $url = "https://api.telegram.org/bot{$telegramBotToken}/restrictChatMember";
 
-      $response = Http::post($url, [
-         'chat_id' => $postId,
-         'user_id' => $user_id,
-         'chatPermissions' => ['can_send_messages' => false, 'can_send_media_messages' => false, 'can_send_polls' => false, 'can_send_other_messages' => false],
-         'until_date' => time() + 3600
-      ]);
-
-      if ($response->failed()) {
-         throw new \Exception('Ошибка Telegram API: ' . $response->body());
-      }
-
-      return $response->json();
    }
 
    /**

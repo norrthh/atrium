@@ -33,7 +33,8 @@ class EventOne extends EventsServices
                         $this->logUser($user_id, $post_id, $findEvent->id);
                         if (EventSocialLogs::query()->where([['post_id', $post_id]])->count() >= $findEvent->countMessage + 1) {
                            if ($this->calculatePrize(EventSocialLogs::query()->where('post_id', $post_id)->count(), $findEvent->countAttempt)) {
-                              if ($this->winPrize(User::query()->where($typeSocial == 1 ? [['vkontakte_id', $user_id]] : [['telegram_id', $user_id]])->first()->id, $findEvent->id, $findEvent->attempts, $socialMethod, $sendMessageUser, $typeSocial)) {
+                              $user = User::query()->where($typeSocial == 1 ? [['vkontakte_id', $user_id]] : [['telegram_id', $user_id]])->first();
+                              if ($user and $this->winPrize( $user->id, $findEvent->id, $findEvent->attempts, $socialMethod, $sendMessageUser, $typeSocial)) {
                                  $socialMethod->replyWallComment($typeSocial == 2 ? $user2 : $post_id, Message::getMessage('event_win_prize'), $comment_id, $findEvent->bg['successBackground']);
                               } else {
                                  $socialMethod->replyWallComment($typeSocial == 2 ? $user2 : $post_id, Message::getMessage('event_lose'), $comment_id);
@@ -49,8 +50,8 @@ class EventOne extends EventsServices
                }
             }
          } else {
-            $socialMethod->replyWallComment($typeSocial == 2 ? $user2 : $post_id, Message::getMessage('event_lose'), $comment_id);
-            $socialMethod->closeWallComments($post_id, $user_id);
+            $socialMethod->replyWallComment($typeSocial == 2 ? $user2 : $post_id, Message::getMessage('event_lose_prize'), $comment_id);
+            $socialMethod->closeWallComments($post_id, $comment_id);
          }
       }
    }

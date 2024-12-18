@@ -15,33 +15,17 @@ class EventServices
     */
    public function eventVkontakte(array $data, string $type): void
    {
-      switch ($data['type']) {
-         case 3:
-         case 4:
-            $word = '';
-
-            foreach ($data['attempts'] as $index => $item) {
-               $word .= ($index > 0 ? ', ' : '') . $item['word'];
-            }
-
-            $data['word'] = $word;
-            break;
-         case 5:
-         default:
-            break;
-      }
-
       $postMessage = str_replace('{twist_word}', $data['word'], $data['text']);
       $data['social_type'] = $data['social'] == 1 ? 'telegram' : 'vk';
       $data['postMessage'] = $postMessage;
       $data['post_id'] =
-         $data['social'] == 1
+         $data['social'] == 2
             ? (new EventTelegramMethod())->sendWallMessage($data['bg']['postImage'], $postMessage)['result']['message_id']
             : (new EventVkontakteMethod())->sendWallMessage($data['bg']['postImage'], $postMessage)['response']['post_id'];
       $data['status'] = $data['type'] == 5 ? $data['typeActivate'] : 0;
       $event = $this->store($data);
 
-      $this->storePrizes($data['attempts'], $event->id, $data['word']);
+      $this->storePrizes($data['attempts'], $event->id, $data['word'] ?? '');
    }
 
    public function store(array $data)
@@ -50,7 +34,7 @@ class EventServices
          'post_id' => $data['post_id'],
          'social_type' => $data['social_type'],
          'eventType' => $data['type'], // тип игры
-         'word' => $data['word'] ?? '', // слово
+         'word' => !empty($data['word']) ? $data['word'] : $this->getWord($data['attempts']), // слово
          'countAttempt' => $data['countAttempt'] ?? 0, // Количество попыток:
          'countMessage' => $data['countMessage'] ?? 0, // Количество попыток до выпадения приза:
          'bg' => $data['bg'] ?? ['bg1.png'], // картинки
@@ -68,15 +52,36 @@ class EventServices
       ]);
    }
 
-   protected function storePrizes(array $prizes, int $event_id, string $word): void
+   protected function storePrizes(array $prizes, int $event_id, $word): void
    {
       foreach ($prizes as $prize) {
-         EventPrize::query()->create([
-            'event_id' => $event_id,
-            'items_id' => $prize['name']['id'],
-            'count_prize' => $prize['count'],
-            'word' => $prize['word'] ?? $word
-         ]);
+         if (isset($prize['name'])) {
+            EventPrize::query()->create([
+               'event_id' => $event_id,
+               'items_id' => $prize['name']['id'],
+               'count_prize' => $prize['count'],
+               'word' => !empty($prize['word'])
+                  ? $prize['word']
+                  : (!empty($prize['number'])
+                     ? $prize['number']
+                     : $word),
+
+            ]);
+         }
       }
+   }
+
+   public function getWord(array $prizes): string
+   {
+      $words = [];
+
+      foreach ($prizes as $prize) {
+         if (isset($prize['name'])) {
+            $words[] = !empty($prize['word'])
+               ? $prize['word']
+               : $prize['number'];
+         }
+      }
+      return implode(', ', $words);
    }
 }
