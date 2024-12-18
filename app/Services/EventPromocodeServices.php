@@ -54,7 +54,7 @@ class EventPromocodeServices
          case 2:
             $data['text'] = str_replace(
                '{prizes}', Items::query()->where('id', $data['prizes'][0]['id'])->first()->name, // Замена {prizes}
-               str_replace('{promocode}', $data['name'], $data['text']) // Замена {promocode}
+               str_replace('{promocode}', $data['name'], $data['text'])
             );
             $data['post_id'] = (new EventVkontakteMethod())->sendWallMessage($data['image'], $data['text'])['response']['post_id'];
             $data['social_type'] = $data['social'];

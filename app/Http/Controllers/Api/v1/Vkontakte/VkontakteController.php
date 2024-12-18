@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1\Vkontakte;
 use App\Http\Controllers\Controller;
 use App\Services\EventServices;
 use App\Vkontakte\Webhook\VkontakteWebhook;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -22,6 +23,9 @@ class VkontakteController extends Controller
       return 'ok';
    }
 
+   /**
+    * @throws ConnectionException
+    */
    public function event(Request $request): string
    {
       (new EventServices())->eventVkontakte($request->all(), 'vk');

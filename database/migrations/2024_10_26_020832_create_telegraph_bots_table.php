@@ -16,7 +16,7 @@ return new class () extends Migration {
         });
 
         \DefStudio\Telegraph\Models\TelegraphBot::query()->create([
-            'token' => '7220442176:AAGhEw0Ln6QKNbnOg8XSCEwZVNr7egum8vk',
+            'token' => '7734202303:AAEFM4nh-DjFE4ZHCWm60JLi3zU1kHa9eQk',
             'name'  => 'dev1'
         ]);
     }

@@ -18,7 +18,7 @@ use App\Models\User\User;
 
 class EventFive extends EventsServices
 {
-   public function event($post_id, $user_id, $comment_id, $sendMessageUser, EventSocialMethod $socialMethod, $type): void
+   public function event($post_id, $user_id, $comment_id, $sendMessageUser, EventSocialMethod $socialMethod, $type, $user2): void
    {
 //      $findEvent = Event::query()->where('post_id', $post_id)->first();
 //

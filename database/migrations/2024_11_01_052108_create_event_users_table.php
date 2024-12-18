@@ -12,7 +12,7 @@ return new class extends Migration {
    {
       Schema::create('event_users', function (Blueprint $table) {
          $table->id();
-         $table->integer('user_id');
+         $table->text('user_id');
          $table->integer('countAttempt');
          $table->integer('event_id');
          $table->timestamps();

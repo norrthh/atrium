@@ -2,12 +2,17 @@
 
 namespace App\Services;
 
+use App\Core\EventMethod\EventTelegramMethod;
 use App\Core\EventMethod\EventVkontakteMethod;
 use App\Models\Event\Event;
 use App\Models\Event\EventPrize;
+use Illuminate\Http\Client\ConnectionException;
 
 class EventServices
 {
+   /**
+    * @throws ConnectionException
+    */
    public function eventVkontakte(array $data, string $type): void
    {
       switch ($data['type']) {
@@ -27,19 +32,16 @@ class EventServices
       }
 
       $postMessage = str_replace('{twist_word}', $data['word'], $data['text']);
-
-      $data['social_type'] = $type;
+      $data['social_type'] = $data['social'] == 1 ? 'telegram' : 'vk';
       $data['postMessage'] = $postMessage;
-      $data['post_id'] = (new EventVkontakteMethod())->sendWallMessage($data['bg']['postImage'], $postMessage)['response']['post_id'];
-//      $data['post_id'] = 123;
+      $data['post_id'] =
+         $data['social'] == 1
+            ? (new EventTelegramMethod())->sendWallMessage($data['bg']['postImage'], $postMessage)['result']['message_id']
+            : (new EventVkontakteMethod())->sendWallMessage($data['bg']['postImage'], $postMessage)['response']['post_id'];
       $data['status'] = $data['type'] == 5 ? $data['typeActivate'] : 0;
       $event = $this->store($data);
 
-      if ($data['type'] == 5) {
-         (new EventPromocodeServices())->promocode($event, $data['attempts']);
-      } else {
-         $this->storePrizes($data['attempts'], $event->id, $data['word']);
-      }
+      $this->storePrizes($data['attempts'], $event->id, $data['word']);
    }
 
    public function store(array $data)

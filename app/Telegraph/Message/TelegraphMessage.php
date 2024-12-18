@@ -4,7 +4,11 @@ namespace App\Telegraph\Message;
 
 use App\Core\Action\Coin\CoinInfoCore;
 use App\Core\Action\UserCore;
+use App\Core\EventMethod\EventTelegramMethod;
+use App\Core\EventMethod\EventVkontakteMethod;
+use App\Core\Events\EventsServices;
 use App\Core\Message\Message;
+use App\Models\Event\Event;
 use App\Models\ReferralPromocode;
 use App\Models\User\User;
 use App\Models\User\UserCoins;
@@ -27,11 +31,44 @@ class TelegraphMessage extends WebhookHandler
       $this->userCore = new UserCore();
    }
 
+   /**
+    * @throws \Exception
+    */
    public function message(Stringable $text): void
    {
+      (new EventTelegramMethod())->replyWallComment(
+         $this->handler->message->chat()->id(),
+         'qqq',
+         $this->handler->message->id()
+      );
+
       $replyToMessage = $this->handler->message->replyToMessage();
       $userTelegram = User::query()->where('telegram_id', $this->handler->message->from()->id())->first();
       $userTelegraph = TelegraphChat::query()->where('chat_id', $this->handler->message->from()->id())->first();
+
+      $from_id = $this->handler->message->from()->id();
+      $message_id = $this->handler->message->id();
+      $text = $this->handler->message->text();
+
+      $dataZ = $this->handler->request->toArray();
+
+      if (isset($dataZ['message'])) {
+         $message = $dataZ['message'];
+
+         if (isset($message['reply_to_message'])) {
+            $replyToMessage = $message['reply_to_message'];
+
+            if (isset($replyToMessage['forward_origin'])) {
+               $forwardOrigin = $replyToMessage['forward_origin'];
+
+               if (isset($forwardOrigin['message_id'])) {
+                  $post_id = $forwardOrigin['message_id'];
+                  (new EventsServices())->events($post_id, $from_id, $message_id, $text, (new EventTelegramMethod()), 1, $this->handler->message->chat()->id());
+                  die();
+               }
+            }
+         }
+      }
 
       if ($replyToMessage) {
          if ($replyToMessage->from()->id() == '777000' and $userTelegram) {
@@ -63,5 +100,8 @@ class TelegraphMessage extends WebhookHandler
             }
          }
       }
+
+//      Log::info(print_r($this->handler->request->toArray()['message']['reply_to_message']['forward_origin']['message_id'], 1));
+//
    }
 }

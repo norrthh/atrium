@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Core\EventMethod\EventTelegramMethod;
 use App\Core\Message\Message;
 use App\Core\EventMethod\EventVkontakteMethod;
 use App\Models\Event\Event;
@@ -59,13 +60,24 @@ class CumbackPlayerEvent extends Command
                   if ($timePassed >= $event->cumebackPlayer['time']) {
                      EventUsers::query()->where('id', $userAttempt->id)->update(['countAttempt' => $userAttempt->countAttempt + $event->cumebackPlayer['attempt']]);
                      $this->storeEventCumback($userAttempt->user_id, $userAttempt->user_id);
+                     $this->info("Пользователь: {$userAttempt->user_id} успешно получил дополнительную попытку}");
 
+                     $user = User::query()->where('id', $userAttempt->user_id)->first();
                      if ($event->social_type == 'vk') {
-                        $this->info("Пользователь: {$userAttempt->user_id} успешно получил дополнительную попытку}");
-                        (new EventVkontakteMethod())->sendMessage(
-                           User::query()->where('id', $userAttempt->user_id)->first()->vkontakte_id,
-                           Message::getMessage('event_cumback', ['count' => $event->cumebackPlayer['attempt']])
-                        );
+                        if($user->vkontakte_id) {
+                           (new EventVkontakteMethod())->sendMessage(
+                              $user->vkontakte_id,
+                              Message::getMessage('event_cumback', ['count' => $event->cumebackPlayer['attempt']])
+                           );
+                        }
+                     }
+                     if ($event->social_type == 'telegram') {
+                        if($user->telegram_id) {
+                           (new EventTelegramMethod())->sendMessage(
+                              $user->telegram_id,
+                              Message::getMessage('event_cumback', ['count' => $event->cumebackPlayer['attempt']])
+                           );
+                        }
                      }
                   }
                }

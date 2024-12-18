@@ -36,7 +36,7 @@ class EventVkontakteMethod extends Message implements EventSocialMethod
       return $this->uploadAPIPhoto($imagePath);
    }
 
-   public function closeWallComments(int $postId)
+   public function closeWallComments(int $postId, int $user_id = null)
    {
       $client = new Client();
 

@@ -1,0 +1,89 @@
+(
+    [update_id] => 170740533
+    [message] => Array
+        (
+            [message_id] => 117
+            [from] => Array
+                (
+                    [id] => 777000
+                    [is_bot] =>
+                    [first_name] => Telegram
+                )
+
+            [sender_chat] => Array
+                (
+                    [id] => -1002424386393
+                    [title] => atrium
+                    [username] => asdsadadasda
+                    [type] => channel
+                )
+
+            [chat] => Array
+                (
+                    [id] => -1002387267295
+                    [title] => atrium Chat
+                    [type] => supergroup
+                )
+
+            [date] => 1734490017
+            [forward_origin] => Array
+                (
+                    [type] => channel
+                    [chat] => Array
+                        (
+                            [id] => -1002424386393
+                            [title] => atrium
+                            [username] => asdsadadasda
+                            [type] => channel
+                        )
+
+                    [message_id] => 19
+                    [date] => 1734490016
+                )
+
+            [is_automatic_forward] => 1
+            [forward_from_chat] => Array
+                (
+                    [id] => -1002424386393
+                    [title] => atrium
+                    [username] => asdsadadasda
+                    [type] => channel
+                )
+
+            [forward_from_message_id] => 19
+            [forward_date] => 1734490016
+            [photo] => Array
+                (
+                    [0] => Array
+                        (
+                            [file_id] => AgACAgIAAyEGAASQgTNZAAMQZ2I2lJcO9mDd2zivvXi3tahRY_wAAlTrMRs88hBLx0vP2l9i18oBAAMCAANzAAM2BA
+                            [file_unique_id] => AQADVOsxGzzyEEt4
+                            [file_size] => 2072
+                            [width] => 90
+                            [height] => 90
+                        )
+
+                    [1] => Array
+                        (
+                            [file_id] => AgACAgIAAyEGAASQgTNZAAMQZ2I2lJcO9mDd2zivvXi3tahRY_wAAlTrMRs88hBLx0vP2l9i18oBAAMCAANtAAM2BA
+                            [file_unique_id] => AQADVOsxGzzyEEty
+                            [file_size] => 35731
+                            [width] => 320
+                            [height] => 320
+                        )
+
+                    [2] => Array
+                        (
+                            [file_id] => AgACAgIAAyEGAASQgTNZAAMQZ2I2lJcO9mDd2zivvXi3tahRY_wAAlTrMRs88hBLx0vP2l9i18oBAAMCAAN4AAM2BA
+                            [file_unique_id] => AQADVOsxGzzyEEt9
+                            [file_size] => 126148
+                            [width] => 640
+                            [height] => 640
+                        )
+
+                )
+
+            [caption] => asdasd
+        )
+
+)

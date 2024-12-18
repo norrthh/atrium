@@ -12,28 +12,30 @@ use App\Models\Event\EventUsers;
 use App\Models\Items\Items;
 use App\Models\User\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class EventsServices
 {
-   public function events($post_id, $user_id, $comment_id, $sendMessageUser, EventSocialMethod $socialMethod): void
+   public function events($post_id, $user_id, $comment_id, $sendMessageUser, EventSocialMethod $socialMethod, $typeSocial = null, $user2 = null): void
    {
       $findEvent = Event::query()->where('post_id', $post_id)->first();
+
       if ($findEvent) {
          switch ($findEvent->eventType) {
             case 1:
-               (new EventOne())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, 1);
+               (new EventOne())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, $typeSocial ? 2 : 1, $user2);
                break;
             case 2:
-               (new EventTwo())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, 1);
+               (new EventTwo())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, $typeSocial ? 2 : 1, $user2);
                break;
             case 3:
-               (new EventThree())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, 1);
+               (new EventThree())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, $typeSocial ? 2 : 1, $user2);
                break;
             case 4:
-               (new EventFour())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, 1);
+               (new EventFour())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, $typeSocial ? 2 : 1, $user2);
                break;
             case 5:
-               (new EventFive())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, 1);
+               (new EventFive())->event($post_id, $user_id, $comment_id, $sendMessageUser, $socialMethod, $typeSocial ? 2 : 1, $user2);
                break;
             default:
                break;
@@ -123,27 +125,27 @@ class EventsServices
       return true;
    }
 
-   public function checkMailing(int $user_id, Event $event, int $post_id, int $comment_id, EventSocialMethod $socialMethod): bool
+   public function checkMailing(int $user_id, Event $event, int $post_id, int $comment_id, EventSocialMethod $socialMethod, $user2): bool
    {
       if ($event->subscribe and !$socialMethod->checkSubscriptionGroup($user_id)) {
-         $socialMethod->replyWallComment($post_id, Message::getMessage('event_subscription', ['type' => 'группу']), $comment_id);
+         $socialMethod->replyWallComment($user2 ?: $post_id, Message::getMessage('event_subscription', ['type' => 'группу']), $comment_id);
          return false;
       }
 
       if ($event->subscribe_mailing and !$socialMethod->checkSubscriptionMailing($user_id)) {
-         $socialMethod->replyWallComment($post_id, Message::getMessage('event_subscription', ['type' => 'группу']), $comment_id);
+         $socialMethod->replyWallComment($user2 ?: $post_id, Message::getMessage('event_subscription', ['type' => 'группу']), $comment_id);
          return false;
       }
 
       return true;
    }
 
-   public function checkAttempt(int $user_id, Event $event, int $post_id, int $comment_id, EventSocialMethod $socialMethod): bool
+   public function checkAttempt(int $user_id, Event $event, int $post_id, int $comment_id, EventSocialMethod $socialMethod, $user2): bool
    {
       $eventUser = EventUsers::query()->where([['user_id', $user_id], ['event_id', $event->id]])->first();
 
       if ($eventUser && $eventUser->countAttempt <= 0) {
-         $socialMethod->replyWallComment($post_id, Message::getMessage('event_limit_attempt'), $comment_id);
+         $socialMethod->replyWallComment($user2 ?: $post_id, Message::getMessage('event_limit_attempt'), $comment_id);
          return false;
       } elseif (!$eventUser) {
          EventUsers::query()->create([

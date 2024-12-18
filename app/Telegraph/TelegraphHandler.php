@@ -10,11 +10,19 @@ use App\Models\User\UserTask;
 use App\Services\Telegram\TelegramMethodServices;
 use App\Telegraph\Message\TelegraphMessage;
 use App\Telegraph\Referral\TelegraphReferralHandler;
+use DefStudio\Telegraph\DTO\CallbackQuery;
+use DefStudio\Telegraph\DTO\ChatJoinRequest;
+use DefStudio\Telegraph\DTO\InlineQuery;
+use DefStudio\Telegraph\DTO\Message;
+use DefStudio\Telegraph\DTO\Reaction;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 use DefStudio\Telegraph\Keyboard\ReplyKeyboard;
+use DefStudio\Telegraph\Models\TelegraphBot;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
+use Illuminate\Http\Request;
 
 class TelegraphHandler extends WebhookHandler
 {
@@ -24,7 +32,7 @@ class TelegraphHandler extends WebhookHandler
          $this->chat->message('Открыть мини приложение')
             ->keyboard(
                Keyboard::make()
-                  ->button('Перейти в мини приложение')->webApp('https://telegram.atrium-bot.ru/')
+                  ->button('Перейти в мини приложение')->webApp(env('APP_URL'))
                   ->button('Промокод')->action('promocode')
             )
             ->send();
@@ -32,7 +40,7 @@ class TelegraphHandler extends WebhookHandler
          $this->chat->message('Открыть мини приложение')
             ->keyboard(
                Keyboard::make()
-                  ->button('Перейти в мини приложение')->webApp('https://telegram.atrium-bot.ru/')
+                  ->button('Перейти в мини приложение')->webApp(env('APP_URL'))
             )
             ->send();
       }

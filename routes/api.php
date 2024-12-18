@@ -10,7 +10,9 @@ use App\Http\Controllers\Api\v1\Admin\TaskController;
 use App\Http\Controllers\Api\v1\Admin\UploadFileController;
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\CoinsController;
+use App\Http\Controllers\Api\v1\InventoryController;
 use App\Http\Controllers\Api\v1\ItemsController;
+use App\Http\Controllers\Api\v1\TransferController;
 use App\Http\Controllers\Api\v1\Vkontakte\VkontakteController;
 use App\Http\Controllers\Api\v1\WithdrawController;
 use Illuminate\Http\Request;
@@ -136,8 +138,8 @@ Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
       });
 
       Route::prefix('/inventory')->group(function () {
-         Route::post('/', [\App\Http\Controllers\Api\v1\InventoryController::class, 'index']);
-         Route::post('/withdraw', [\App\Http\Controllers\Api\v1\InventoryController::class, 'withdraw']);
+         Route::post('/', [InventoryController::class, 'index']);
+         Route::post('/withdraw', [InventoryController::class, 'withdraw']);
       });
 
       Route::prefix('promocode')->group(function () {
@@ -146,8 +148,8 @@ Route::middleware(\App\Http\Middleware\OwnCors::class)->group(function () {
       });
 
       Route::prefix('transfer')->group(function () {
-         Route::post('/code', [\App\Http\Controllers\Api\v1\TransferController::class, 'code']);
-         Route::post('/activate', [\App\Http\Controllers\Api\v1\TransferController::class, 'activate']);
+         Route::post('/code', [TransferController::class, 'code']);
+         Route::post('/activate', [TransferController::class, 'activate']);
       });
    });
 
