@@ -64,7 +64,7 @@ class TelegraphMessage extends WebhookHandler
       }
 
       if ($replyToMessage) {
-//         Log::info(print_r($replyToMessage->from()->id(), 1));
+         Log::info(print_r($this->handler->message->toArray(), 1));
          if ($replyToMessage->from()->id() == 777000 and $userTelegram) {
             $userCore = new UserCore();
             $objectId = $replyToMessage->id();
