@@ -2,27 +2,22 @@
 
 namespace App\Telegraph;
 
+use App\Core\EventMethod\EventTelegramMethod;
+use App\Core\Message\AdminCommands;
 use App\Facades\WithdrawUser;
+use App\Models\ChatSetting;
 use App\Models\Task\TaskItems;
 use App\Models\Task\Tasks;
 use App\Models\User\User;
 use App\Models\User\UserTask;
-use App\Services\Telegram\TelegramMethodServices;
+use App\Telegraph\Chat\TelegramChatCommandServices;
 use App\Telegraph\Message\TelegraphMessage;
 use App\Telegraph\Referral\TelegraphReferralHandler;
-use DefStudio\Telegraph\DTO\CallbackQuery;
-use DefStudio\Telegraph\DTO\ChatJoinRequest;
-use DefStudio\Telegraph\DTO\InlineQuery;
-use DefStudio\Telegraph\DTO\Message;
-use DefStudio\Telegraph\DTO\Reaction;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Keyboard;
-use DefStudio\Telegraph\Keyboard\ReplyKeyboard;
-use DefStudio\Telegraph\Models\TelegraphBot;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
-use Illuminate\Http\Request;
 
 class TelegraphHandler extends WebhookHandler
 {
@@ -88,14 +83,51 @@ class TelegraphHandler extends WebhookHandler
 
                   $taskItem = TaskItems::query()->where('task_id', $task->id)->first();
                   WithdrawUser::store($taskItem->item_id, $taskItem->count, $user->id);
-
                }
             }
+         }
+      }
+
+      (new EventTelegramMethod())->replyWallComment($this->message->chat()->id(), ChatSetting::query()->first()->welcome_message, $this->message->id());
+   }
+
+   /**
+    * @throws \Exception
+    */
+   protected function handleCommand(Stringable $text): void
+   {
+      [$command, $parameter] = $this->parseCommand($text);
+
+      $chatCommand = (new TelegramChatCommandServices());
+      if ((new AdminCommands())->checkCommand($text)) {
+         $chatCommand->commands($text, $this->message->chat()->id(), $this->message->id(), $this->message->from()->id());
+      } else {
+         if (!$this->canHandle($command)) {
+            $this->handleUnknownCommand($text);
+
+            return;
+         } else {
+            $this->$command($parameter);
          }
       }
    }
 
    public function return(): void
+   {
+
+   }
+
+   public function peerID()
+   {
+      $this->chat->message($this->message->chat()->id())->send();
+   }
+
+   public function staff()
+   {
+
+   }
+
+   public function tickets()
    {
 
    }

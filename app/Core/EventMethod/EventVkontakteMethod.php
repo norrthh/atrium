@@ -5,6 +5,7 @@ namespace App\Core\EventMethod;
 use App\Vkontakte\Method\Message;
 use App\Vkontakte\Method\Subscribe;
 use GuzzleHttp\Client;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 
 class EventVkontakteMethod extends Message implements EventSocialMethod
@@ -98,5 +99,31 @@ class EventVkontakteMethod extends Message implements EventSocialMethod
    public function checkVkDonutSubscription(int $userId): bool
    {
       return (new Subscribe())->donate($userId);
+   }
+
+   public function kickUserFromChat($chatId, $userId): string
+   {
+      $client = new Client(['base_uri' => 'https://api.vk.com/method/']);
+
+      try {
+         $response = $client->post('messages.removeChatUser', [
+            'form_params' => [
+               'access_token' => env('VKONTAKTE_TOKEN'), // Токен доступа
+               'chat_id' => $chatId - 2000000000,     // ID беседы (без 2000000000)
+               'user_id' => $userId,     // ID пользователя
+               'v' => env('VKONTAKTE_VERSION'),    // Версия API
+            ],
+         ]);
+
+         $body = json_decode($response->getBody(), true);
+
+         if (isset($body['error'])) {
+            return "Error: " . $body['error']['error_msg'];
+         }
+
+         return "User removed successfully!";
+      } catch (RequestException $e) {
+         return "Request failed: " . $e->getMessage();
+      }
    }
 }

@@ -26,7 +26,7 @@ class Message
    public function sendAPIMessage(int $userId, string|bool $message = false, $keyboard = false, string|bool $attachment = false): Response
    {
       $params = [
-         'user_id' => $userId,
+         'peer_id' => $userId,
          'access_token' => $this->vkKey,
          'v' => $this->vkVersion,
          'random_id' => rand(),
@@ -45,7 +45,9 @@ class Message
       }
 
 
-      return Http::get(self::VK_API_URL, $params);
+      $response = Http::get(self::VK_API_URL, $params);
+      Log::info($response->json());
+      return $response;
    }
 
    public function uploadAPIPhoto(string $imagePath): string

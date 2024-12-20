@@ -1,28 +1,25 @@
 <?php
 
-namespace App\Telegraph\Chat\Telegram;
+namespace App\Telegraph\Chat;
 
-use App\Telegraph\Chat\Telegram\Admin\AdminChatCommandServices;
-use App\Telegraph\Chat\Telegram\User\UserChatCommandServices;
+use App\Core\EventMethod\EventTelegramMethod;
+use App\Core\Message\AdminCommands;
+use App\Models\UserRole;
+use App\Telegraph\Chat\Admin\AdminChatCommandServices;
+use App\Telegraph\Chat\User\UserChatCommandServices;
 
 class TelegramChatCommandServices
 {
-   protected array $commandList = ['/addmoder', '/addadmin', '/warn', '/mute', '/kick', '/akick', '/addinfo', '/newm'];
 
    /**
     * @throws \Exception
     */
-   public function commands(string $text, string $chat_id, $message_id): void
+   public function commands(string $text, string $chat_id, int $message_id, int $user_id): void
    {
-      if (in_array($text, $this->commandList)) {
-         (new AdminChatCommandServices())->command($text, $social, $chat_id, $message_id);
+      if ((new AdminCommands())->checkCommand($text) and UserRole::query()->where('telegram_id', $user_id)->exists()) {
+         (new AdminChatCommandServices())->command($text, $chat_id, $message_id, $user_id);
       } else {
-         (new UserChatCommandServices())->command($text, $social, $chat_id, $message_id);
+         (new UserChatCommandServices())->filter($text, $chat_id, $message_id, $user_id);
       }
-   }
-
-   public function checkCommand(string $text): bool
-   {
-      return in_array($text, $this->commandList);
    }
 }

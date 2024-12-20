@@ -2,8 +2,8 @@
 
 namespace App\Core\EventMethod;
 
-use DefStudio\Telegraph\Models\TelegraphBot;
 use DefStudio\Telegraph\Models\TelegraphChat;
+use GuzzleHttp\Client;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -13,7 +13,6 @@ class EventTelegramMethod implements EventSocialMethod
 {
    public function sendMessage(int $userId, string $message): void
    {
-      Log::info(print_r([$userId, $message], 1));
       TelegraphChat::query()->where('chat_id', $userId)->first()->message($message)->send();
    }
 
@@ -52,19 +51,9 @@ class EventTelegramMethod implements EventSocialMethod
 
    }
 
-   /**
-    * @throws \Exception
-    */
    public function replyWallComment(int $postId, string $message, int $commentId, $image = null)
    {
       $telegramBotToken = env('TELEGRAM_TOKEN');
-
-      Log::info(print_r([
-         'chat_id' => $postId,
-         'text' => $message,
-         'reply_to_message_id' => $commentId,
-         'image' => $image,
-      ], 1));
 
       if ($image) {
          $url = "https://api.telegram.org/bot{$telegramBotToken}/sendPhoto";
@@ -108,4 +97,36 @@ class EventTelegramMethod implements EventSocialMethod
    {
       return true;
    }
+
+   public function kickUserFromChat(int $chatId, int $userId): string
+   {
+      $client = new Client(['base_uri' => 'https://api.telegram.org']);
+      $response = $client->post('/bot' . env('TELEGRAM_TOKEN') . '/kickChatMember', [
+         'form_params' => [
+            'chat_id' => $chatId,
+            'user_id' => $userId,
+         ],
+      ]);
+
+      if ($response->getStatusCode() !== 200) {
+         return 'Ошибка при исключении пользователя из беседы' . $response->getBody();
+      }
+
+      return 'Вы успешно исключили пользователя';
+   }
+
+   public function deleteMessage(int $chatId, int $messageId): void
+   {
+      $client = new Client([
+         'base_uri' => "https://api.telegram.org/bot" . env('TELEGRAM_TOKEN')
+      ]);
+
+      $response = $client->post('deleteMessage', [
+         'json' => [
+            'chat_id' => $chatId,
+            'message_id' => $messageId
+         ]
+      ]);
+   }
+
 }
