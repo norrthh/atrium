@@ -108,7 +108,7 @@ class TelegraphHandler extends WebhookHandler
          return;
       }
 
-      Log::info(print_r($this->message->from()->toArray(), true));
+      Log::info('telegram ');
       if ($this->message?->newChatMembers()) {
          foreach ($this->message->newChatMembers() as $member) {
             $this->handleChatMemberJoined($member);
