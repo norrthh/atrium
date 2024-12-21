@@ -93,38 +93,6 @@ class TelegraphHandler extends WebhookHandler
       }
    }
 
-   protected function handleMessage(): void
-   {
-      $this->extractMessageData();
-      if (config('telegraph.debug_mode', config('telegraph.webhook.debug'))) {
-         Log::debug('Telegraph webhook message', $this->data->toArray());
-      }
-
-      $text = Str::of($this->message?->text() ?? '');
-
-      if ($text->startsWith($this->commandPrefixes())) {
-         $this->handleCommand($text);
-
-         return;
-      }
-
-      Log::info('telegram ');
-      if ($this->message?->newChatMembers()) {
-         foreach ($this->message->newChatMembers() as $member) {
-            $this->handleChatMemberJoined($member);
-         }
-
-         return;
-      }
-
-      if ($this->message?->leftChatMember() !== null) {
-         $this->handleChatMemberLeft($this->message->leftChatMember());
-
-         return;
-      }
-
-      $this->handleChatMessage($text);
-   }
 
    /**
     * @throws \Exception

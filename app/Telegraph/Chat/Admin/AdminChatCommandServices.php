@@ -24,9 +24,9 @@ class AdminChatCommandServices
    /**
     * @throws \Exception
     */
-   public function command(string $text, string $chat_id, int $message_id, $user_id)
+   public function command(string $text, string $chat_id, int $message_id, $telegram_id)
    {
-      $userRole = UserRole::query()->where('telegram_id', $user_id)->first();
+      $userRole = UserRole::query()->where('telegram_id', $telegram_id)->first();
 
       if ($userRole) {
          $getInfoCommand = (new AdminCommands())->getCommand($text);
@@ -39,15 +39,10 @@ class AdminChatCommandServices
             $nameUser = $this->extractMention($getInfoCommand['parameters'][0]);
 
             if (in_array($getInfoCommand['command'], ['addInfo', 'newm', 'links', 'words', 'questions'])) {
-               $this->{$getInfoCommand['command']}($chat_id, $message_id, $getInfoCommand['parameters'], $user_id, $text);
+               $this->{$getInfoCommand['command']}($chat_id, $message_id, $getInfoCommand['parameters'], $telegram_id, $text);
             } elseif ($nameUser) {
-               $findUser = TelegraphChat::query()->where([['name', 'LIKE', '%' . $nameUser . '%']])->first();
-               if ($findUser) {
-                  $user = User::query()->where('telegram_id', $findUser->chat_id)->first();
-                  $this->{$getInfoCommand['command']}($chat_id, $message_id, $getInfoCommand['parameters'], $findUser, $user, $user_id);
-               } else {
-                  (new EventTelegramMethod())->replyWallComment($chat_id, 'Пользователь не найден', $message_id);
-               }
+               $user = User::query()->where('telegram_id', $telegram_id)->first();
+               $this->{$getInfoCommand['command']}($chat_id, $message_id, $getInfoCommand['parameters'], $user, $telegram_id);
             } else {
                (new EventTelegramMethod())->replyWallComment($chat_id, 'Введите все аргументы команды', $message_id);
             }
@@ -55,21 +50,21 @@ class AdminChatCommandServices
       }
    }
 
-   public function addmoder(string $chat_id, int $message_id, array $parameters, TelegraphChat $telegraphChat, $user, $user_id): void
+   public function addmoder(string $chat_id, int $message_id, array $parameters, ?User $user, int $telegram_id): void
    {
-      $userRole = UserRole::query()->where('telegram_id', $user_id)->first();
+      $userRole = UserRole::query()->where('telegram_id', $telegram_id)->first();
 
       if ($userRole->role == 2) {
          if (count($parameters) == 1) {
-            $userRole = UserRole::query()->where('telegram_id', $telegraphChat->chat_id)->first();
+            $userRole = UserRole::query()->where('telegram_id', $telegram_id)->first();
 
-            $userUpdate = $this->getInfoUser($user, $telegraphChat, 'Вам был выдан доступ модератора в беседах Atrium');
+            $userUpdate = $this->getInfoUser($user, $telegram_id, 'Вам был выдан доступ модератора в беседах Atrium');
             $userUpdate['role'] = 1;
 
             if (!$userRole) {
                UserRole::query()->create($userUpdate);
             } else {
-               UserRole::query()->where('telegram_id', $telegraphChat->chat_id)->update($userUpdate);
+               UserRole::query()->where('telegram_id', $telegram_id)->update($userUpdate);
             }
 
             (new EventTelegramMethod())->replyWallComment($chat_id, 'Пользователю ' . $parameters[0] . ' был выдан доступ модератора', $message_id);
@@ -77,21 +72,21 @@ class AdminChatCommandServices
       }
    }
 
-   public function addadmin(string $chat_id, int $message_id, array $parameters, TelegraphChat $telegraphChat, $user, $user_id): void
+   public function addadmin(string $chat_id, int $message_id, array $parameters, ?User $user, $telegram_id): void
    {
-      $userRole = UserRole::query()->where('telegram_id', $user_id)->first();
+      $userRole = UserRole::query()->where('telegram_id', $telegram_id)->first();
 
       if ($userRole->role == 2) {
          if (count($parameters) == 1) {
-            $userRole = UserRole::query()->where('telegram_id', $telegraphChat->chat_id)->first();
+            $userRole = UserRole::query()->where('telegram_id', $telegram_id)->first();
 
-            $userUpdate = $this->getInfoUser($user, $telegraphChat, 'Вам был выдан доступ модератора в беседах Atrium');
+            $userUpdate = $this->getInfoUser($user, $telegram_id, 'Вам был выдан доступ модератора в беседах Atrium');
             $userUpdate['role'] = 2;
 
             if (!$userRole) {
                UserRole::query()->create($userUpdate);
             } else {
-               UserRole::query()->where('telegram_id', $telegraphChat->chat_id)->updateOrCreate($userUpdate);
+               UserRole::query()->where('telegram_id', $telegram_id)->updateOrCreate($userUpdate);
             }
 
             (new EventTelegramMethod())->replyWallComment($chat_id, 'Пользователю ' . $parameters[0] . ' был выдан доступ администратора', $message_id);
@@ -99,9 +94,9 @@ class AdminChatCommandServices
       }
    }
 
-   public function warn(string $chat_id, int $message_id, array $parameters, TelegraphChat $telegraphChat, $user, $user_id): void
+   public function warn(string $chat_id, int $message_id, array $parameters,?User $user, $telegram_id): void
    {
-      $users = $this->getInfoUser($user, $telegraphChat, 'Вам было выдано предупреждение в беседах Atrium');
+      $users = $this->getInfoUser($user, $telegram_id, 'Вам было выдано предупреждение в беседах Atrium');
 
       (new EventTelegramMethod())->replyWallComment($chat_id, 'Пользователю ' . $parameters[0] . ' был выдан предупреждение', $message_id);
 
@@ -109,7 +104,7 @@ class AdminChatCommandServices
       if ($userWarn) {
          UserWarns::query()->where($users)->increment('count', 1);
          if ($userWarn->count + 1 == 3) {
-            $this->kick($chat_id, $message_id, $parameters, $telegraphChat, $user, $user_id);
+            $this->kick($chat_id, $message_id, $parameters, $user, $telegram_id);
          }
       } else {
          $users['count'] = 1;
@@ -117,33 +112,33 @@ class AdminChatCommandServices
       }
    }
 
-   public function mute(string $chat_id, int $message_id, array $parameters, TelegraphChat $telegraphChat, $user, $user_id): void
+   public function mute(string $chat_id, int $message_id, array $parameters, ?User $user, int $telegram_id): void
    {
       if (count($parameters) != 2) {
          (new EventTelegramMethod())->replyWallComment($chat_id, 'Вы ввели неверные данные, проверьте пробелы. Пример: /mute @user 1', $message_id);
          die();
       }
 
-      $users = $this->getInfoUser($user, $telegraphChat, 'Вы были замучены в беседах Atrium');
+      $users = $this->getInfoUser($user, $telegram_id, 'Вы были замучены в беседах Atrium');
       $users['time'] = $parameters[1];
       UserMute::query()->create($users);
 
       (new EventTelegramMethod())->replyWallComment($chat_id, 'Пользователю ' . $parameters[0] . ' был выдан мут', $message_id);
    }
 
-   public function kick(string $chat_id, int $message_id, array $parameters, TelegraphChat $telegraphChat, $user, $user_id): void
+   public function kick(string $chat_id, int $message_id, array $parameters,?User $user, $telegram_id): void
    {
-      (new EventTelegramMethod())->replyWallComment($chat_id, (new EventTelegramMethod())->kickUserFromChat($chat_id, $telegraphChat->chat_id), $message_id);
+      (new EventTelegramMethod())->replyWallComment($chat_id, (new EventTelegramMethod())->kickUserFromChat($chat_id, $telegram_id), $message_id);
    }
 
-   public function akick(string $chat_id, int $message_id, array $parameters, TelegraphChat $telegraphChat, $user, $user_id): void
+   public function akick(string $chat_id, int $message_id, array $parameters,  $user, $telegram_id): void
    {
       $chats = Chats::query()->get();
       foreach ($chats as $chat) {
-         if ($chat->messanger == 'vkontakte' and $user->vkontakte_id) {
+         if ($user and $chat->messanger == 'vkontakte' and $user->vkontakte_id) {
             (new EventVkontakteMethod())->kickUserFromChat($chat->chat_id, $user->vkontakte_id);
          } else {
-            (new EventTelegramMethod())->kickUserFromChat($chat->chat_id, $user->telegram_id);
+            (new EventTelegramMethod())->kickUserFromChat($chat->chat_id, $telegram_id);
          }
       }
 
@@ -153,9 +148,9 @@ class AdminChatCommandServices
    /**
     * @throws \Exception
     */
-   public function addInfo(string $chat_id, int $message_id, array $parameters, TelegraphChat $telegraphChat, $user, $user_id): void
+   public function addInfo(string $chat_id, int $message_id, array $parameters,?User $user, $telegram_id): void
    {
-      $userRole = UserRole::query()->where('telegram_id', $user_id)->first();
+      $userRole = UserRole::query()->where('telegram_id', $telegram_id)->first();
       if ($userRole->role == 2) {
          if (count($parameters) != 2) {
             (new EventTelegramMethod())->replyWallComment(
@@ -229,9 +224,9 @@ class AdminChatCommandServices
    }
 
 
-   public function newm($chat_id, $message_id, $parameters, $user_id, $text): void
+   public function newm($chat_id, $message_id, $parameters, $telegram_id, $text): void
    {
-      $userRole = UserRole::query()->where('telegram_id', $user_id)->first();
+      $userRole = UserRole::query()->where('telegram_id', $telegram_id)->first();
       if ($userRole->role == 2) {
          $text2 = preg_replace('~/newm\s?~', '', $text);
          if ($text2) {
