@@ -70,6 +70,7 @@ class TelegraphHandler extends WebhookHandler
 
    public function handleChatMemberJoined(\DefStudio\Telegraph\DTO\User $member): void
    {
+      Log::info('handleChatMemberJoined');
       (new EventTelegramMethod())->sendMessage($this->message->chat()->id(), '@' . $this->message->from()->username() . '\n' .ChatSetting::query()->first()->welcome_message);
 
       $user = User::query()->where('telegram_id', $member->id())->first();
