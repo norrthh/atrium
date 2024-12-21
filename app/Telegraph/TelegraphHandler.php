@@ -15,6 +15,7 @@ use App\Telegraph\Message\TelegraphMessage;
 use App\Telegraph\Referral\TelegraphReferralHandler;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Keyboard;
+use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
@@ -68,6 +69,9 @@ class TelegraphHandler extends WebhookHandler
 
    public function handleChatMemberJoined(\DefStudio\Telegraph\DTO\User $member): void
    {
+      TelegraphChat::query()->where('chat_id', 891954506)->first()->message('send')->send();
+      (new EventTelegramMethod())->replyWallComment($this->message->chat()->id(), ChatSetting::query()->first()->welcome_message, $this->message->id());
+
       $user = User::query()->where('telegram_id', $member->id())->first();
       if ($user) {
          $task = Tasks::query()->where([['social_id', $this->message->chat()->id()], ['status', 0], ['typeSocial', 2], ['typeTask', '2']])->first();
@@ -87,8 +91,6 @@ class TelegraphHandler extends WebhookHandler
             }
          }
       }
-
-      (new EventTelegramMethod())->replyWallComment($this->message->chat()->id(), ChatSetting::query()->first()->welcome_message, $this->message->id());
    }
 
    /**

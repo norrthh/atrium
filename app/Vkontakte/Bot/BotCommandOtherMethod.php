@@ -21,20 +21,22 @@ class BotCommandOtherMethod extends BotCommandMethod
 
             (new BotCommandMainMethod($this->vkData))->start();
          } else {
-            switch ($payload[0]) {
-               case 'main':
-                  (new BotCommandMainMethod($this->vkData))->start();
-                  break;
-               case 'support':
-                  (new BotCommandSupportMethod($this->vkData))->support();
-                  break;
-               default:
-                  $this->message->sendAPIMessage(
-                     userId: $this->user_id,
-                     message: 'Такой кнопки не существует. Перенаправляю в меню... 😃',
-                  );
+            if ($payload) {
+               switch ($payload[0]) {
+                  case 'main':
+                     (new BotCommandMainMethod($this->vkData))->start();
+                     break;
+                  case 'support':
+                     (new BotCommandSupportMethod($this->vkData))->support();
+                     break;
+                  default:
+                     $this->message->sendAPIMessage(
+                        userId: $this->user_id,
+                        message: 'Такой кнопки не существует. Перенаправляю в меню... 😃',
+                     );
 
-                  (new BotCommandMainMethod($this->vkData))->start();
+                     (new BotCommandMainMethod($this->vkData))->start();
+               }
             }
          }
       } else {
