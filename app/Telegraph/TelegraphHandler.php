@@ -18,6 +18,7 @@ use DefStudio\Telegraph\Keyboard\Keyboard;
 use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 
 class TelegraphHandler extends WebhookHandler
@@ -91,6 +92,40 @@ class TelegraphHandler extends WebhookHandler
             }
          }
       }
+   }
+
+   protected function handleMessage(): void
+   {
+      $this->extractMessageData();
+      Log::info(print_r($this->message->toArray(), true));
+      if (config('telegraph.debug_mode', config('telegraph.webhook.debug'))) {
+         Log::debug('Telegraph webhook message', $this->data->toArray());
+      }
+
+      $text = Str::of($this->message?->text() ?? '');
+
+      if ($text->startsWith($this->commandPrefixes())) {
+         $this->handleCommand($text);
+
+         return;
+      }
+
+
+      if ($this->message?->newChatMembers()->isNotEmpty()) {
+         foreach ($this->message->newChatMembers() as $member) {
+            $this->handleChatMemberJoined($member);
+         }
+
+         return;
+      }
+
+      if ($this->message?->leftChatMember() !== null) {
+         $this->handleChatMemberLeft($this->message->leftChatMember());
+
+         return;
+      }
+
+      $this->handleChatMessage($text);
    }
 
    /**
