@@ -23,7 +23,7 @@ class UserChatCommandServices
     {
         if ($this->checkMute($user_id)) {
             $analyzeText = $this->analyzeText($text);
-            if (isset($analyzeText['status']) && $analyzeText['status'] and UserRole::query()->where('telegram_id', $user_id)->exists()) {
+            if (isset($analyzeText['status']) && $analyzeText['status'] and !UserRole::query()->where('telegram_id', $user_id)->exists()) {
                 if (isset($analyzeText['type']) && $analyzeText['type'] == 'links' or isset($analyzeText['type']) && $analyzeText['type'] == 'words') {
                     $user = User::query()->where('telegram_id', $user_id)->first();
                     if ($user) {
