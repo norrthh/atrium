@@ -12,7 +12,7 @@ class EventVkontakteMethod extends Message implements EventSocialMethod
 {
    public function sendMessage(int $userId, string $message): Response
    {
-      return $this->sendAPIMessage($userId, $message);
+      return $this->sendAPIMessage(userId:$userId, message: $message, peer_id: true);
    }
 
    public function sendWallMessage($filePath, $message)

@@ -23,14 +23,19 @@ class Message
       $this->vkVersion = env('VKONTAKTE_VERSION');
    }
 
-   public function sendAPIMessage(int $userId, string|bool $message = false, $keyboard = false, string|bool $attachment = false): Response
+   public function sendAPIMessage(int $userId, string|bool $message = false, $keyboard = false, string|bool $attachment = false, $peer_id = false): Response
    {
       $params = [
-         'peer_id' => $userId,
          'access_token' => $this->vkKey,
          'v' => $this->vkVersion,
          'random_id' => rand(),
       ];
+
+      if ($peer_id) {
+         $params['peer_id'] = $userId;
+      } else {
+         $params['user_id'] = $userId;
+      }
 
       if ($keyboard) {
          $params['keyboard'] = $keyboard;

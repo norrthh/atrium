@@ -20,7 +20,6 @@ class TelegramChatCommandServices
       if ((new AdminCommands())->checkCommand($text) and UserRole::query()->where('telegram_id', $user_id)->exists()) {
          (new AdminChatCommandServices())->command($text, $chat_id, $message_id, $user_id);
       } else {
-         Log::info('test');
          (new UserChatCommandServices())->filter($text, $chat_id, $message_id, $user_id);
       }
    }
