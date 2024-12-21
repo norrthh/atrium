@@ -70,8 +70,7 @@ class TelegraphHandler extends WebhookHandler
 
    public function handleChatMemberJoined(\DefStudio\Telegraph\DTO\User $member): void
    {
-      TelegraphChat::query()->where('chat_id', 891954506)->first()->message('send')->send();
-      (new EventTelegramMethod())->replyWallComment($this->message->chat()->id(), ChatSetting::query()->first()->welcome_message, $this->message->id());
+      (new EventTelegramMethod())->sendMessage($this->message->chat()->id(), '@' . $this->message->from()->username() . '\n' .ChatSetting::query()->first()->welcome_message);
 
       $user = User::query()->where('telegram_id', $member->id())->first();
       if ($user) {
@@ -94,39 +93,6 @@ class TelegraphHandler extends WebhookHandler
       }
    }
 
-   protected function handleMessage(): void
-   {
-      $this->extractMessageData();
-      Log::info(print_r($this->message->toArray(), true));
-      if (config('telegraph.debug_mode', config('telegraph.webhook.debug'))) {
-         Log::debug('Telegraph webhook message', $this->data->toArray());
-      }
-
-      $text = Str::of($this->message?->text() ?? '');
-
-      if ($text->startsWith($this->commandPrefixes())) {
-         $this->handleCommand($text);
-
-         return;
-      }
-
-
-      if ($this->message?->newChatMembers()->isNotEmpty()) {
-         foreach ($this->message->newChatMembers() as $member) {
-            $this->handleChatMemberJoined($member);
-         }
-
-         return;
-      }
-
-      if ($this->message?->leftChatMember() !== null) {
-         $this->handleChatMemberLeft($this->message->leftChatMember());
-
-         return;
-      }
-
-      $this->handleChatMessage($text);
-   }
 
    /**
     * @throws \Exception
