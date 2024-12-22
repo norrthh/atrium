@@ -119,26 +119,25 @@ class TelegraphMessage extends WebhookHandler
 
    private function processWallReply(array $data, User $userTelegram, ?TelegraphChat $userTelegraph): void
    {
-      Log::info('telegram data ' . print_r($data, 1));
-//      $objectId = $data['message']['reply_to_message']['id'];
-//
-//      if (!$this->userCore->checkAction($userTelegram->telegram_id, 'wall_reply_new', $objectId)) {
-//         if ($userTelegraph) {
-//            $this->userCore->setCoin(
-//               $userTelegram->telegram_id,
-//               'wall_reply_new',
-//               'comment',
-//               $objectId,
-//               'telegram_id'
-//            );
-//
-//            $userTelegraph->message(
-//               Message::getMessage('comment_add', [
-//                  'count' => (new CoinInfoCore())->getDataType('comment')
-//               ])
-//            )->send();
-//         }
-//      }
+      $objectId = $data['message']['reply_to_message']['message_id'];
+
+      if (!$this->userCore->checkAction($userTelegram->telegram_id, 'wall_reply_new', $objectId)) {
+         if ($userTelegraph) {
+            $this->userCore->setCoin(
+               $userTelegram->telegram_id,
+               'wall_reply_new',
+               'comment',
+               $objectId,
+               'telegram_id'
+            );
+
+            $userTelegraph->message(
+               Message::getMessage('comment_add', [
+                  'count' => (new CoinInfoCore())->getDataType('comment')
+               ])
+            )->send();
+         }
+      }
    }
 
    private function handlePromocodeActivation(Stringable $text, User $userTelegram, ?TelegraphChat $userTelegraph): void
