@@ -11,8 +11,8 @@ use App\Models\ChatQuestion;
 use App\Models\ReferralPromocode;
 use App\Models\User\User;
 use App\Models\UserReferralPromocode;
-use App\Telegraph\Chat\Telegram\ChatCommandServices;
 use App\Telegraph\Chat\TelegramChatCommandServices;
+use App\Telegraph\Method\UserMessageTelegramMethod;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
@@ -170,7 +170,7 @@ class TelegraphMessage extends WebhookHandler
 
    private function replyWithMessage(string $message): void
    {
-      (new EventTelegramMethod())->replyWallComment(
+      (new UserMessageTelegramMethod())->replyWallComment(
          $this->handler->message->chat()->id(),
          $message,
          $this->handler->message->id()

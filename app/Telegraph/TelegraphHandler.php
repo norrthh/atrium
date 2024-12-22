@@ -12,6 +12,7 @@ use App\Models\User\User;
 use App\Models\User\UserTask;
 use App\Telegraph\Chat\TelegramChatCommandServices;
 use App\Telegraph\Message\TelegraphMessage;
+use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Telegraph\Referral\TelegraphReferralHandler;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Keyboard;
@@ -70,7 +71,7 @@ class TelegraphHandler extends WebhookHandler
 
    public function handleChatMemberJoined(\DefStudio\Telegraph\DTO\User $member): void
    {
-      (new EventTelegramMethod())->replyWallComment($this->message->chat()->id(), ChatSetting::query()->first()->welcome_message, $this->message->id());
+      (new UserMessageTelegramMethod())->replyWallComment($this->message->chat()->id(), ChatSetting::query()->first()->welcome_message, $this->message->id());
 
       $user = User::query()->where('telegram_id', $member->id())->first();
       if ($user) {
@@ -126,11 +127,6 @@ class TelegraphHandler extends WebhookHandler
    }
 
    public function staff()
-   {
-
-   }
-
-   public function tickets()
    {
 
    }

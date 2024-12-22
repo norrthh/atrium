@@ -2,6 +2,7 @@
 
 namespace App\Core\EventMethod;
 
+use App\Telegraph\Method\UserMessageTelegramMethod;
 use DefStudio\Telegraph\Models\TelegraphChat;
 use GuzzleHttp\Client;
 use Illuminate\Http\Client\ConnectionException;
@@ -53,34 +54,7 @@ class EventTelegramMethod implements EventSocialMethod
 
    public function replyWallComment(int $postId, string $message, int $commentId, $image = null)
    {
-      $telegramBotToken = env('TELEGRAM_TOKEN');
-
-      if ($image) {
-         $url = "https://api.telegram.org/bot{$telegramBotToken}/sendPhoto";
-         $response =  Http::attach(
-            'photo', // Поле для отправки файла
-            fopen(Storage::disk('public')->path($image), 'r'), // Открываем файл
-            basename($image) // Имя файла
-         )->post($url, [
-            'chat_id' => $postId, // ID получателя
-            'caption' => $message, // Текст сообщения
-            'reply_to_message_id' => $commentId,
-         ]);
-      } else {
-         $url = "https://api.telegram.org/bot{$telegramBotToken}/sendMessage";
-         $response = Http::post($url, [
-            'chat_id' => $postId,
-            'text' => $message,
-            'reply_to_message_id' => $commentId,
-         ]);
-      }
-
-      if ($response->failed()) {
-         Log::error("Telegram API error: " . $response->body());
-         throw new \Exception("Telegram API error: " . $response->body());
-      }
-
-      return $response->json();
+      return (new UserMessageTelegramMethod())->replyWallComment($postId, $message, $commentId, $image);
    }
 
    public function checkSubscriptionGroup(int $userId): true
@@ -97,36 +71,4 @@ class EventTelegramMethod implements EventSocialMethod
    {
       return true;
    }
-
-   public function kickUserFromChat(int $chatId, int $userId): string
-   {
-      $client = new Client(['base_uri' => 'https://api.telegram.org']);
-      $response = $client->post('/bot' . env('TELEGRAM_TOKEN') . '/kickChatMember', [
-         'form_params' => [
-            'chat_id' => $chatId,
-            'user_id' => $userId,
-         ],
-      ]);
-
-      if ($response->getStatusCode() !== 200) {
-         return 'Ошибка при исключении пользователя из беседы' . $response->getBody();
-      }
-
-      return 'Вы успешно исключили пользователя';
-   }
-
-   public function deleteMessage(int $chatId, int $messageId): void
-   {
-      $client = new Client([
-         'base_uri' => "https://api.telegram.org/bot" . env('TELEGRAM_TOKEN')
-      ]);
-
-      $response = $client->post('deleteMessage', [
-         'json' => [
-            'chat_id' => $chatId,
-            'message_id' => $messageId
-         ]
-      ]);
-   }
-
 }

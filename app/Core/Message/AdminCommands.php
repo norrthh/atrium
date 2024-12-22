@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Log;
 
 class AdminCommands
 {
-   protected array $commandList = ['/addmoder', '/addadmin', '/warn', '/mute', '/kick', '/akick', '/addInfo', '/newm', '/links', '/words', '/questions'];
+   public array $commandList = ['/addmoder', '/addadmin', '/warn', '/mute', '/kick', '/akick', '/addInfo', '/newm', '/links', '/words', '/questions'];
+   public array $commandNotArg = ['addInfo', 'newm', 'links', 'words', 'questions'];
 
    public function checkCommand(string $input): bool
    {
@@ -20,6 +21,44 @@ class AdminCommands
       }
 
       return false;
+   }
+
+   public function checkCommandVK(string $input): array
+   {
+      $result = [];
+
+      if (preg_match('/\/(\w+)(?:\s+\[id(\d+)\|@?([\w.]+)\])?\s*(.+)?/u', $input, $matches)) {
+         $result = [
+            'command' => $matches[1], // Название команды
+            'id' => $matches[2] ?? null, // ID пользователя (если есть)
+            'nickname' => $matches[3] ?? null, // Ник пользователя (если есть)
+            'other' => $matches[4] ?? null, // Остальная часть строки после ID/ника
+         ];
+      }
+
+      return $result;
+   }
+
+   public function parseCommandWithArgs(string $input): array
+   {
+      $result = [];
+
+      if (preg_match('/\/(\w+)\s+(.+)/', $input, $matches)) {
+         $result = [
+            'command' => $matches[1], // Название команды
+            'args' => trim($matches[2]), // Все аргументы после команды
+         ];
+      } else {
+         // Если команда без аргументов
+         if (preg_match('/\/(\w+)/', $input, $matches)) {
+            $result = [
+               'command' => $matches[1],
+               'args' => null, // Аргументы отсутствуют
+            ];
+         }
+      }
+
+      return $result;
    }
 
    public function getCommand(string $input): array
@@ -40,5 +79,20 @@ class AdminCommands
          'command' => null,
          'parameters' => null,
       ];
+   }
+
+   public function parseFirstArg(string $input = ''): array
+   {
+      $result = [
+         'first_arg' => null,
+         'remaining' => null,
+      ];
+
+      if ($input and preg_match('/^\s*(\S+)\s+(.*)$/', $input, $matches)) {
+         $result['first_arg'] = $matches[1]; // Первый аргумент (до первого пробела)
+         $result['remaining'] = $matches[2]; // Остальная часть строки
+      }
+
+      return $result;
    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Vkontakte\Method;
 
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -23,18 +24,17 @@ class Message
       $this->vkVersion = env('VKONTAKTE_VERSION');
    }
 
-   public function sendAPIMessage(int $userId, string|bool $message = false, $keyboard = false, string|bool $attachment = false, $peer_id = false): Response
+   public function sendAPIMessage(int $userId = 0, string|bool $message = false, $keyboard = false, string|bool $attachment = false, int $conversation_message_id = 0): Response
    {
       $params = [
          'access_token' => $this->vkKey,
          'v' => $this->vkVersion,
          'random_id' => rand(),
+         'peer_id' => $userId
       ];
 
-      if ($peer_id) {
-         $params['peer_id'] = $userId;
-      } else {
-         $params['user_id'] = $userId;
+      if ($conversation_message_id != 0) {
+         $params['reply_to'] = $this->getMessageId($userId, $conversation_message_id);
       }
 
       if ($keyboard) {
@@ -49,12 +49,8 @@ class Message
          $params['attachment'] = $attachment;
       }
 
-
-      $response = Http::get(self::VK_API_URL, $params);
-      Log::info($response->json());
-      return $response;
+      return Http::get(self::VK_API_URL, $params);
    }
-
    public function uploadAPIPhoto(string $imagePath): string
    {
       $client = new Client();
@@ -94,5 +90,28 @@ class Message
       $savedPhoto = json_decode($saveResponse->getBody(), true);
 
       return 'photo' . $savedPhoto['response'][0]['owner_id'] . '_' . $savedPhoto['response'][0]['id'];
+   }
+   public function getMessageId(int $chat_id, int $conversation_message_id)
+   {
+      try {
+         $response = Http::get("https://api.vk.com/method/messages.getByConversationMessageId", [
+            "peer_id" => $chat_id,
+            "conversation_message_ids" => $conversation_message_id,
+            'access_token' => $this->vkKey,
+            'v' => $this->vkVersion,
+         ]);
+
+         $response_data = $response->json();
+
+         if (isset($response_data['response']['items'][0]['id'])) {
+            return $response_data['response']['items'][0]['id']; // Глобальный ID сообщения
+         } elseif (isset($response_data['error'])) {
+            echo "Ошибка VK API: " . $response_data['error']['error_msg'] . "\n";
+         }
+      } catch (Exception $e) {
+         echo "Ошибка при выполнении запроса: " . $e->getMessage() . "\n";
+      }
+
+      return null;
    }
 }
