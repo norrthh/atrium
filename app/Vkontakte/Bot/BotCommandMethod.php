@@ -33,13 +33,14 @@ class BotCommandMethod
 
       Log::info('vk request data ' . print_r($data, 1));
 
-      if (isset($data['object']['message']) and isset($data['object']['message']['text'])) {
-         $this->messageText = $data['object']['message']['text'];
+      if (isset($data['object']['message'])) {
+         if (isset($data['object']['message']['text'])) {
+            $this->messageText = $data['object']['message']['text'];
+         }
+         $this->user_id = $data['object']['message']['peer_id'];
+         $this->user = $data['object']['message']['from_id'];
+         $this->conversation_message_id = $data['object']['message']['conversation_message_id'];
       }
-
-      $this->user_id = $data['object']['message']['peer_id'];
-      $this->user = $data['object']['message']['from_id'];
-      $this->conversation_message_id = $data['object']['message']['conversation_message_id'];
 
       $this->userMethod = new User(user_id: $this->user, chat_id: $this->user_id);
    }
