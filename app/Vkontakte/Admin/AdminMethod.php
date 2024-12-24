@@ -68,19 +68,23 @@ class AdminMethod extends BotCommandMethod
    public function warn(int $user_id, array $args): void
    {
       $data = $this->userData($user_id);
+      $notification = true;
       $userWarn = UserWarns::query()->where([['vkontakte_id', $user_id]])->first();
       if ($userWarn) {
          UserWarns::query()->where([['vkontakte_id', $user_id]])->increment('count', 1);
-         if (($userWarn->count + 1) === 3) {
+         if (($userWarn->count + 1) >= 3) {
             $this->akick(user_id: $user_id, args: $args);
             UserWarns::query()->where([['vkontakte_id', $user_id]])->delete();
+            $notification = false;
          }
       } else {
          $data['count'] = 1;
          UserWarns::query()->create($data);
       }
 
-      $this->message->sendAPIMessage(userId: $this->user_id, message: 'Вы успешно выдали предупреждение', conversation_message_id: $this->conversation_message_id);
+      if ($notification) {
+         $this->message->sendAPIMessage(userId: $this->user_id, message: 'Вы успешно выдали предупреждение', conversation_message_id: $this->conversation_message_id);
+      }
    }
 
    public function akick(int $user_id, array $args): void
@@ -106,7 +110,7 @@ class AdminMethod extends BotCommandMethod
       $this->message->sendAPIMessage(userId: $this->user_id, message: 'Вы успешно выдали мут', conversation_message_id: $this->conversation_message_id);
    }
 
-   public function addInfo(array $args)
+   public function addInfo(array $args): void
    {
       $info = (new AdminCommands())->parseFirstArg($args['other']);
 
@@ -195,7 +199,7 @@ class AdminMethod extends BotCommandMethod
 
          $this->message->sendAPIMessage(
             userId: $this->user_id,
-            message: "send message",
+            message: "Ваше сообщение отправлено",
             conversation_message_id: $this->conversation_message_id
          );
       } else {

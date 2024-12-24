@@ -51,6 +51,7 @@ class Message
 
       return Http::get(self::VK_API_URL, $params);
    }
+
    public function uploadAPIPhoto(string $imagePath): string
    {
       $client = new Client();
@@ -91,6 +92,7 @@ class Message
 
       return 'photo' . $savedPhoto['response'][0]['owner_id'] . '_' . $savedPhoto['response'][0]['id'];
    }
+
    public function getMessageId(int $chat_id, int $conversation_message_id)
    {
       try {
@@ -113,5 +115,21 @@ class Message
       }
 
       return null;
+   }
+
+   public function deleteMessage(int $message_id, int $peer_id): Response
+   {
+      $request = Http::get(
+         'https://api.vk.com/method/messages.delete',
+         [
+            'cmids' => $message_id, // ID сообщения
+            'delete_for_all' => 1, // Удалить для всех (опционально)
+            'access_token' => $this->vkKey,
+            'v' => $this->vkVersion,
+            'peer_id' => $peer_id
+         ]
+      );
+
+      return $request;
    }
 }

@@ -31,8 +31,8 @@ class AdminCommands
          $result = [
             'command' => $matches[1], // Название команды
             'id' => $matches[2] ?? null, // ID пользователя (если есть)
-            'nickname' => $matches[3] ?? null, // Ник пользователя (если есть)
-            'other' => $matches[4] ?? null, // Остальная часть строки после ID/ника
+            'nickname' => $matches[3] ?? null,
+            'other' => $matches[4] ?? null,
          ];
       }
 

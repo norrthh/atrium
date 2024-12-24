@@ -2,6 +2,7 @@
 
 namespace App\Telegraph\Chat;
 
+use App\Core\Bot\BotCore;
 use App\Core\EventMethod\EventTelegramMethod;
 use App\Core\Message\AdminCommands;
 use App\Models\UserRole;
@@ -20,7 +21,7 @@ class TelegramChatCommandServices
       if ((new AdminCommands())->checkCommand($text) and UserRole::query()->where('telegram_id', $user_id)->exists()) {
          (new AdminChatCommandServices())->command($text, $chat_id, $message_id, $user_id);
       } else {
-         (new UserChatCommandServices())->filter($text, $chat_id, $message_id, $user_id);
+         (new BotCore())->filterMessage($text, $chat_id, $message_id, $user_id, 'telegram_id');
       }
    }
 }
