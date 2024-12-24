@@ -31,7 +31,7 @@ class BotCommandMethod
 
       $this->vkData = $data;
 
-      Log::info('vk request data ' . isset($data['object']['message']) and isset($data['object']['message']['text']));
+      Log::info('vk request data ' . print_r($data, 1));
 
       if (isset($data['object']['message']) and isset($data['object']['message']['text'])) {
          $this->messageText = $data['object']['message']['text'];
