@@ -97,7 +97,6 @@ class BotCommandMethod
                userId: $this->user_id,
                message: 'Такой кнопки не существует. Перенаправляю в меню... 😃',
             );
-
             (new BotCommandMainMethod($this->vkData))->start();
          } elseif (Chats::query()->where([['messanger', 'vkontakte'], ['chat_id', $this->user_id]])->exists()) {
             if (isset($this->vkData['object']['message']['action'])) {

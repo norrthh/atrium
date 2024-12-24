@@ -9,7 +9,6 @@ class VkontakteMessageMethod
 {
    public function message(array $data): void
    {
-
       (new BotCommandMethod($data))->command();
    }
 }

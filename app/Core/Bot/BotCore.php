@@ -125,9 +125,11 @@ class BotCore
       if ($this->checkMute($user_id, $column)) {
          $analyzeText = $this->analyzeText($text);
          Log::info('analyzeText: ' . json_encode($analyzeText));
-         if (isset($analyzeText['status']) && $analyzeText['status'] and !UserRole::query()->where('telegram_id', $user_id)->exists()) {
+         if (isset($analyzeText['status']) && $analyzeText['status']) {
             if (isset($analyzeText['type']) && $analyzeText['type'] == 'links' or isset($analyzeText['type']) && $analyzeText['type'] == 'words') {
-               $this->akick(User::query()->where($column, $user_id)->first(), ($column == 'telegram_id' ? 'telegram' : 'vkontakte'), $user_id);
+               if (!UserRole::query()->where($column, $user_id)->exists()) {
+                  $this->akick(User::query()->where($column, $user_id)->first(), ($column == 'telegram_id' ? 'telegram' : 'vkontakte'), $user_id);
+               }
             }
             if (isset($analyzeText['answer'])) {
                if ($column == 'telegram_id') {
@@ -138,7 +140,6 @@ class BotCore
             }
          }
       } else {
-//         Log::info('user_Id:' . $user_id . 'peer_id:' . $chat_id);
          if ($column == 'telegram_id') {
             (new UserMessageTelegramMethod())->deleteMessage($chat_id, $message_id);
          } else {
