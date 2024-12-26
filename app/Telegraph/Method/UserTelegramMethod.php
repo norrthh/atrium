@@ -46,6 +46,30 @@ class UserTelegramMethod
       return null;
    }
 
+   public function getUserId(int $userID)
+   {
+      $botToken = env('TELEGRAM_TOKEN');
+
+      $client = new Client();
+      $url = "https://api.telegram.org/bot$botToken/getChat";
+
+      try {
+         $response = $client->get($url, [
+            'query' => [
+               'chat_id' => $userID
+            ]
+         ]);
+
+         $data = json_decode($response->getBody(), true);
+
+         Log::info('getUserId' . print_r($data, 1));
+         return $data['result'];
+      } catch (\GuzzleHttp\Exception\ClientException $e) {
+         Log::info('getUserIdFail' . $e->getMessage());
+         return null;
+      }
+   }
+
    public function getInfoUser(?User $user, int $user_id): array
    {
       $userUpdate = ['telegram_id' => $user_id];

@@ -50,7 +50,6 @@ class AdminMethod extends BotCommandMethod
          $usersFilter[] = ($role->role == 2 ? 'Администратор ' : 'Модератор ') . '[id' . $role->vkontakte_id . '|' . $user->username_vkontakte . ']';
       }
 
-//      Log::info(print_r($usersFilter, 1));
       $this->message->sendAPIMessage(userId: $this->user_id, message: implode("<br>", $usersFilter), conversation_message_id: $this->conversation_message_id);
    }
 
