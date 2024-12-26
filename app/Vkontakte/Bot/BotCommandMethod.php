@@ -105,7 +105,7 @@ class BotCommandMethod
                if ($actionMessage['type'] == 'chat_invite_user' or $actionMessage['type'] == 'chat_invite_user_by_link' and $actionMessage['member_id']) {
                   $this->message->sendAPIMessage(
                      userId: $this->user_id,
-                     message: ChatSetting::query()->first()->welcome_message,
+                     message: ChatSetting::query()->where('chat_id', $this->user_id)->first()->welcome_message,
                   );
                }
             } elseif ((new AdminCommands())->checkCommandVK($this->messageText)) {

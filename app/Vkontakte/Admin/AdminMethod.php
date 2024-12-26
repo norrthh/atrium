@@ -24,6 +24,8 @@ class AdminMethod extends BotCommandMethod
       if ($userRole) {
          $getInfoCommand = (new AdminCommands())->checkCommandVK($this->messageText);
 
+         Log::info('getInfoCommand' . print_r($getInfoCommand, 1));
+
          $command = $getInfoCommand['command'] ?? null;
          $user_id = $getInfoCommand['id'];
 
@@ -38,7 +40,6 @@ class AdminMethod extends BotCommandMethod
          }
       }
    }
-
    public function staff($args): void
    {
       $userRoles = UserRole::query()->where([['vkontakte_id', '!=', null]])->orderBy('role', 'desc')->get();
@@ -52,13 +53,11 @@ class AdminMethod extends BotCommandMethod
 
       $this->message->sendAPIMessage(userId: $this->user_id, message: implode("<br>", $usersFilter), conversation_message_id: $this->conversation_message_id);
    }
-
    public function kick($user_id, array $args): void
    {
       $this->userMethod->kickUserFromChat($user_id);
       $this->message->sendAPIMessage(userId: $this->user_id, message: 'Пользователь исключён из беседы', conversation_message_id: $this->conversation_message_id);
    }
-
    public function addmoder(int $user_id, array $args): void
    {
       $userRole = UserRole::query()->where('vkontakte_id', $this->user)->first();
@@ -67,7 +66,6 @@ class AdminMethod extends BotCommandMethod
          $this->message->sendAPIMessage(userId: $this->user_id, message: 'Вы успешно выдали роль модератора', conversation_message_id: $this->conversation_message_id);
       }
    }
-
    public function addadmin(int $user_id, array $args): void
    {
       $userRole = UserRole::query()->where('vkontakte_id', $this->user)->first();
@@ -76,7 +74,6 @@ class AdminMethod extends BotCommandMethod
          $this->message->sendAPIMessage(userId: $this->user_id, message: 'Вы успешно выдали роль администратора', conversation_message_id: $this->conversation_message_id);
       }
    }
-
    public function warn(int $user_id, array $args): void
    {
       $data = $this->userData($user_id);
@@ -98,7 +95,6 @@ class AdminMethod extends BotCommandMethod
          $this->message->sendAPIMessage(userId: $this->user_id, message: 'Вы успешно выдали предупреждение', conversation_message_id: $this->conversation_message_id);
       }
    }
-
    public function akick(int $user_id, array $args): void
    {
       Log::info('call akick');
@@ -110,7 +106,6 @@ class AdminMethod extends BotCommandMethod
 
       $this->message->sendAPIMessage(userId: $this->user_id, message: 'Пользователь был удален из всех бесед', conversation_message_id: $this->conversation_message_id);
    }
-
    public function mute(int $user_id, array $args): void
    {
       if ($args['other'] == '' or !is_numeric($args['other'])) {
@@ -121,7 +116,6 @@ class AdminMethod extends BotCommandMethod
       (new BotCore())->mute($this->userData($user_id), $args['other'], 'vkontakte_id', $user_id);
       $this->message->sendAPIMessage(userId: $this->user_id, message: 'Вы успешно выдали мут', conversation_message_id: $this->conversation_message_id);
    }
-
    public function addInfo(array $args): void
    {
       $this->message->sendAPIMessage(
@@ -130,8 +124,6 @@ class AdminMethod extends BotCommandMethod
          conversation_message_id: $this->conversation_message_id
       );
    }
-
-
    protected function userData(int $user_id): array
    {
       $data = ['vkontakte_id' => $user_id];
@@ -142,5 +134,9 @@ class AdminMethod extends BotCommandMethod
       }
 
       return $data;
+   }
+   protected function newm(array $args): void
+   {
+      $this->message->sendAPIMessage(userId: $this->user_id, message: (new BotCore())->newm($this->user_id, $args['other']), conversation_message_id: $this->conversation_message_id);
    }
 }

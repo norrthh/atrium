@@ -71,7 +71,10 @@ class TelegraphHandler extends WebhookHandler
 
    public function handleChatMemberJoined(\DefStudio\Telegraph\DTO\User $member): void
    {
-      (new UserMessageTelegramMethod())->replyWallComment($this->message->chat()->id(), ChatSetting::query()->first()->welcome_message, $this->message->id());
+      $welcomeMessage = ChatSetting::query()->where('chat_id', $this->message->chat()->id())->first();
+      if ($welcomeMessage) {
+         (new UserMessageTelegramMethod())->replyWallComment($this->message->chat()->id(), $welcomeMessage->welcome_message, $this->message->id());
+      }
 
       $user = User::query()->where('telegram_id', $member->id())->first();
       if ($user) {
@@ -94,10 +97,6 @@ class TelegraphHandler extends WebhookHandler
       }
    }
 
-
-   /**
-    * @throws \Exception
-    */
    protected function handleCommand(Stringable $text): void
    {
       [$command, $parameter] = $this->parseCommand($text);
@@ -114,20 +113,5 @@ class TelegraphHandler extends WebhookHandler
             $this->$command($parameter);
          }
       }
-   }
-
-   public function return(): void
-   {
-
-   }
-
-   public function peerID()
-   {
-      $this->chat->message($this->message->chat()->id())->send();
-   }
-
-   public function staff()
-   {
-
    }
 }
