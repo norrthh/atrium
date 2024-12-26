@@ -43,15 +43,9 @@ class UserMessageTelegramMethod
 
    public function deleteMessage(int $chatId, int $messageId): void
    {
-      $client = new Client([
-         'base_uri' => "https://api.telegram.org/bot" . env('TELEGRAM_TOKEN')
-      ]);
-
-      $client->post('deleteMessage', [
-         'json' => [
-            'chat_id' => $chatId,
-            'message_id' => $messageId
-         ]
+      Http::post("https://api.telegram.org/bot". env('TELEGRAM_TOKEN') ."/deleteMessage", [
+         'chat_id' => $chatId,
+         'message_id' => $messageId
       ]);
    }
 }
