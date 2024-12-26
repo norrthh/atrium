@@ -16,6 +16,7 @@ use App\Telegraph\Method\UserMessageTelegramMethod;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
+use DefStudio\Telegraph\Models\TelegraphBot;
 use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -52,20 +53,26 @@ class TelegraphMessage extends WebhookHandler
       if (isset($this->handler->message)) {
          $chatId = $this->handler->message->from()->id() ?? null;
          if ($chatId !== null) {
-            TelegraphChat::query()->updateOrCreate(
-               ['chat_id' => $chatId],
-               ['name' => '[private] ' . $this->handler->message->from()->username()]
-            );
+             $telegraphChat = TelegraphChat::query()->updateOrCreate(
+                 ['chat_id' => $chatId],
+                 ['name' => '[private] ' . $this->handler->message->from()->username()]
+             );
+
+             $telegraphChat->forceFill(['telegraph_bot_id' => TelegraphBot::query()->first()->id])->save();
+
          }
       }
 
       if (isset($this->handler->callbackQuery)) {
          $chatId = $this->handler->callbackQuery->from()->id() ?? null;
          if ($chatId !== null) {
-            TelegraphChat::query()->updateOrCreate(
-               ['chat_id' => $chatId],
-               ['name' => '[private] ' . $this->handler->callbackQuery->from()->username()]
-            );
+             $telegraphChat = TelegraphChat::query()->updateOrCreate(
+                 ['chat_id' => $chatId],
+                 ['name' => '[private] ' . $this->handler->callbackQuery->from()->username()]
+             );
+
+             $telegraphChat->forceFill(['telegraph_bot_id' => TelegraphBot::query()->first()->id])->save();
+
          }
       }
 
