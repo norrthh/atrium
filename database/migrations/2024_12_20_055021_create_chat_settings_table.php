@@ -13,13 +13,10 @@ return new class extends Migration
     {
         Schema::create('chat_settings', function (Blueprint $table) {
             $table->id();
+            $table->string('chat_id');
             $table->text('welcome_message');
             $table->timestamps();
         });
-
-        \App\Models\ChatSetting::query()->create([
-            'welcome_message' => ''
-        ]);
     }
 
     /**

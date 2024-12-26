@@ -65,34 +65,20 @@ class AdminCommands
    {
       $pattern = '/\/(\w+)(?:\s+([^\/]+))?/';
 
-      if (preg_match($pattern, $input, $matches)) {
-         $command = $matches[1] ?? null;
-         $parameters = isset($matches[2]) ? trim($matches[2]) : null;
+       if (preg_match($pattern, $input, $matches)) {
+           $command = $matches[1] ?? null;
+           $parameters = isset($matches[2]) ? trim($matches[2]) : null;
 
-         return [
-            'command' => $command,
-            'parameters' => explode(' ', $parameters),
-         ];
-      }
+           return [
+               'command' => $command,
+               'parameters' => $parameters ? preg_split('/\s+/', $parameters) : [],
+               'param' => $parameters
+           ];
+       }
 
       return [
          'command' => null,
          'parameters' => null,
       ];
-   }
-
-   public function parseFirstArg(string $input = ''): array
-   {
-      $result = [
-         'first_arg' => null,
-         'remaining' => null,
-      ];
-
-      if ($input and preg_match('/^\s*(\S+)\s+(.*)$/', $input, $matches)) {
-         $result['first_arg'] = $matches[1]; // Первый аргумент (до первого пробела)
-         $result['remaining'] = $matches[2]; // Остальная часть строки
-      }
-
-      return $result;
    }
 }

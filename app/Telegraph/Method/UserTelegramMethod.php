@@ -4,6 +4,7 @@ namespace App\Telegraph\Method;
 
 use App\Core\EventMethod\EventVkontakteMethod;
 use App\Models\User\User;
+use DefStudio\Telegraph\Models\TelegraphChat;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
@@ -22,7 +23,7 @@ class UserTelegramMethod
             ],
          ]);
       } catch (GuzzleException $e) {
-         Log::info('Error in kickChatMember Telegram: '. $e->getMessage());
+         Log::info('Error in kickChatMember Telegram: ' . $e->getMessage());
          return $e->getMessage();
       }
 
@@ -35,10 +36,14 @@ class UserTelegramMethod
 
    public function getUserIdByUsername(string $username): ?int
    {
-      $response = file_get_contents("https://api.telegram.org/bot" . env('TELEGRAM_TOKEN') . "/getChat?chat_id={$username}");
-      $data = json_decode($response, true);
+      $username = ltrim($username, '@');
 
-      return $data['result']['id'] ?? null;
+      $telegraph = TelegraphChat::query()->where('name', 'LIKE', '%' . $username . '%')->first();
+      if ($telegraph) {
+         return $telegraph->chat_id;
+      }
+
+      return null;
    }
 
    public function getInfoUser(?User $user, int $user_id): array

@@ -64,7 +64,7 @@ class AdminMethod extends BotCommandMethod
    {
       $userRole = UserRole::query()->where('vkontakte_id', $this->user)->first();
       if ($userRole->role == 2) {
-         $this->addRole($user_id, 1);
+         (new BotCore())->addRole($user_id, 1, 'vkontakte_id');
          $this->message->sendAPIMessage(userId: $this->user_id, message: 'Вы успешно выдали роль модератора', conversation_message_id: $this->conversation_message_id);
       }
    }
@@ -73,7 +73,7 @@ class AdminMethod extends BotCommandMethod
    {
       $userRole = UserRole::query()->where('vkontakte_id', $this->user)->first();
       if ($userRole->role == 2) {
-         $this->addRole($user_id, 2);
+         (new BotCore())->addRole($user_id, 2, 'vkontakte_id');
          $this->message->sendAPIMessage(userId: $this->user_id, message: 'Вы успешно выдали роль администратора', conversation_message_id: $this->conversation_message_id);
       }
    }
@@ -125,123 +125,13 @@ class AdminMethod extends BotCommandMethod
 
    public function addInfo(array $args): void
    {
-      $info = (new AdminCommands())->parseFirstArg($args['other']);
-
-      if ($info['first_arg'] != '' and $info['remaining'] != '') {
-         $text = $info['remaining'];
-         $type = $info['first_arg'];
-
-         if ($type != 2 and $type != 4 and $type != 5) {
-            $explode = explode('.', $type);
-            if (count($explode) == 2) {
-               if ($explode[0] == 1) {
-                  $chats = Chats::query()->where('messanger', 'vkontakte')->get();
-                  $chats = $chats[$explode[1] - 1];
-
-                  if ($chats) {
-                     $this->message->sendAPIMessage(
-                        userId: $chats->chat_id,
-                        message: $text,
-                     );
-                  } else {
-                     $this->message->sendAPIMessage(
-                        userId: $this->user_id,
-                        message: 'Беседа не найдена',
-                        conversation_message_id: $this->conversation_message_id
-                     );
-                     die();
-                  }
-               }
-
-               if ($explode[0] == 3) {
-                  $chats = Chats::query()->where('messanger', 'telegram')->get();
-                  $chats = $chats[$explode[1] - 1];
-                  if ($chats) {
-                     (new EventTelegramMethod())->sendMessage($chats->chat_id, $text);
-                  } else {
-                     $this->message->sendAPIMessage(
-                        userId: $this->user_id,
-                        message: 'Беседа не найдена',
-                        conversation_message_id: $this->conversation_message_id
-                     );
-                     die();
-                  }
-               }
-            } else {
-               $this->message->sendAPIMessage(
-                  userId: $this->user_id,
-                  message: "
-                     Вы ввели неверные данные, проверьте пробелы. Пример: /addInfo {type} {text}.
-                     \n{type}:\n1 - Одна беседа Вконтакнте\n1.1 - Первая беседа вконтакте (и тд)\n2 - Все беседы ВК\n3 - Одна беседа Telegram\n3.1 - Первая беседа Telegram (и тд)\n4 - Все беседы Telegram\n5 - Все беседы
-                  ",
-                  conversation_message_id: $this->conversation_message_id
-               );
-               die();
-            }
-         } elseif ($type == 2) {
-            foreach (Chats::query()->where('messanger', 'vkontakte')->get() as $chat) {
-               $this->message->sendAPIMessage(
-                  userId: $chat->chat_id,
-                  message: $text,
-               );
-            }
-         } elseif ($type == 4) {
-            foreach (Chats::query()->where('messanger', 'telegram')->get() as $chat) {
-               (new EventTelegramMethod())->sendMessage($chat->chat_id, $text);
-            }
-         } elseif ($type == 5) {
-            foreach (Chats::query()->get() as $chat) {
-               if ($chat->messanger == 'vkontakte') {
-                  $this->message->sendAPIMessage(
-                     userId: $chat->chat_id,
-                     message: $text,
-                  );
-               } else {
-                  (new EventTelegramMethod())->sendMessage($chat->chat_id, $text);
-               }
-            }
-         } else {
-            $this->message->sendAPIMessage(
-               userId: $this->user_id,
-               message: 'Введите валидные аргументы',
-               conversation_message_id: $this->conversation_message_id
-            );
-
-            die();
-         }
-
-         $this->message->sendAPIMessage(
-            userId: $this->user_id,
-            message: "Ваше сообщение отправлено",
-            conversation_message_id: $this->conversation_message_id
-         );
-      } else {
-         $this->message->sendAPIMessage(
-            userId: $this->user_id,
-            message: "
-               Вы ввели неверные данные, проверьте пробелы. Пример: /addInfo {type} {text}.
-               \n{type}:\n1 - Одна беседа Вконтакнте\n1.1 - Первая беседа вконтакте (и тд)\n2 - Все беседы ВК\n3 - Одна беседа Telegram\n3.1 - Первая беседа Telegram (и тд)\n4 - Все беседы Telegram\n5 - Все беседы
-            ",
-            conversation_message_id: $this->conversation_message_id
-         );
-      }
+      $this->message->sendAPIMessage(
+         userId: $this->user_id,
+         message: (new BotCore())->addInfo($args['text']),
+         conversation_message_id: $this->conversation_message_id
+      );
    }
 
-   protected function addRole(int $user_id, int $role): void
-   {
-      $user = User::query()->where('vkontakte_id', $user_id)->first();
-
-      $roleData = [
-         'vkontakte_id' => $user_id,
-         'role' => $role
-      ];
-
-      if ($user and $user->telegram_id) {
-         $roleData['telegram_id'] = $user->telegram_id;
-      }
-
-      UserRole::query()->updateOrCreate(['vkontakte_id' => $user_id], $roleData);
-   }
 
    protected function userData(int $user_id): array
    {

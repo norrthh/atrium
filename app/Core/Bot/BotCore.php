@@ -2,9 +2,12 @@
 
 namespace App\Core\Bot;
 
+use App\Core\EventMethod\EventTelegramMethod;
+use App\Core\Message\AdminCommands;
 use App\Models\ChatLink;
 use App\Models\ChatQuestion;
 use App\Models\Chats;
+use App\Models\ChatSetting;
 use App\Models\ChatWords;
 use App\Models\User\User;
 use App\Models\UserMute;
@@ -124,7 +127,7 @@ class BotCore
    {
       if ($this->checkMute($user_id, $column)) {
          $analyzeText = $this->analyzeText($text);
-         Log::info('analyzeText: ' . json_encode($analyzeText));
+         Log::info('analyzeText: ' . print_r($analyzeText, 1));
          if (isset($analyzeText['status']) && $analyzeText['status']) {
             if (isset($analyzeText['type']) && $analyzeText['type'] == 'links' or isset($analyzeText['type']) && $analyzeText['type'] == 'words') {
                if (!UserRole::query()->where($column, $user_id)->exists()) {
@@ -146,5 +149,121 @@ class BotCore
             (new Message())->deleteMessage($message_id, $chat_id);
          }
       }
+   }
+
+   public function addRole(int $user_id, int $role, string $table): void
+   {
+      $user = User::query()->where($table, $user_id)->first();
+
+      $roleData = [
+         'vkontakte_id' => $user_id,
+         'role' => $role
+      ];
+
+      if ($user and ($table == 'telegram_id' ? $user->telegram_id : $user->vkontakte_id)) {
+         $roleData['telegram_id'] = $user->telegram_id;
+      }
+
+      UserRole::query()->updateOrCreate([$table => $user_id], $roleData);
+   }
+
+   public function addInfo(string $message): ?string
+   {
+      $info = $this->parseFirstArg($message);
+
+      Log::info('addInfo: ' . print_r($info, 1));
+
+      if ($info['first_arg'] != '' and $info['remaining'] != '') {
+         $text = $info['remaining'];
+         $type = $info['first_arg'];
+
+         $vkMethod = new Message();
+
+         if ($type != 2 and $type != 4 and $type != 5) {
+            $explode = explode('.', $type);
+            if (count($explode) == 2) {
+               if ($explode[0] == 1) {
+                  $chats = Chats::query()->where('messanger', 'vkontakte')->get();
+                  $chats = $chats[$explode[1] - 1];
+
+                  if ($chats) {
+                     $vkMethod->sendAPIMessage(
+                        userId: $chats->chat_id,
+                        message: $text,
+                     );
+                  } else {
+                     return 'Беседа не найдена';
+                  }
+               }
+
+               if ($explode[0] == 3) {
+                  $chats = Chats::query()->where('messanger', 'telegram')->get();
+                  $chats = $chats[$explode[1] - 1];
+                  if ($chats) {
+                     (new EventTelegramMethod())->sendMessage($chats->chat_id, $text);
+                  } else {
+                     return 'Беседа не найдена';
+                  }
+               }
+            } else {
+               return "
+                     Вы ввели неверные данные, проверьте пробелы. Пример: /addInfo {type} {text}.
+                     \n{type}:\n1 - Одна беседа Вконтакнте\n1.1 - Первая беседа вконтакте (и тд)\n2 - Все беседы ВК\n3.1 - Первая беседа Telegram (и тд)\n4 - Все беседы Telegram\n5 - Все беседы
+                  ";
+            }
+         } elseif ($type == 2) {
+            foreach (Chats::query()->where('messanger', 'vkontakte')->get() as $chat) {
+               $vkMethod->sendAPIMessage(
+                  userId: $chat->chat_id,
+                  message: $text,
+               );
+            }
+         } elseif ($type == 4) {
+            foreach (Chats::query()->where('messanger', 'telegram')->get() as $chat) {
+               (new EventTelegramMethod())->sendMessage($chat->chat_id, $text);
+            }
+         } elseif ($type == 5) {
+            foreach (Chats::query()->get() as $chat) {
+               if ($chat->messanger == 'vkontakte') {
+                  $vkMethod->sendAPIMessage(
+                     userId: $chat->chat_id,
+                     message: $text,
+                  );
+               } else {
+                  (new EventTelegramMethod())->sendMessage($chat->chat_id, $text);
+               }
+            }
+         } else {
+            return 'Введите валидные аргументы';
+         }
+
+         return "Ваше сообщение отправлено";
+      }
+
+      return "
+         Вы ввели неверные данные, проверьте пробелы. Пример: /addInfo {type} {text}.
+         \n{type}:\n1.1 - Первая беседа вконтакте (и тд)\n2 - Все беседы ВК\n3 - Одна беседа Telegram\n3.1 - Первая беседа Telegram (и тд)\n4 - Все беседы Telegram\n5 - Все беседы
+      ";
+   }
+
+   public function newm(int $chat_id, string $welcomeMessage): string
+   {
+      ChatSetting::query()->updateOrCreate(['chat_id' => $chat_id], ['welcome_message' => $welcomeMessage]);
+      return "Вы успешно обновили приветственное сообщение";
+   }
+
+   protected function parseFirstArg(string $input = ''): array
+   {
+      $result = [
+         'first_arg' => null,
+         'remaining' => null,
+      ];
+
+      if ($input and preg_match('/^\s*(\S+)\s+(.*)$/', $input, $matches)) {
+         $result['first_arg'] = $matches[1]; // Первый аргумент (до первого пробела)
+         $result['remaining'] = $matches[2]; // Остальная часть строки
+      }
+
+      return $result;
    }
 }
