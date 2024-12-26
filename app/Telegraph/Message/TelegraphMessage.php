@@ -49,6 +49,18 @@ class TelegraphMessage extends WebhookHandler
 
    private function getUserByTelegramId(): ?User
    {
+      if (isset($this->handler->message)) {
+         TelegraphChat::query()->where('id', $this->message->from()->id())->update([
+            'name' => '[private]' . $this->message->from()->username()
+         ]);
+      }
+
+      if (isset($this->handler->callbackQuery)) {
+         TelegraphChat::query()->where('id', $this->callbackQuery->from()->id())->update([
+            'name' => '[private]' . $this->callbackQuery->from()->username()
+         ]);
+      }
+
       return User::query()->where('telegram_id', $this->handler->message->from()->id())->first();
    }
 

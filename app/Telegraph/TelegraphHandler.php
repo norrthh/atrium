@@ -102,18 +102,6 @@ class TelegraphHandler extends WebhookHandler
    {
       [$command, $parameter] = $this->parseCommand($text);
 
-      if (isset($this->message)) {
-         TelegraphChat::query()->where('id', $this->message->from()->id())->update([
-            'name' => '[private]' . $this->message->from()->username()
-         ]);
-      }
-
-      if (isset($this->callbackQuery)) {
-         TelegraphChat::query()->where('id', $this->callbackQuery->from()->id())->update([
-            'name' => '[private]' . $this->callbackQuery->from()->username()
-         ]);
-      }
-
       $chatCommand = (new TelegramChatCommandServices());
       if ((new AdminCommands())->checkCommand($text)) {
          $chatCommand->commands($text, $this->message->chat()->id(), $this->message->id(), $this->message->from()->id());
