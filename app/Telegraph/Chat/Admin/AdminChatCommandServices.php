@@ -195,7 +195,6 @@ class AdminChatCommandServices
 
       foreach ($userRoles as $role) {
          $user = (new UserTelegramMethod())->getUserId($role->telegram_id);
-         Log::info($user['username']);
          $usersFilter[] = ($role->role == 2 ? 'Администратор ' : 'Модератор ') . '@' . $user['username'];
       }
 
