@@ -14,6 +14,7 @@ use App\Models\UserWarns;
 use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Telegraph\Method\UserTelegramMethod;
 use DefStudio\Telegraph\Models\TelegraphChat;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -188,16 +189,24 @@ class AdminChatCommandServices
       (new EventTelegramMethod())->replyWallComment($chat_id, (new BotCore())->newm($chat_id, $parameters), $message_id);
    }
 
-   public function staff(string $chat_id, int $message_id)
+   /**
+    * @throws ConnectionException
+    */
+   public function staff(string $chat_id, int $message_id): void
    {
-      $userRoles = UserRole::query()->where([['telegram_id', '!=', null]])->orderBy('role', 'desc')->get();
-      $usersFilter = [];
+      $userRoles = UserRole::query()->where([['telegram_id', '!=', null]])->orderBy('role', 'desc')->get()->groupBy('role');;
 
-      foreach ($userRoles as $role) {
-         $user = (new UserTelegramMethod())->getUserId($role->telegram_id);
-         $usersFilter[] = ($role->role == 2 ? 'Администратор ' : 'Модератор ') . '@' . $user['username'];
-      }
+      $result = $userRoles->map(function ($users, $role) {
+         $names = '';
 
-      (new EventTelegramMethod())->replyWallComment($chat_id, implode("\n", $usersFilter), $message_id);
+         foreach ($users as $user) {
+            $user = (new UserTelegramMethod())->getUserId($user->telegram_id);
+            $names .= "<a href='https://t.me/". $user['username'] ."'>". ($user['first_name'] ?? '') . ($user['last_name'] ?? '') . "</a>\n";
+         }
+
+         return ($role == 1 ? 'Модератор' : 'Администратор') . "\n" . $names;
+      })->join("\n");
+
+      (new UserMessageTelegramMethod())->replyWallComment($chat_id, $result, $message_id, parseMode: 'html');
    }
 }

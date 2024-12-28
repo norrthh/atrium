@@ -52,9 +52,12 @@ class EventTelegramMethod implements EventSocialMethod
 
    }
 
-   public function replyWallComment(int $postId, string $message, int $commentId, $image = null)
+   /**
+    * @throws ConnectionException
+    */
+   public function replyWallComment(int $postId, string $message, int $commentId, $image = null, $parseMode = '')
    {
-      return (new UserMessageTelegramMethod())->replyWallComment($postId, $message, $commentId, $image);
+      (new UserMessageTelegramMethod())->replyWallComment($postId, $message, $commentId, $image, $parseMode);
    }
 
    public function checkSubscriptionGroup(int $userId): true
