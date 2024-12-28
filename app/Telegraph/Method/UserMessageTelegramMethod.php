@@ -14,15 +14,18 @@ class UserMessageTelegramMethod
     * @throws ConnectionException
     * @throws \Exception
     */
-   public function replyWallComment(int $postId, string $message, int $commentId, $image = null, string $parseMode = null): void
+   public function replyWallComment(int $postId, string $message, int $commentId = null, $image = null, string $parseMode = null): void
    {
       $telegramBotToken = env('TELEGRAM_TOKEN');
 
       $data = [
          'chat_id' => $postId,
-         'reply_to_message_id' => $commentId,
          'disable_web_page_preview' => true,
       ];
+
+      if ($commentId) {
+         $data['reply_to_message_id'] = $commentId;
+      }
 
       if ($parseMode) {
          $data['parse_mode'] = $parseMode;

@@ -72,8 +72,11 @@ class TelegraphHandler extends WebhookHandler
    public function handleChatMemberJoined(\DefStudio\Telegraph\DTO\User $member): void
    {
       $welcomeMessage = ChatSetting::query()->where('chat_id', $this->message->chat()->id())->first();
+
       if ($welcomeMessage) {
-         (new UserMessageTelegramMethod())->replyWallComment($this->message->chat()->id(), $welcomeMessage->welcome_message, $this->message->id());
+         $userMessageTelegram = new UserMessageTelegramMethod();
+         $userMessageTelegram->replyWallComment($this->message->chat()->id(), $welcomeMessage->welcome_message);
+         $userMessageTelegram->deleteMessage($this->message->chat()->id(), $this->message->id());
       }
 
       $user = User::query()->where('telegram_id', $member->id())->first();
