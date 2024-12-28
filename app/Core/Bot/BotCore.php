@@ -246,8 +246,11 @@ class BotCore
       ";
    }
 
-   public function newm(int $chat_id, string $welcomeMessage): string
+   public function newm(int $chat_id, ?string $welcomeMessage = null): string
    {
+      if (!$welcomeMessage) {
+         return "Введите аргумент для заполнения текста /newm text";
+      }
       ChatSetting::query()->updateOrCreate(['chat_id' => $chat_id], ['welcome_message' => $welcomeMessage]);
       return "Вы успешно обновили приветственное сообщение";
    }

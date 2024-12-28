@@ -137,6 +137,10 @@ class AdminMethod extends BotCommandMethod
    }
    protected function newm(array $args): void
    {
-      $this->message->sendAPIMessage(userId: $this->user_id, message: (new BotCore())->newm($this->user_id, $args['other']), conversation_message_id: $this->conversation_message_id);
+      $this->message->sendAPIMessage(
+         userId: $this->user_id,
+         message: (new BotCore())->newm($this->user_id, $args['other']),
+         conversation_message_id: $this->conversation_message_id
+      );
    }
 }
