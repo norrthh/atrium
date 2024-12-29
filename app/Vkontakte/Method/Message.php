@@ -49,7 +49,11 @@ class Message
          $params['attachment'] = $attachment;
       }
 
-      return Http::get(self::VK_API_URL, $params);
+      $request = Http::get(self::VK_API_URL, $params);
+
+      Log::info('request send message vk' . print_r($request->body(), true));
+
+      return $request;
    }
 
    public function uploadAPIPhoto(string $imagePath): string

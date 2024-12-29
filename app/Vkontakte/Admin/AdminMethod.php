@@ -20,7 +20,6 @@ class AdminMethod extends BotCommandMethod
    public function method(): void
    {
       $userRole = UserRole::query()->where('vkontakte_id', $this->user)->first();
-
       if ($userRole) {
          $getInfoCommand = (new AdminCommands())->checkCommandVK($this->messageText);
 
@@ -34,6 +33,7 @@ class AdminMethod extends BotCommandMethod
          if ($user_id) {
             $this->{$command}(user_id: $user_id, args: $getInfoCommand);
          } elseif (in_array($command, (new AdminCommands())->commandNotArg)) {
+            Log::info(300);
             $this->{$command}(args: $getInfoCommand);
          } else {
             $this->message->sendAPIMessage(userId: $this->user_id, message: 'Пользователь не найден', conversation_message_id: $this->conversation_message_id);
@@ -42,13 +42,14 @@ class AdminMethod extends BotCommandMethod
    }
    public function staff($args): void
    {
-      $userRoles = UserRole::query()->where([['vkontakte_id', '!=', null]])->orderBy('role', 'desc')->get()->groupBy('role');
+      $userRoles = UserRole::query()->where([['vkontakte_id', '!=', null]])->orderBy('role', 'desc')->get();
 
       $result = $userRoles->groupBy('role')->map(function ($users, $role) {
          $names = '';
-
-         foreach ($users as $user) {
-            $userAccount = User::query()->where('vkontakte_id', $user->vkontakte_id)->first();
+         Log::info('users ' . $users);
+         foreach ($users as $userZ) {
+            Log::info('user ' . $userZ);
+            $userAccount = User::query()->where('vkontakte_id', $userZ->vkontakte_id)->first();
 
             // Проверяем, найден ли пользователь
             if ($userAccount) {
@@ -145,6 +146,7 @@ class AdminMethod extends BotCommandMethod
    }
    protected function newm(array $args): void
    {
+      Log::info('call newm');
       $this->message->sendAPIMessage(
          userId: $this->user_id,
          message: (new BotCore())->newm($this->user_id, $args['other']),
