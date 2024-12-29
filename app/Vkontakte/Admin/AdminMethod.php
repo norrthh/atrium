@@ -43,14 +43,13 @@ class AdminMethod extends BotCommandMethod
    public function staff($args): void
    {
       $userRoles = UserRole::query()->where([['vkontakte_id', '!=', null]])->orderBy('role', 'desc')->get();
-      $usersFilter = [];
 
       $result = $userRoles->map(function ($users, $role) {
          $names = '';
 
          foreach ($users as $user) {
             $userAccount = User::query()->where('vkontakte_id', $user->vkontakte_id)->first();
-            $names .= '[id' . $role->vkontakte_id . '|' . $userAccount->username_vkontakte . ']';
+            $names .= '[id' . $userAccount->vkontakte_id . '|' . $userAccount->username_vkontakte . ']';
          }
 
          return ($role == 1 ? 'Модераторы' : 'Администраторы') . "\n" . $names;
