@@ -129,11 +129,11 @@ class BotCore
          $analyzeText = $this->analyzeText($text);
          Log::info('analyzeText: ' . print_r($analyzeText, 1));
          if (isset($analyzeText['status']) && $analyzeText['status']) {
-            if (isset($analyzeText['type']) && $analyzeText['type'] == 'links' or isset($analyzeText['type']) && $analyzeText['type'] == 'words') {
-               if (!UserRole::query()->where($column, $user_id)->exists()) {
-                  $this->akick(User::query()->where($column, $user_id)->first(), ($column == 'telegram_id' ? 'telegram' : 'vkontakte'), $user_id);
-               }
-            }
+//            if (isset($analyzeText['type']) && $analyzeText['type'] == 'links' or isset($analyzeText['type']) && $analyzeText['type'] == 'words') {
+//               if (!UserRole::query()->where($column, $user_id)->exists()) {
+//                  $this->akick(User::query()->where($column, $user_id)->first(), ($column == 'telegram_id' ? 'telegram' : 'vkontakte'), $user_id);
+//               }
+//            }
             if (isset($analyzeText['answer'])) {
                if ($column == 'telegram_id') {
                   (new UserMessageTelegramMethod())->replyWallComment($chat_id, $analyzeText['answer'], $message_id);
