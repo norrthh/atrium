@@ -53,7 +53,7 @@ class AdminMethod extends BotCommandMethod
 
             // Проверяем, найден ли пользователь
             if ($userAccount) {
-               $names .= '[id' . $userAccount->vkontakte_id . '|' . $userAccount->username_vkontakte . "]\n";
+               $names .= '> [id' . $userAccount->vkontakte_id . '|' . $userAccount->username_vkontakte . "]\n";
             }
          }
 
