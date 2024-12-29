@@ -45,13 +45,18 @@ class AdminMethod extends BotCommandMethod
       $userRoles = UserRole::query()->where([['vkontakte_id', '!=', null]])->orderBy('role', 'desc')->get();
       $usersFilter = [];
 
-      foreach ($userRoles as $role) {
-         $user = User::query()->where('vkontakte_id', $role->vkontakte_id)->first();
+      $result = $userRoles->map(function ($users, $role) {
+         $names = '';
+         $userAccount = User::query()->where('vkontakte_id', $role->vkontakte_id)->first();
 
-         $usersFilter[] = ($role->role == 2 ? 'Администратор ' : 'Модератор ') . '[id' . $role->vkontakte_id . '|' . $user->username_vkontakte . ']';
-      }
+         foreach ($userAccount as $user) {
+            $names .= '[id' . $role->vkontakte_id . '|' . $user->username_vkontakte . ']';
+         }
 
-      $this->message->sendAPIMessage(userId: $this->user_id, message: implode("<br>", $usersFilter), conversation_message_id: $this->conversation_message_id);
+         return ($role == 1 ? 'Модераторы' : 'Администраторы') . "\n" . $names;
+      })->join("\n");
+
+      $this->message->sendAPIMessage(userId: $this->user_id, message: $result, conversation_message_id: $this->conversation_message_id);
    }
    public function kick($user_id, array $args): void
    {
