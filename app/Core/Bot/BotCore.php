@@ -251,6 +251,11 @@ class BotCore
       if (!$welcomeMessage) {
          return "Введите аргумент для заполнения текста /newm text";
       }
+
+      if (mb_strlen($welcomeMessage) > 65536) {
+         echo "Нельзя ввести более 65,536 символов";
+      }
+
       ChatSetting::query()->updateOrCreate(['chat_id' => $chat_id], ['welcome_message' => $welcomeMessage]);
       return "Вы успешно обновили приветственное сообщение";
    }

@@ -35,7 +35,7 @@ class TestCommand extends Command
       if ($now->isSunday()) {
          $users = User::query()
             ->orderBy('coins_week', 'desc')
-            ->take(5)
+            ->take(10)
             ->get();
 
          LastActivity::query()->delete();
