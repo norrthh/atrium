@@ -156,7 +156,7 @@ class BotCore
       $user = User::query()->where($table, $user_id)->first();
 
       $roleData = [
-         'vkontakte_id' => $user_id,
+         $table => $user_id,
          'role' => $role
       ];
 
