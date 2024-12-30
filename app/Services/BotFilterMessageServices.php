@@ -235,7 +235,7 @@ class BotFilterMessageServices
       }
 
       if ($violations < 3) {
-         $error .= "Это {$violations->violations} предупреждение.";
+         $error .= "Это {$violations} предупреждение.";
       } else {
          $error .= "Это последнее предупреждение.";
       }
