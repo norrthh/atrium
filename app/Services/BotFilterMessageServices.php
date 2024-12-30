@@ -124,7 +124,7 @@ class BotFilterMessageServices
 
       if ($column == 'telegram') {
          $user = (new UserTelegramMethod())->getUserId($user_ID);
-         $string = "@" . $user['username'];
+         $string = $user['username'] ? "@" . $user['username'] : $user['first_name'];
       } else {
          $string = '@id' . $user_ID;
       }
@@ -181,6 +181,15 @@ class BotFilterMessageServices
 
       // Разбираем URL
       $parsedUrl = parse_url($url);
+
+      if ($parsedUrl === false) {
+         Log::error('Failed to parse URL: ' . $url);
+         return [
+            'filterVar' => false,
+            'host' => null,
+         ];
+      }
+
       $host = $parsedUrl['host'] ?? $parsedUrl['path'];
 
       // Убираем 'www.' из начала хоста, если оно есть
