@@ -36,16 +36,16 @@ class BotFilterMessageServices
             Log::info('analyze' . print_r($analyzeText, true));
 
             if (isset($analyzeText['status']) && $analyzeText['status']) {
-               if (UserRole::query()->where($column, $user_id)->exists()) {
+               if (!UserRole::query()->where($column, $user_id)->exists()) {
                   if ($analyzeText['type'] == 'links' or $analyzeText['type'] == 'words') {
                      $violations = $this->updateUserViolations($user_id, $column);
 
-                     $userUpom = $this->getUserInfo($user_id, $column);
+                     $userUpom = $this->getUserInfo($user_id, $columnTable);
 
                      if ($violations->violations < 3) {
                         $this->sendMessage($chat_id, "Пользователь {$userUpom}, вы нарушаете правила чата. Это {$violations->violations} предупреждение.", $column);
                      } elseif ($violations->violations == 3) {
-                        $this->sendMessage($chat_id, "Пользователь {$userUpom}, это последнее предупреждение. Следующее нарушение приведёт к удалению.", $column);
+                        $this->sendMessage($chat_id, "Пользователь {$userUpom}, это последнее предупреждение. Следующее нарушение приведёт к удалению из чата.", $column);
                      } elseif ($violations->violations > 3) {
                         $this->sendMessage($chat_id, "Пользователь {$userUpom} был исключён за нарушение правила чата", $column);
                         $this->kickUser($user_id, $column);
