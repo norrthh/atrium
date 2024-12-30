@@ -52,11 +52,11 @@ class AdminMethod extends BotCommandMethod
             $userAccount = User::query()->where('vkontakte_id', $userZ->vkontakte_id)->first();
 
             if ($userAccount) {
-               $names .= '> [id' . $userAccount->vkontakte_id . '|' . $userAccount->username_vkontakte . "]\n";
+               $names .= '🏐 [id' . $userAccount->vkontakte_id . '|' . $userAccount->username_vkontakte . "]\n";
             }
          }
 
-         return ($role == 1 ? 'Модераторы' : 'Администраторы') . "\n" . $names;
+         return ($role == 1 ? '🎄🎄🎄🎄🎄Модераторы' : '🎄🎄🎄🎄🎄Администраторы') . "\n" . $names;
       })->join("\n");
 
       $this->message->sendAPIMessage(userId: $this->user_id, message: $result, conversation_message_id: $this->conversation_message_id);

@@ -206,10 +206,10 @@ class AdminChatCommandServices
 
          foreach ($users as $user) {
             $user = (new UserTelegramMethod())->getUserId($user->telegram_id);
-            $names .= "> <a href='https://t.me/". $user['username'] ."'>". ($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '') . "</a>\n";
+            $names .= "🏐<a href='https://t.me/". $user['username'] ."'>". ($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '') . "</a>\n";
          }
 
-         return ($role == 1 ? 'Модераторы' : 'Администраторы') . "\n" . $names;
+         return ($role == 1 ? '🎄🎄🎄🎄🎄Модераторы' : '🎄🎄🎄🎄🎄Администраторы') . "\n" . $names;
       })->join("\n");
 
       (new UserMessageTelegramMethod())->replyWallComment($chat_id, $result, $message_id, parseMode: 'html');
