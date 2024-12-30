@@ -59,7 +59,6 @@ class TelegraphMessage extends WebhookHandler
              );
 
              $telegraphChat->forceFill(['telegraph_bot_id' => TelegraphBot::query()->first()->id])->save();
-
          }
       }
 
@@ -72,7 +71,6 @@ class TelegraphMessage extends WebhookHandler
              );
 
              $telegraphChat->forceFill(['telegraph_bot_id' => TelegraphBot::query()->first()->id])->save();
-
          }
       }
 
@@ -117,7 +115,8 @@ class TelegraphMessage extends WebhookHandler
          $text,
          $this->handler->message->chat()->id(),
          $this->handler->message->id(),
-         $this->handler->message->from()->id()
+         $this->handler->message->from()->id(),
+         (bool)$this->handler->message->sticker()
       );
    }
 

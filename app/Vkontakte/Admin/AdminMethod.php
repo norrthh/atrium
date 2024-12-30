@@ -51,7 +51,6 @@ class AdminMethod extends BotCommandMethod
             Log::info('user ' . $userZ);
             $userAccount = User::query()->where('vkontakte_id', $userZ->vkontakte_id)->first();
 
-            // Проверяем, найден ли пользователь
             if ($userAccount) {
                $names .= '> [id' . $userAccount->vkontakte_id . '|' . $userAccount->username_vkontakte . "]\n";
             }

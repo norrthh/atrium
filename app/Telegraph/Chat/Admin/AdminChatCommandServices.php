@@ -31,7 +31,9 @@ class AdminChatCommandServices
          return;
       }
 
-      $getInfoCommand = (new AdminCommands())->getCommand($text);
+      $adminCommand = new AdminCommands();
+
+      $getInfoCommand = $adminCommand->getCommand($text);
       $command = $getInfoCommand['command'] ?? null;
       $parameters = $getInfoCommand['parameters'] ?? [];
 
@@ -41,29 +43,26 @@ class AdminChatCommandServices
          return;
       }
 
-      if (!isset($parameters[0])) {
-         if ($command == 'staff') {
-            $this->staff($chat_id, $message_id);
-            die();
-         } else {
-            (new UserMessageTelegramMethod())->replyWallComment($chat_id, 'Введите все аргументы команды', $message_id);
-            die();
-         }
-      }
-
-      $user_id = (new UserTelegramMethod())->getUserIdByUsername($parameters[0] ?? '');
-
-      if (in_array($command, ['addInfo', 'newm', 'links', 'words', 'questions'])) {
+      if (in_array($command, $adminCommand->commandNotArg)) {
          if (in_array($command, ['addInfo', 'newm'])) {
-            $this->{$command}($chat_id, $message_id, $getInfoCommand['param'], $admin_id, $text);
+            $this->{$command}($chat_id, $message_id, $getInfoCommand, $admin_id, $text);
          } else {
             $this->{$command}($chat_id, $message_id, $parameters, $admin_id, $text);
          }
-      } elseif ($user_id) {
-         $user = User::query()->where('telegram_id', $user_id)->first();
-         $this->{$command}($chat_id, $message_id, $parameters, $user, $admin_id, $user_id);
       } else {
-         (new UserMessageTelegramMethod())->replyWallComment($chat_id, 'Пользователь не найден в системе', $message_id);
+         if (!isset($parameters[0])) {
+            (new UserMessageTelegramMethod())->replyWallComment($chat_id, 'Введите все аргументы команды', $message_id);
+            die();
+         }
+
+         $user_id = (new UserTelegramMethod())->getUserIdByUsername($parameters[0]);
+
+         if ($user_id) {
+            $user = User::query()->where('telegram_id', $user_id)->first();
+            $this->{$command}($chat_id, $message_id, $parameters, $user, $admin_id, $user_id);
+         } else {
+            (new UserMessageTelegramMethod())->replyWallComment($chat_id, 'Пользователь не найден в системе', $message_id);
+         }
       }
    }
 
@@ -150,11 +149,17 @@ class AdminChatCommandServices
 
    public function links(string $chat_id, int $message_id, array $parameters, int $user_id, string $text): void
    {
-      if (empty($parameters[0])) {
+      $args = explode(' ', $text);
+
+      if (empty($args[1])) {
          $links = ChatLink::query()->get()->pluck('text')->implode("\n");
          (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Доступные ссылки:\n$links", $message_id);
       } else {
-         ChatLink::query()->create(['text' => $parameters[0]]);
+         if (!filter_var($args[1], FILTER_VALIDATE_URL)) {
+            (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Аргумент должен быть ссылкой", $message_id);
+            die();
+         }
+         ChatLink::query()->create(['text' => $args[1]]);
          (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Вы успешно добавили ссылку", $message_id);
       }
    }

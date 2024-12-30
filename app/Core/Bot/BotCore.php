@@ -12,6 +12,7 @@ use App\Models\ChatWords;
 use App\Models\User\User;
 use App\Models\UserMute;
 use App\Models\UserRole;
+use App\Services\BotFilterMessageServices;
 use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Telegraph\Method\UserTelegramMethod;
 use App\Vkontakte\Method\Message;
@@ -61,94 +62,9 @@ class BotCore
       }
    }
 
-   public function analyzeText(string $text): array
+   public function filterMessage(string $text, string $chat_id, int $message_id, int $user_id, string $column, bool $sticker = false): void
    {
-      $chatLinks = ChatLink::query()->get();
-      $chatWords = ChatWords::query()->get();
-      $chatQuestions = ChatQuestion::query()->get();
-
-      foreach ($chatLinks as $chatLink) {
-         // Приводим обе строки к нижнему регистру и убираем лишние пробелы и невидимые символы
-         $normalizedText = preg_replace('/\s+/', ' ', mb_strtolower(trim($text), 'UTF-8')); // mb_strtolower для корректной работы с русскими буквами
-         $normalizedLinkText = preg_replace('/\s+/', ' ', mb_strtolower(trim($chatLink->text), 'UTF-8'));
-
-         if (str_contains($normalizedText, $normalizedLinkText)) {
-            return [
-               'status' => true,
-               'type' => 'links',
-            ];
-         }
-      }
-
-      foreach ($chatWords as $chatWord) {
-         $normalizedText = preg_replace('/\s+/', ' ', mb_strtolower(trim($text), 'UTF-8')); // mb_strtolower для русских символов
-         $normalizedWord = preg_replace('/\s+/', ' ', mb_strtolower(trim($chatWord->word), 'UTF-8')); // аналогично для слова
-
-         if (str_contains($normalizedText, $normalizedWord)) {
-            return [
-               'status' => true,
-               'type' => 'words',
-            ];
-         }
-      }
-
-      foreach ($chatQuestions as $chatQuestion) {
-         $normalizedText = preg_replace('/\s+/', ' ', mb_strtolower(trim($text), 'UTF-8')); // mb_strtolower для русских символов
-         $normalizedQuestion = preg_replace('/\s+/', ' ', mb_strtolower(trim($chatQuestion->question), 'UTF-8')); // аналогично для вопроса
-
-         if (str_contains($normalizedText, $normalizedQuestion)) {
-            return [
-               'status' => true,
-               'answer' => $chatQuestion->answer,
-            ];
-         }
-      }
-
-      return [
-         'status' => false,
-      ];
-   }
-
-   public function checkMute(int $user_id, string $column): bool
-   {
-      $mute = UserMute::query()->where($column, $user_id)->first();
-      if ($mute) {
-         $lastCollected = Carbon::parse($mute->updated_at)->setTimezone('Europe/Moscow');
-         if ($lastCollected->diffInMinutes(Carbon::now('Europe/Moscow')) > $mute->time) {
-            UserMute::query()->where($column, $user_id)->delete();
-            return true;
-         }
-         return false;
-      }
-      return true;
-   }
-
-   public function filterMessage(string $text, string $chat_id, int $message_id, int $user_id, string $column): void
-   {
-      if ($this->checkMute($user_id, $column)) {
-         $analyzeText = $this->analyzeText($text);
-         Log::info('analyzeText: ' . print_r($analyzeText, 1));
-         if (isset($analyzeText['status']) && $analyzeText['status']) {
-//            if (isset($analyzeText['type']) && $analyzeText['type'] == 'links' or isset($analyzeText['type']) && $analyzeText['type'] == 'words') {
-//               if (!UserRole::query()->where($column, $user_id)->exists()) {
-//                  $this->akick(User::query()->where($column, $user_id)->first(), ($column == 'telegram_id' ? 'telegram' : 'vkontakte'), $user_id);
-//               }
-//            }
-            if (isset($analyzeText['answer'])) {
-               if ($column == 'telegram_id') {
-                  (new UserMessageTelegramMethod())->replyWallComment($chat_id, $analyzeText['answer'], $message_id);
-               } else {
-                  (new Message())->sendAPIMessage(userId: $chat_id, message: $analyzeText['answer'], conversation_message_id: $message_id);
-               }
-            }
-         }
-      } else {
-         if ($column == 'telegram_id') {
-            (new UserMessageTelegramMethod())->deleteMessage($chat_id, $message_id);
-         } else {
-            (new Message())->deleteMessage($message_id, $chat_id);
-         }
-      }
+      (new BotFilterMessageServices())->filterMessage($text, $chat_id, $message_id, $user_id, $column, $sticker);
    }
 
    public function addRole(int $user_id, int $role, string $table): void
