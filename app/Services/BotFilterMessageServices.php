@@ -29,7 +29,7 @@ class BotFilterMessageServices
             } else {
                $analyzeText = [
                   'status' => true,
-                  'type' => 'words'
+                  'type' => 'sticker'
                ];
             }
 
@@ -37,24 +37,19 @@ class BotFilterMessageServices
 
             if (isset($analyzeText['status']) && $analyzeText['status']) {
                if (!UserRole::query()->where($column, $user_id)->exists()) {
-                  if ($analyzeText['type'] == 'links' or $analyzeText['type'] == 'words') {
+                  if (in_array($analyzeText['type'], ['sticker', 'links', 'words', 'tag'])) {
                      $violations = $this->updateUserViolations($user_id, $column);
 
                      $userUpom = $this->getUserInfo($user_id, $columnTable);
 
-                     if ($violations->violations < 3) {
-                        $this->sendMessage($chat_id, "Пользователь {$userUpom}, вы нарушаете правила чата. Это {$violations->violations} предупреждение.", $column);
-                     } elseif ($violations->violations == 3) {
-                        $this->sendMessage($chat_id, "Пользователь {$userUpom}, это последнее предупреждение. Следующее нарушение приведёт к удалению из чата.", $column);
-                     } elseif ($violations->violations > 3) {
+                     if ($violations->violations <= 3) {
+                        $this->sendMessage($chat_id, $this->getViolationError($analyzeText['type'], $userUpom, $violations->violations), $column);
+                     }  elseif ($violations->violations > 3) {
                         $this->sendMessage($chat_id, "Пользователь {$userUpom} был исключён за нарушение правила чата", $column);
                         $this->kickUser($user_id, $column);
                         UserViolation::query()->where('id', $violations->id)->delete();
                      }
 
-                     $this->deleteMessage($message_id, $chat_id, $column);
-                  }
-                  if ($analyzeText['type'] == 'tag') {
                      $this->deleteMessage($message_id, $chat_id, $column);
                   }
                }
@@ -215,5 +210,36 @@ class BotFilterMessageServices
          'filterVar' => $isValidDomain,  // Возвращаем информацию о том, валиден ли домен
          'host' => $normalizedHost,
       ];
+   }
+   protected function getViolationError(string $type, string $userUpom, string|int $violations): string
+   {
+      if ($violations < 3) {
+         $error = "Пользователь {$userUpom}, вы нарушаете правила чата.";
+      } else {
+         $error = "Пользователь {$userUpom}, это последнее предупреждение.";
+      }
+
+      switch ($type) {
+         case 'sticker':
+            $error .= "В данной беседе запрещено отправлять стикеры.";
+            break;
+            case 'links':
+               $error .= "В данной беседе запрещено отправлять ссылки.";
+               break;
+            case 'words':
+               $error .= "В данной беседе запрещено отправлять запрещенные слова.";
+               break;
+            case 'tag':
+               $error .= "В данной беседе запрещено упоминать кого-то.";
+               break;
+      }
+
+      if ($violations < 3) {
+         $error .= "Это {$violations->violations} предупреждение.";
+      } else {
+         $error .= "Это последнее предупреждение.";
+      }
+
+      return $error;
    }
 }
