@@ -53,11 +53,11 @@ class BotCommandMethod
          } elseif (Chats::query()->where([['messanger', 'vkontakte'], ['chat_id', $this->user_id]])->exists()) {
             $adminCommand = new AdminCommands();
             $checkCommand = $adminCommand->checkCommandVK($this->messageText);
+            Log::debug('checkCommand:'. print_r($checkCommand, true));
             if (isset($this->vkData['object']['message']['action'])) {
                $this->welcomeInviteMessageUser();
             } elseif (
-               $this->messageText != '' and
-               (isset($checkCommand['command']) && in_array($checkCommand, $adminCommand->commandList))
+               $this->messageText != '' and in_array('/' . $checkCommand['command'], $adminCommand->commandList)
             ) {
                (new AdminMethod($this->vkData))->method();
             } else {
