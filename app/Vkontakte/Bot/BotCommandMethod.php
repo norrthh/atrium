@@ -11,6 +11,7 @@ use App\Vkontakte\Admin\AdminMethod;
 use App\Vkontakte\Method\Keyboard;
 use App\Vkontakte\Method\Message;
 use App\Vkontakte\Method\User;
+use App\Vkontakte\UserCommandVkontakte;
 use Illuminate\Support\Facades\Log;
 
 class BotCommandMethod
@@ -20,7 +21,7 @@ class BotCommandMethod
    protected User $userMethod;
    protected array $vkData;
    protected int $user = 0;
-   protected int $user_id = 0;
+   protected int $user_id = 0; // chatID
    protected string $messageText;
    protected int $conversation_message_id;
    protected array $messageData;
@@ -53,13 +54,15 @@ class BotCommandMethod
          } elseif (Chats::query()->where([['messanger', 'vkontakte'], ['chat_id', $this->user_id]])->exists()) {
             $adminCommand = new AdminCommands();
             $checkCommand = $adminCommand->checkCommandVK($this->messageText);
-            Log::debug('checkCommand:'. print_r($checkCommand, true));
+
             if (isset($this->vkData['object']['message']['action'])) {
                $this->welcomeInviteMessageUser();
-            } elseif (
-               $this->messageText != '' and in_array('/' . $checkCommand['command'], $adminCommand->commandList)
-            ) {
-               (new AdminMethod($this->vkData))->method();
+            } elseif ($this->messageText != '') {
+               if(in_array('/' . $checkCommand['command'], $adminCommand->commandList)) {
+                  (new AdminMethod($this->vkData))->method();
+               } else {
+                  (new UserCommandVkontakte($this->vkData))->filter($checkCommand['command']);
+               }
             } else {
                (new BotCore())->filterMessage(
                   $this->messageText,
@@ -116,6 +119,7 @@ class BotCommandMethod
          case 'Актуальные вакансии':
             (new BotCommandVacancyMethod($this->vkData))->sendVacancyInfo();
             break;
+//            case
          default:
             (new BotCommandOtherMethod($this->vkData))->other();
             break;

@@ -23,20 +23,15 @@ class AdminMethod extends BotCommandMethod
       if ($userRole) {
          $getInfoCommand = (new AdminCommands())->checkCommandVK($this->messageText);
 
-         Log::info('getInfoCommand' . print_r($getInfoCommand, 1));
-
          $command = $getInfoCommand['command'] ?? null;
          $user_id = $getInfoCommand['id'];
-
-         Log::info('user_id' . print_r($getInfoCommand, 1));
 
          if ($user_id) {
             $this->{$command}(user_id: $user_id, args: $getInfoCommand);
          } elseif (in_array($command, (new AdminCommands())->commandNotArg)) {
-            Log::info(300);
             $this->{$command}(args: $getInfoCommand);
          } else {
-            $this->message->sendAPIMessage(userId: $this->user_id, message: 'Пользователь не найден', conversation_message_id: $this->conversation_message_id);
+            $this->message->sendAPIMessage(userId: $this->user_id, message: 'Перепроверьте все аргументы, они должны быть валидными. Пример: /kick @username', conversation_message_id: $this->conversation_message_id);
          }
       }
    }
@@ -126,9 +121,13 @@ class AdminMethod extends BotCommandMethod
    }
    public function addInfo(array $args): void
    {
+      $message = 'Заполните все аргументы. /addInfo 1231';
+      if (isset($args['other'])) {
+         $message = (new BotCore())->addInfo($args['other']);
+      }
       $this->message->sendAPIMessage(
          userId: $this->user_id,
-         message: (new BotCore())->addInfo($args['text']),
+         message: $message,
          conversation_message_id: $this->conversation_message_id
       );
    }
