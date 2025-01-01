@@ -11,11 +11,9 @@ class UserCommandVkontakte extends BotCommandMethod
    protected array $userCommand = ['tickets'];
    public function filter(string $command): void
    {
-      Log::info($command);
       if (in_array($command, $this->userCommand)) {
          switch ($command) {
             case 'tickets':
-               Log::info($this->user);
                $user = User::query()->where('vkontakte_id', $this->user)->first();
                $message = '';
 
@@ -24,8 +22,6 @@ class UserCommandVkontakte extends BotCommandMethod
                } else {
                   $message  = "Количество ваших билетов на аккаунте " . $user->bilet . "шт";
                }
-
-               Log::info($message);
 
                $this->message->sendAPIMessage(
                   userId: $this->user_id,

@@ -44,6 +44,9 @@ class TelegraphHandler extends WebhookHandler
       }
    }
 
+   /**
+    * @throws \Exception
+    */
    public function handleChatMessage(Stringable $text): void
    {
       (new TelegraphMessage($this))->message($text);
@@ -100,6 +103,9 @@ class TelegraphHandler extends WebhookHandler
       }
    }
 
+   /**
+    * @throws \Exception
+    */
    protected function handleCommand(Stringable $text): void
    {
       [$command, $parameter] = $this->parseCommand($text);
@@ -116,5 +122,18 @@ class TelegraphHandler extends WebhookHandler
             $this->$command($parameter);
          }
       }
+   }
+
+   public function tickets(): void
+   {
+      $user = User::query()->where('vkontakte_id', $this->message->from()->id())->first();
+
+      if (!$user) {
+         $message = 'У вас не зарегестрирован аккаунт в приложение';
+      } else {
+         $message  = "Количество ваших билетов на аккаунте " . $user->bilet . "шт";
+      }
+
+      (new UserMessageTelegramMethod())->replyWallComment($this->message->chat()->id(), $message, $this->message->id());
    }
 }

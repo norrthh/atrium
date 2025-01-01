@@ -33,8 +33,6 @@ class BotFilterMessageServices
                ];
             }
 
-            Log::info('analyze' . print_r($analyzeText, true));
-
             if (isset($analyzeText['status']) && $analyzeText['status']) {
                if (!UserRole::query()->where($column, $user_id)->exists()) {
                   if (in_array($analyzeText['type'], ['sticker', 'links', 'words', 'tag'])) {

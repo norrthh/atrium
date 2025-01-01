@@ -37,8 +37,6 @@ class AdminChatCommandServices
       $command = $getInfoCommand['command'] ?? null;
       $parameters = $getInfoCommand['parameters'] ?? [];
 
-      Log::info('command: ' . $command . ' parameters: ' . print_r($parameters, 1));
-
       if (!$command || !method_exists($this, $command)) {
          return;
       }
@@ -65,7 +63,6 @@ class AdminChatCommandServices
          }
       }
    }
-
    public function addmoder(string $chat_id, int $message_id, array $parameters, ?User $user, int $admin_id, int $user_id): void
    {
       $userRole = UserRole::query()->where('telegram_id', $admin_id)->first();
@@ -77,7 +74,6 @@ class AdminChatCommandServices
          }
       }
    }
-
    public function addadmin(string $chat_id, int $message_id, array $parameters, ?User $user, $admin_id, $user_id): void
    {
       $userRole = UserRole::query()->where('telegram_id', $admin_id)->first();
@@ -89,7 +85,6 @@ class AdminChatCommandServices
          }
       }
    }
-
    public function warn(string $chat_id, int $message_id, array $parameters, ?User $user, int $admin_id, int $user_id): void
    {
       $users = (new UserTelegramMethod())->getInfoUser($user, $user_id);
@@ -113,10 +108,8 @@ class AdminChatCommandServices
          (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Пользователю {$parameters[0]} было выдано предупреждение", $message_id);
       }
    }
-
    public function mute(string $chat_id, int $message_id, array $parameters, ?User $user, int $admin_id, int $user_id): void
    {
-      (new UserMessageTelegramMethod())->replyWallComment($chat_id, print_r($parameters, 1), $message_id);
       if (count($parameters) !== 2) {
          (new UserMessageTelegramMethod())->replyWallComment($chat_id, 'Неверные данные. Пример: /mute @user 1', $message_id);
          return;
@@ -130,23 +123,19 @@ class AdminChatCommandServices
       (new BotCore())->mute((new UserTelegramMethod())->getInfoUser($user, $user_id), $parameters[1], 'telegram_id', $user_id);
       (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Пользователю {$parameters[0]} был выдан мут", $message_id);
    }
-
    public function kick(string $chat_id, int $message_id, array $parameters, ?User $user, int $admin_id, int $user_id): void
    {
       (new UserMessageTelegramMethod())->replyWallComment($chat_id, (new UserTelegramMethod())->kickUserFromChat($chat_id, $user_id), $message_id);
    }
-
    public function akick(string $chat_id, int $message_id, array $parameters, ?User $user, int $admin_id, int $user_id)
    {
       (new BotCore())->akick($user, 'telegram', $user_id);
       (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Пользователь был удален из всех бесед", $message_id);
    }
-
-   public function addInfo(string $chat_id, int $message_id, string $parameters, int $admin_id, string $text): void
+   public function addInfo(string $chat_id, int $message_id, array $parameters, int $admin_id, string $text): void
    {
-      (new EventTelegramMethod())->replyWallComment($chat_id, (new BotCore())->addInfo($parameters), $message_id);
+      (new EventTelegramMethod())->replyWallComment($chat_id, (new BotCore())->addInfo($parameters['param']), $message_id);
    }
-
    public function links(string $chat_id, int $message_id, array $parameters, int $user_id, string $text): void
    {
       $args = explode(' ', $text);
@@ -155,15 +144,10 @@ class AdminChatCommandServices
          $links = ChatLink::query()->get()->pluck('text')->implode("\n");
          (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Доступные ссылки:\n$links", $message_id);
       } else {
-         if (!filter_var($args[1], FILTER_VALIDATE_URL)) {
-            (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Аргумент должен быть ссылкой", $message_id);
-            die();
-         }
          ChatLink::query()->create(['text' => $args[1]]);
          (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Вы успешно добавили ссылку", $message_id);
       }
    }
-
    public function words(string $chat_id, int $message_id, array $parameters, int $user_id, string $text): void
    {
       if (empty($parameters[0])) {
@@ -174,7 +158,6 @@ class AdminChatCommandServices
          (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Вы успешно запретили слово", $message_id);
       }
    }
-
    public function questions(string $chat_id, int $message_id, array $parameters, int $user_id, string $text): void
    {
       if (empty($parameters[0])) {
@@ -188,15 +171,10 @@ class AdminChatCommandServices
          (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Введите ответ на вопрос", $message_id);
       }
    }
-
    public function newm(string $chat_id, int $message_id, string $parameters, int $user_id, string $text): void
    {
       (new EventTelegramMethod())->replyWallComment($chat_id, (new BotCore())->newm($chat_id, $parameters), $message_id);
    }
-
-   /**
-    * @throws ConnectionException
-    */
    public function staff(string $chat_id, int $message_id): void
    {
       $userRoles = UserRole::query()->where([['telegram_id', '!=', null]])->orderBy('role', 'desc')->get()->groupBy('role');;
