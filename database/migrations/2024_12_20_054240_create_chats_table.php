@@ -29,7 +29,7 @@ return new class extends Migration {
       ];
 
       foreach ($chats as $chat) {
-         \App\Models\Chats::query()->create($chat);
+         \App\Models\Chat\Chats::query()->create($chat);
       }
    }
 

@@ -3,8 +3,7 @@
 namespace App\Services\Referral;
 
 use App\Models\ReferralPromocode;
-use App\Models\UserReferralPromocode;
-use Illuminate\Support\Facades\Log;
+use App\Models\User\UserReferralPromocode;
 use Illuminate\Support\Str;
 
 class ReferralServices

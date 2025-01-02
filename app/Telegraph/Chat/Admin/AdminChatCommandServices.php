@@ -5,18 +5,15 @@ namespace App\Telegraph\Chat\Admin;
 use App\Core\Bot\BotCore;
 use App\Core\EventMethod\EventTelegramMethod;
 use App\Core\Message\AdminCommands;
-use App\Models\ChatLink;
-use App\Models\ChatQuestion;
-use App\Models\ChatWords;
+use App\Models\Chat\ChatLink;
+use App\Models\Chat\ChatQuestion;
+use App\Models\Chat\ChatWords;
 use App\Models\User\User;
-use App\Models\UserRole;
-use App\Models\UserWarns;
+use App\Models\User\UserRole;
+use App\Models\User\UserWarns;
 use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Telegraph\Method\UserTelegramMethod;
-use DefStudio\Telegraph\Models\TelegraphChat;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class AdminChatCommandServices
 {

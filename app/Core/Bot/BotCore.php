@@ -3,20 +3,14 @@
 namespace App\Core\Bot;
 
 use App\Core\EventMethod\EventTelegramMethod;
-use App\Core\Message\AdminCommands;
-use App\Models\ChatLink;
-use App\Models\ChatQuestion;
-use App\Models\Chats;
-use App\Models\ChatSetting;
-use App\Models\ChatWords;
+use App\Models\Chat\Chats;
+use App\Models\Chat\ChatSetting;
 use App\Models\User\User;
-use App\Models\UserMute;
-use App\Models\UserRole;
+use App\Models\User\UserMute;
+use App\Models\User\UserRole;
 use App\Services\BotFilterMessageServices;
-use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Telegraph\Method\UserTelegramMethod;
 use App\Vkontakte\Method\Message;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class BotCore

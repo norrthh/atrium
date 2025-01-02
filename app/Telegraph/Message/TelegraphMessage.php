@@ -7,10 +7,10 @@ use App\Core\Action\UserCore;
 use App\Core\EventMethod\EventTelegramMethod;
 use App\Core\Events\EventsServices;
 use App\Core\Message\Message;
-use App\Models\ChatQuestion;
+use App\Models\Chat\ChatQuestion;
 use App\Models\ReferralPromocode;
 use App\Models\User\User;
-use App\Models\UserReferralPromocode;
+use App\Models\User\UserReferralPromocode;
 use App\Telegraph\Chat\TelegramChatCommandServices;
 use App\Telegraph\Method\UserMessageTelegramMethod;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
@@ -19,7 +19,6 @@ use DefStudio\Telegraph\Keyboard\Keyboard;
 use DefStudio\Telegraph\Models\TelegraphBot;
 use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TelegraphMessage extends WebhookHandler

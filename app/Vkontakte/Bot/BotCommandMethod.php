@@ -3,16 +3,14 @@
 namespace App\Vkontakte\Bot;
 
 use App\Core\Bot\BotCore;
-use App\Core\EventMethod\EventVkontakteMethod;
 use App\Core\Message\AdminCommands;
-use App\Models\Chats;
-use App\Models\ChatSetting;
+use App\Models\Chat\Chats;
+use App\Models\Chat\ChatSetting;
 use App\Vkontakte\Admin\AdminMethod;
 use App\Vkontakte\Method\Keyboard;
 use App\Vkontakte\Method\Message;
 use App\Vkontakte\Method\User;
 use App\Vkontakte\UserCommandVkontakte;
-use Illuminate\Support\Facades\Log;
 
 class BotCommandMethod
 {

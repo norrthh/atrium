@@ -2,17 +2,14 @@
 
 namespace App\Telegraph\Referral;
 
-use App\Core\Action\UserCore;
 use App\Facades\WithdrawUser;
 use App\Models\ReferralPromocode;
 use App\Models\User\User;
-use App\Models\UserReferralPromocode;
+use App\Models\User\UserReferralPromocode;
 use App\Services\Referral\ReferralServices;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class TelegraphReferralHandler extends WebhookHandler
 {

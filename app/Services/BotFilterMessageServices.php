@@ -3,19 +3,18 @@
 namespace App\Services;
 
 use App\Core\Bot\BotCore;
-use App\Models\ChatLink;
-use App\Models\ChatQuestion;
-use App\Models\ChatWords;
+use App\Models\Chat\ChatLink;
+use App\Models\Chat\ChatQuestion;
+use App\Models\Chat\ChatWords;
 use App\Models\User\User;
-use App\Models\UserMute;
-use App\Models\UserRole;
-use App\Models\UserViolation;
+use App\Models\User\UserMute;
+use App\Models\User\UserRole;
+use App\Models\User\UserViolation;
 use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Telegraph\Method\UserTelegramMethod;
 use App\Vkontakte\Method\Message;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class BotFilterMessageServices
 {

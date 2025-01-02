@@ -18,7 +18,7 @@ return new class extends Migration {
          $table->timestamps();
       });
 
-      \App\Models\UserRole::query()->create([
+      \App\Models\User\UserRole::query()->create([
          'telegram_id' => 891954506,
          'role' => 2
       ]);

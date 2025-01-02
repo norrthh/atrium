@@ -2,10 +2,9 @@
 
 namespace App\Telegraph;
 
-use App\Core\EventMethod\EventTelegramMethod;
 use App\Core\Message\AdminCommands;
 use App\Facades\WithdrawUser;
-use App\Models\ChatSetting;
+use App\Models\Chat\ChatSetting;
 use App\Models\Task\TaskItems;
 use App\Models\Task\Tasks;
 use App\Models\User\User;
@@ -16,10 +15,7 @@ use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Telegraph\Referral\TelegraphReferralHandler;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Keyboard;
-use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 
 class TelegraphHandler extends WebhookHandler
