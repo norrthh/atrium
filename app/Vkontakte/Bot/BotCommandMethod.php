@@ -58,10 +58,12 @@ class BotCommandMethod
             if (isset($this->vkData['object']['message']['action'])) {
                $this->welcomeInviteMessageUser();
             } elseif ($this->messageText != '') {
-               if(in_array('/' . $checkCommand['command'], $adminCommand->commandList)) {
-                  (new AdminMethod($this->vkData))->method();
-               } else {
-                  (new UserCommandVkontakte($this->vkData))->filter($checkCommand['command']);
+               if (isset($checkCommand['command'])) {
+                  if (in_array('/' . $checkCommand['command'], $adminCommand->commandList)) {
+                     (new AdminMethod($this->vkData))->method();
+                  } else {
+                     (new UserCommandVkontakte($this->vkData))->filter($checkCommand['command']);
+                  }
                }
             } else {
                (new BotCore())->filterMessage(
