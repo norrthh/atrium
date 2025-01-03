@@ -11,6 +11,7 @@ use App\Vkontakte\Method\Keyboard;
 use App\Vkontakte\Method\Message;
 use App\Vkontakte\Method\User;
 use App\Vkontakte\UserCommandVkontakte;
+use Illuminate\Support\Facades\Log;
 
 class BotCommandMethod
 {
@@ -44,26 +45,37 @@ class BotCommandMethod
 
    public function command(): void
    {
-      if (isset($this->messageText) and $this->user_id > 0 && !Chats::query()->where([['messanger', 'vkontakte'], ['chat_id', $this->user_id]])->exists()) {
+      Log::info('command≈');
+      if (!Chats::query()->where([['messanger', 'vkontakte'], ['chat_id', $this->user_id]])->exists()) {
+         Log::info('filterMessageText');
          $this->filterMessageText();
       } else {
-         if (!Chats::query()->where([['messanger', 'vkontakte'], ['chat_id', $this->user_id]])->exists()) {
-            $this->notFoundCommand();
-         } elseif (Chats::query()->where([['messanger', 'vkontakte'], ['chat_id', $this->user_id]])->exists()) {
+          if (Chats::query()->where([['messanger', 'vkontakte'], ['chat_id', $this->user_id]])->exists()) {
             $adminCommand = new AdminCommands();
             $checkCommand = $adminCommand->checkCommandVK($this->messageText);
 
             if (isset($this->vkData['object']['message']['action'])) {
                $this->welcomeInviteMessageUser();
-            } elseif ($this->messageText != '') {
+            } elseif ($this->messageText) {
                if (isset($checkCommand['command'])) {
                   if (in_array('/' . $checkCommand['command'], $adminCommand->commandList)) {
                      (new AdminMethod($this->vkData))->method();
                   } else {
                      (new UserCommandVkontakte($this->vkData))->filter($checkCommand['command']);
                   }
+               } else {
+                  Log::info('adsasd');
+                  (new BotCore())->filterMessage(
+                     $this->messageText,
+                     $this->user_id,
+                     $this->conversation_message_id,
+                     $this->user,
+                     'vkontakte_id',
+                     $this->messageData['attachments'] && $this->messageData['attachments'][0]['type'] == 'sticker'
+                  );
                }
             } else {
+               Log::info('adsasd');
                (new BotCore())->filterMessage(
                   $this->messageText,
                   $this->user_id,

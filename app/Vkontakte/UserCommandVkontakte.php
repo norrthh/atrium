@@ -2,6 +2,7 @@
 
 namespace App\Vkontakte;
 
+use App\Core\Bot\BotCore;
 use App\Models\User\User;
 use App\Vkontakte\Bot\BotCommandMethod;
 use Illuminate\Support\Facades\Log;
@@ -33,6 +34,15 @@ class UserCommandVkontakte extends BotCommandMethod
                Log::info('not found command');
                break;
          }
+      } else {
+         (new BotCore())->filterMessage(
+            $this->messageText,
+            $this->user_id,
+            $this->conversation_message_id,
+            $this->user,
+            'vkontakte_id',
+            $this->messageData['attachments'] && $this->messageData['attachments'][0]['type'] == 'sticker'
+         );
       }
    }
 }

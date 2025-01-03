@@ -32,7 +32,9 @@ class BotFilterMessageServices
                ];
             }
 
-            if (isset($analyzeText['status']) && $analyzeText['status']) {
+            Log::info('analyzeText: ' . print_r($analyzeText, true));
+
+            if ($analyzeText['status']) {
                if (!UserRole::query()->where($column, $user_id)->exists()) {
                   if (in_array($analyzeText['type'], ['sticker', 'links', 'words'])) {
                      $violations = $this->updateUserViolations($user_id, $column);
