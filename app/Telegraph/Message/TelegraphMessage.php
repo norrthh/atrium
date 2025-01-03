@@ -50,25 +50,23 @@ class TelegraphMessage extends WebhookHandler
    private function getUserByTelegramId(): ?User
    {
       if (isset($this->handler->message)) {
-         $chatId = $this->handler->message->from()->toArray() !== null ? $this->handler->message->from()->id() : null;
+         $chatId = $this->handler->message->from()->toArray() != null ? $this->handler->message->from()->id() : null;
          if ($chatId !== null) {
              $telegraphChat = TelegraphChat::query()->updateOrCreate(
                  ['chat_id' => $chatId],
                  ['name' => '[private] ' . $this->handler->message->from()->username()]
              );
-
              $telegraphChat->forceFill(['telegraph_bot_id' => TelegraphBot::query()->first()->id])->save();
          }
       }
 
       if (isset($this->handler->callbackQuery)) {
-         $chatId = $this->handler->callbackQuery->toArray() !== null ? $this->handler->callbackQuery->from()->id() : null;
+         $chatId = $this->handler->callbackQuery->toArray() != null ? $this->handler->callbackQuery->from()->id() : null;
          if ($chatId !== null) {
              $telegraphChat = TelegraphChat::query()->updateOrCreate(
                  ['chat_id' => $chatId],
                  ['name' => '[private] ' . $this->handler->callbackQuery->from()->username()]
              );
-
              $telegraphChat->forceFill(['telegraph_bot_id' => TelegraphBot::query()->first()->id])->save();
          }
       }

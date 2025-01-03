@@ -34,7 +34,7 @@ class BotFilterMessageServices
 
             if (isset($analyzeText['status']) && $analyzeText['status']) {
                if (!UserRole::query()->where($column, $user_id)->exists()) {
-                  if (in_array($analyzeText['type'], ['sticker', 'links', 'words', 'tag'])) {
+                  if (in_array($analyzeText['type'], ['sticker', 'links', 'words'])) {
                      $violations = $this->updateUserViolations($user_id, $column);
 
                      $userUpom = $this->getUserInfo($user_id, $columnTable);
