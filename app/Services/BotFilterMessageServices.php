@@ -198,7 +198,7 @@ class BotFilterMessageServices
       $normalizedUrl = 'https://' . $normalizedHost;
 
       // Проверка на валидность домена и расширения (.com, .ru и т.д.)
-      $validExtensions = ['.com', '.ru', '.org', '.net', '.io']; // Можно добавить нужные расширения
+      $validExtensions = ['.com', '.ru', '.org', '.net', '.io', '.me']; // Можно добавить нужные расширения
       $isValidDomain = false;
 
       // Проверяем, заканчивается ли домен на одно из нужных расширений
