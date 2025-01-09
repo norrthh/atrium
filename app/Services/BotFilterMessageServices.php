@@ -10,6 +10,7 @@ use App\Models\User\User;
 use App\Models\User\UserMute;
 use App\Models\User\UserRole;
 use App\Models\User\UserViolation;
+use App\Models\User\UserWarns;
 use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Telegraph\Method\UserTelegramMethod;
 use App\Vkontakte\Method\Message;
@@ -32,7 +33,7 @@ class BotFilterMessageServices
                ];
             }
 
-            Log::info('analyzeText: ' . print_r($analyzeText, true));
+//            Log::info('analyzeText: ' . print_r($analyzeText, true));
 
             if ($analyzeText['status']) {
                if (!UserRole::query()->where($column, $user_id)->exists()) {
@@ -41,12 +42,12 @@ class BotFilterMessageServices
 
                      $userUpom = $this->getUserInfo($user_id, $columnTable);
 
-                     if ($violations->violations <= 3) {
-                        $this->sendMessage($chat_id, $this->getViolationError($analyzeText['type'], $userUpom, $violations->violations), $column);
-                     }  elseif ($violations->violations > 3) {
+                     if ($violations->count <= 3) {
+                        $this->sendMessage($chat_id, $this->getViolationError($analyzeText['type'], $userUpom, $violations->count), $column);
+                     }  elseif ($violations->count > 3) {
                         $this->sendMessage($chat_id, "Пользователь {$userUpom} был исключён за нарушение правила чата", $column);
                         $this->kickUser($user_id, $column);
-                        UserViolation::query()->where('id', $violations->id)->delete();
+                        UserWarns::query()->where('id', $violations->id)->delete();
                      }
 
                      $this->deleteMessage($message_id, $chat_id, $column);
@@ -143,11 +144,21 @@ class BotFilterMessageServices
       }
       return true;
    }
-   private function updateUserViolations(int $user_id, string $column): UserViolation
+   private function updateUserViolations(int $user_id, string $column): UserWarns
    {
-      $violation = UserViolation::query()->firstOrCreate([$column => $user_id]);
-      $violation->increment('violations');
-      return $violation;
+      $violation = UserWarns::query()->where($column, $user_id)->first();
+      if ($violation) {
+         UserWarns::query()->where('id', $violation->id)->update([
+            'count' => $violation->count + 1,
+         ]);
+      } else {
+         $violation = UserWarns::query()->create([
+            $column => $user_id,
+            'count' => 1
+         ]);
+      }
+
+      return UserWarns::query()->where('id', $violation->id)->first();
    }
    private function deleteMessage(int $message_id, string $chat_id, string $column): void
    {
@@ -173,49 +184,43 @@ class BotFilterMessageServices
    }
    protected function normalizeUrl(string $url): array
    {
-      // Если протокол не указан, добавляем https://
-      if (!parse_url($url, PHP_URL_SCHEME)) {
-         $url = 'https://' . $url;
-      }
-
-      // Разбираем URL
-      $parsedUrl = parse_url($url);
-
-      if ($parsedUrl === false) {
-         Log::error('Failed to parse URL: ' . $url);
+      // Проверяем, содержит ли строка пробелы (грубая проверка, чтобы избежать вводимого текста)
+      if (str_contains($url, ' ')) {
          return [
             'filterVar' => false,
             'host' => null,
          ];
       }
 
-      $host = $parsedUrl['host'] ?? $parsedUrl['path'];
-
-      // Убираем 'www.' из начала хоста, если оно есть
-      $normalizedHost = preg_replace('/^www\./', '', $host);
-
-      // Нормализуем URL с https://
-      $normalizedUrl = 'https://' . $normalizedHost;
-
-      // Проверка на валидность домена и расширения (.com, .ru и т.д.)
-      $validExtensions = ['.com', '.ru', '.org', '.net', '.io', '.me']; // Можно добавить нужные расширения
-      $isValidDomain = false;
-
-      // Проверяем, заканчивается ли домен на одно из нужных расширений
-      foreach ($validExtensions as $extension) {
-         if (str_ends_with($normalizedHost, $extension)) {
-            $isValidDomain = true;
-            break;
-         }
+      // Если протокол не указан, добавляем https://
+      if (!preg_match('/^(http:\/\/|https:\/\/)/', $url)) {
+         $url = 'https://' . $url;
       }
 
-      // Логирование
-//      Log::info('normalizedUrl: ' . $normalizedUrl);
-//      Log::info('normalizedHost: ' . $normalizedHost);
-//      Log::info('filterVar: ' . ($isValidDomain ? 'Yes' : 'No'));
+      // Проверяем валидность URL с помощью FILTER_VALIDATE_URL
+      if (!filter_var($url, FILTER_VALIDATE_URL)) {
+         return [
+            'filterVar' => false,
+            'host' => null,
+         ];
+      }
+
+      // Проверяем, является ли хост допустимым доменом
+      $parsedUrl = parse_url($url);
+      $host = $parsedUrl['host'] ?? null;
+
+      if (!$host || !preg_match('/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $host)) {
+         return [
+            'filterVar' => false,
+            'host' => null,
+         ];
+      }
+
+      // Нормализуем хост, убирая 'www.'
+      $normalizedHost = preg_replace('/^www\./', '', $host);
 
       return [
-         'filterVar' => $isValidDomain,  // Возвращаем информацию о том, валиден ли домен
+         'filterVar' => true,
          'host' => $normalizedHost,
       ];
    }
