@@ -123,7 +123,7 @@ class BotFilterMessageServices
 
       if ($column == 'telegram') {
          $user = (new UserTelegramMethod())->getUserId($user_ID);
-         $string = $user['username'] ? "@" . $user['username'] : $user['first_name'];
+         $string = isset($user['username']) ? "@" . $user['username'] : (isset($user['first_name']) ? $user['first_name'] : '');
       } else {
          $string = '@id' . $user_ID;
       }

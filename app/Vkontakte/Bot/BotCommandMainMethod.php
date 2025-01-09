@@ -18,7 +18,6 @@ class BotCommandMainMethod extends BotCommandMethod
             ]
          )
       );
-
       $this->message->sendAPIMessage(
          userId: $this->user_id,
          message: "

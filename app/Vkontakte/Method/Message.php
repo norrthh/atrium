@@ -2,6 +2,7 @@
 
 namespace App\Vkontakte\Method;
 
+use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Client\Response;
@@ -28,9 +29,9 @@ class Message
    {
       $params = [
          'access_token' => $this->vkKey,
-         'v' => $this->vkVersion,
-         'random_id' => rand(),
-         'peer_id' => $userId
+         'v'            => $this->vkVersion,
+         'random_id'    => rand(),
+         'peer_id'      => $userId
       ];
 
       if ($conversation_message_id != 0) {
