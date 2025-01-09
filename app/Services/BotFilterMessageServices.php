@@ -210,9 +210,9 @@ class BotFilterMessageServices
       }
 
       // Логирование
-      Log::info('normalizedUrl: ' . $normalizedUrl);
-      Log::info('normalizedHost: ' . $normalizedHost);
-      Log::info('filterVar: ' . ($isValidDomain ? 'Yes' : 'No'));
+//      Log::info('normalizedUrl: ' . $normalizedUrl);
+//      Log::info('normalizedHost: ' . $normalizedHost);
+//      Log::info('filterVar: ' . ($isValidDomain ? 'Yes' : 'No'));
 
       return [
          'filterVar' => $isValidDomain,  // Возвращаем информацию о том, валиден ли домен
