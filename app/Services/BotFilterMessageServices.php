@@ -77,17 +77,25 @@ class BotFilterMessageServices
          ];
       }
 
-      $url = $this->normalizeUrl($normalizedText);
-      if ($url['filterVar']) {
-         if (ChatLink::query()->where('text', 'LIKE', "%{$url['host']}%")->exists()) {
-            return [
-               'status' => false,
-            ];
-         } else {
-            return [
-               'status' => true,
-               'type' => 'links'
-            ];
+      // Ищем ссылки в тексте
+      preg_match_all('/https?:\/\/[^\s]+/u', $normalizedText, $matches);
+
+      if (!empty($matches[0])) {
+         foreach ($matches[0] as $foundUrl) {
+            $url = $this->normalizeUrl($foundUrl);
+
+            if ($url['filterVar']) {
+               if (ChatLink::query()->where('text', 'LIKE', "%{$url['host']}%")->exists()) {
+                  return [
+                     'status' => false,
+                  ];
+               } else {
+                  return [
+                     'status' => true,
+                     'type' => 'links',
+                  ];
+               }
+            }
          }
       }
 
