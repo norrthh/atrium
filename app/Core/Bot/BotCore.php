@@ -56,9 +56,9 @@ class BotCore
       }
    }
 
-   public function filterMessage(string $text, string $chat_id, int $message_id, int $user_id, string $column, bool $sticker = false): void
+   public function filterMessage(string $text, string $chat_id, int $message_id, int $user_id, string $column, bool $sticker = false, bool $forwardMessage = false): void
    {
-      (new BotFilterMessageServices())->filterMessage($text, $chat_id, $message_id, $user_id, $column, $sticker);
+      (new BotFilterMessageServices())->filterMessage($text, $chat_id, $message_id, $user_id, $column, $sticker, $forwardMessage);
    }
 
    public function addRole(int $user_id, int $role, string $table): void

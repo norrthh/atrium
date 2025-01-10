@@ -46,7 +46,7 @@ class AdminChatCommandServices
          }
       } else {
          if (!isset($parameters[0])) {
-            (new UserMessageTelegramMethod())->replyWallComment($chat_id, 'Введите все аргументы команды', $message_id);
+            (new UserMessageTelegramMethod())->replyWallComment($chat_id, 'Введите все аргументы команды. Пример: /'. $command . ' @norrth', $message_id);
             die();
          }
 
@@ -188,5 +188,15 @@ class AdminChatCommandServices
       })->join("\n");
 
       (new UserMessageTelegramMethod())->replyWallComment($chat_id, $result, $message_id, parseMode: 'html');
+   }
+
+   public function unwarn(string $chat_id, int $message_id, array $parameters, ?User $user, int $admin_id, int $user_id): void
+   {
+      $userWarn = UserWarns::query()->where('telegram_id', $user_id)->first();
+      if($userWarn and $userWarn->count > 1) {
+         UserWarns::query()->where('telegram_id', $user_id)->update(['count' => $userWarn->count - 1]);
+      }
+
+      (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Вы успешно сняли одно предупреждение", $message_id, parseMode: 'html');
    }
 }

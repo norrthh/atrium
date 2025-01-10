@@ -13,12 +13,14 @@ use App\Models\User\User;
 use App\Models\User\UserReferralPromocode;
 use App\Telegraph\Chat\TelegramChatCommandServices;
 use App\Telegraph\Method\UserMessageTelegramMethod;
+use App\Telegraph\Method\UserTelegramMethod;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 use DefStudio\Telegraph\Models\TelegraphBot;
 use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TelegraphMessage extends WebhookHandler
@@ -108,12 +110,15 @@ class TelegraphMessage extends WebhookHandler
          $this->handlePromocodeActivation($text, $userTelegram, $userTelegraph);
       }
 
+      Log::info('telegraph ' . print_r($data, true));
+
       (new TelegramChatCommandServices())->commands(
          $text,
          $this->handler->message->chat()->id(),
          $this->handler->message->id(),
          $this->handler->message->from()->id(),
-         (bool)$this->handler->message->sticker()
+         isset($data['message']['sticker']),
+         (isset($data['message']['forward_origin']) && $this->checkForwardMessage($data['message']['forward_origin']))
       );
    }
 
@@ -171,12 +176,10 @@ class TelegraphMessage extends WebhookHandler
          $this->sendPromocodeOptions($text, $promo, $userTelegraph);
       }
    }
-
    private function hasUserActivatedPromo(User $userTelegram): bool
    {
       return UserReferralPromocode::query()->where('user_id', $userTelegram->id)->exists();
    }
-
    private function sendPromocodeOptions(Stringable $text, ReferralPromocode $promo, ?TelegraphChat $userTelegraph): void
    {
       if ($userTelegraph) {
@@ -191,7 +194,6 @@ class TelegraphMessage extends WebhookHandler
          )->send();
       }
    }
-
    private function replyWithMessage(string $message): void
    {
       (new UserMessageTelegramMethod())->replyWallComment(
@@ -199,5 +201,26 @@ class TelegraphMessage extends WebhookHandler
          $message,
          $this->handler->message->id()
       );
+   }
+   protected function checkForwardMessage(?array $forwardMessage): bool
+   {
+      if (!$forwardMessage) {
+         return false;
+      }
+
+      if (
+         ($forwardMessage['type'] == 'channel' && $forwardMessage['chat']['id'] != env('TELEGRAM_CHANNEL_ID'))
+         || $forwardMessage['type'] == 'hidden_user'
+      ) {
+         return true;
+      }
+
+      if ($forwardMessage['type'] == 'user' and !(new UserTelegramMethod())->getChatMember($forwardMessage['sender_user']['id'])) {
+         return true;
+      }
+
+      Log::info('test');
+
+      return false;
    }
 }

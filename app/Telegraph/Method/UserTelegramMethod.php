@@ -3,6 +3,7 @@
 namespace App\Telegraph\Method;
 
 use App\Core\EventMethod\EventVkontakteMethod;
+use App\Models\Chat\Chats;
 use App\Models\User\User;
 use DefStudio\Telegraph\Models\TelegraphChat;
 use GuzzleHttp\Client;
@@ -68,6 +69,39 @@ class UserTelegramMethod
          Log::info('getUserIdFail' . $e->getMessage());
          return null;
       }
+   }
+
+   public function getChatMember(int $userId): bool
+   {
+      $client = new Client();
+      $url = "https://api.telegram.org/bot". env('TELEGRAM_TOKEN') ."/getChatMember";
+
+      try {
+         foreach (Chats::query()->where('messanger', 'telegram')->get() as $item) {
+            $response = $client->get($url, [
+               'query' => [
+                  'user_id' => $userId,
+                  'chat_id' => $item->chat_id,
+               ]
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+
+            Log::info('data ' . print_r($data, 1));
+
+            if (isset($data['ok']) && $data['ok'] === true) {
+               $status = $data['result']['status'] ?? null;
+               if (in_array($status, ['member', 'administrator', 'creator'])) {
+                  return true;
+               }
+            }
+         }
+      } catch (GuzzleException $e) {
+         Log::info('getChatMemberFail' . $e->getMessage());
+         return false;
+      }
+
+      return false;
    }
 
    public function getInfoUser(?User $user, int $user_id): array

@@ -9,7 +9,6 @@ use App\Models\Chat\ChatWords;
 use App\Models\User\User;
 use App\Models\User\UserMute;
 use App\Models\User\UserRole;
-use App\Models\User\UserViolation;
 use App\Models\User\UserWarns;
 use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Telegraph\Method\UserTelegramMethod;
@@ -19,43 +18,43 @@ use Illuminate\Support\Facades\Log;
 
 class BotFilterMessageServices
 {
-   public function filterMessage(string $text, string $chat_id, int $message_id, int $user_id, string $column, bool $sticker = false): void
+   public function filterMessage(string $text, string $chat_id, int $message_id, int $user_id, string $column, bool $sticker = false, bool $forwardMessage = false): void
    {
+      Log::info('forward:' . $forwardMessage);
+      Log::info('sticker:' . $sticker);
+
       $columnTable = $column == 'telegram_id' ? 'telegram' : 'vkontakte';
+
       if ($this->checkMute($user_id, $column)) {
-         if ($text) {
-            if (!$sticker) {
-               $analyzeText = $this->analyzeText($text);
-            } else {
-               $analyzeText = [
-                  'status' => true,
-                  'type' => 'sticker'
-               ];
-            }
+         if (!$sticker and !$forwardMessage and $text) {
+            $analyzeText = $this->analyzeText($text);
+         } else {
+            $analyzeText = [
+               'status' => true,
+               'type' => $sticker ? 'sticker' : ($forwardMessage ? 'forward' : null),
+            ];
+         }
 
-//            Log::info('analyzeText: ' . print_r($analyzeText, true));
+         if ($analyzeText['status']) {
+            if (!UserRole::query()->where($column, $user_id)->exists()) {
+               if (in_array($analyzeText['type'], ['sticker', 'links', 'words', 'forward'])) {
+                  $violations = $this->updateUserViolations($user_id, $column);
 
-            if ($analyzeText['status']) {
-               if (!UserRole::query()->where($column, $user_id)->exists()) {
-                  if (in_array($analyzeText['type'], ['sticker', 'links', 'words'])) {
-                     $violations = $this->updateUserViolations($user_id, $column);
+                  $userUpom = $this->getUserInfo($user_id, $columnTable);
 
-                     $userUpom = $this->getUserInfo($user_id, $columnTable);
-
-                     if ($violations->count <= 3) {
-                        $this->sendMessage($chat_id, $this->getViolationError($analyzeText['type'], $userUpom, $violations->count), $column);
-                     }  elseif ($violations->count > 3) {
-                        $this->sendMessage($chat_id, "Пользователь {$userUpom} был исключён за нарушение правила чата", $column);
-                        $this->kickUser($user_id, $column);
-                        UserWarns::query()->where('id', $violations->id)->delete();
-                     }
-
-                     $this->deleteMessage($message_id, $chat_id, $column);
+                  if ($violations->count <= 3) {
+                     $this->sendMessage($chat_id, $this->getViolationError($analyzeText['type'], $userUpom, $violations->count), $column);
+                  }  elseif ($violations->count > 3) {
+                     $this->sendMessage($chat_id, "Пользователь {$userUpom} был исключён за нарушение правила чата", $column);
+                     $this->kickUser($user_id, $column);
+                     UserWarns::query()->where('id', $violations->id)->delete();
                   }
+
+                  $this->deleteMessage($message_id, $chat_id, $column);
                }
-               if (isset($analyzeText['answer'])) {
-                  $this->sendMessage($chat_id, $analyzeText['answer'], $message_id);
-               }
+            }
+            if (isset($analyzeText['answer'])) {
+               $this->sendMessage($chat_id, $analyzeText['answer'], $message_id);
             }
          }
       } else {
@@ -93,15 +92,17 @@ class BotFilterMessageServices
       }
 
       foreach ($chatWords as $chatWord) {
-         $normalizedWord = preg_replace('/\s+/', ' ', mb_strtolower(trim($chatWord->word), 'UTF-8')); // аналогично для слова
+         $normalizedWord = preg_replace('/\s+/', ' ', mb_strtolower(trim($chatWord->word), 'UTF-8'));
+         $pattern = '/\b' . preg_quote($normalizedWord, '/') . '\b/u';
 
-         if (str_contains($normalizedText, $normalizedWord)) {
+         if (preg_match($pattern, $normalizedText)) {
             return [
                'status' => true,
                'type' => 'words',
             ];
          }
       }
+
       foreach ($chatQuestions as $chatQuestion) {
          $normalizedQuestion = preg_replace('/\s+/', ' ', mb_strtolower(trim($chatQuestion->question), 'UTF-8')); // аналогично для вопроса
 
@@ -236,15 +237,18 @@ class BotFilterMessageServices
          case 'sticker':
             $error .= "В данной беседе запрещено отправлять стикеры.";
             break;
-            case 'links':
-               $error .= "В данной беседе запрещено отправлять ссылки.";
-               break;
-            case 'words':
-               $error .= "В данной беседе запрещено отправлять запрещенные слова.";
-               break;
-            case 'tag':
-               $error .= "В данной беседе запрещено упоминать кого-то.";
-               break;
+         case 'links':
+            $error .= "В данной беседе запрещено отправлять ссылки.";
+            break;
+         case 'words':
+            $error .= "В данной беседе запрещено отправлять запрещенные слова.";
+            break;
+         case 'tag':
+            $error .= "В данной беседе запрещено упоминать кого-то.";
+            break;
+         case 'forward':
+            $error .= "В данной беседе запрещено пересылать сообщения от пользователей которые скрыли профиль или от разных тгк.";
+            break;
       }
 
       if ($violations < 3) {

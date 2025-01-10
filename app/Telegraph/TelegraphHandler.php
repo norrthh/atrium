@@ -16,20 +16,19 @@ use App\Telegraph\Referral\TelegraphReferralHandler;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TelegraphHandler extends WebhookHandler
 {
    public function start(): void
    {
-      if ($this->message->from()->id() == 891954506) {
-         $this->chat->message('Открыть мини приложение')
-            ->keyboard(
-               Keyboard::make()
-                  ->button('Перейти в мини приложение')->webApp(env('APP_URL'))
-                  ->button('Промокод')->action('promocode')
-            )
-            ->send();
+      $explode = explode(' ', $this->message->text());
+
+      if (!isset($this->callbackQuery) && $this->message->text() and count($explode) >= 2) {
+         $token = $explode[1];
+
+         $this->chat->message($token)->send();
       } else {
          $this->chat->message('Открыть мини приложение')
             ->keyboard(
