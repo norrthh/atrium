@@ -26,7 +26,7 @@ class AdminMethod extends BotCommandMethod
          } elseif (in_array($command, (new AdminCommands())->commandNotArg)) {
             $this->{$command}(args: $getInfoCommand);
          } else {
-            $this->message->sendAPIMessage(userId: $this->user_id, message: 'Перепроверьте все аргументы, они должны быть валидными. Пример: /kick @username', conversation_message_id: $this->conversation_message_id);
+            $this->message->sendAPIMessage(userId: $this->user_id, message: 'Перепроверьте все аргументы, они должны быть валидными. Пример: /'. $command .' @username', conversation_message_id: $this->conversation_message_id);
          }
       }
    }
@@ -139,10 +139,23 @@ class AdminMethod extends BotCommandMethod
    }
    protected function newm(array $args): void
    {
-      Log::info('call newm');
       $this->message->sendAPIMessage(
          userId: $this->user_id,
          message: (new BotCore())->newm($this->user_id, $args['other']),
+         conversation_message_id: $this->conversation_message_id
+      );
+   }
+
+   protected function unwarn(int $user_id, array $args)
+   {
+      $userWarn = UserWarns::query()->where('vkontakte_id', $args['id'])->first();
+      if($userWarn and $userWarn->count > 1) {
+         UserWarns::query()->where('vkontakte_id', $args['id'])->update(['count' => $userWarn->count - 1]);
+      }
+
+      $this->message->sendAPIMessage(
+         userId: $this->user_id,
+         message: "Вы успешно сняли одно предупреждение",
          conversation_message_id: $this->conversation_message_id
       );
    }

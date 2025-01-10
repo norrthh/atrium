@@ -66,7 +66,6 @@ class BotCommandMethod
                      (new UserCommandVkontakte($this->vkData))->filter($checkCommand['command']);
                   }
                } else {
-                  Log::info('adsasd');
                   (new BotCore())->filterMessage(
                      $this->messageText,
                      $this->user_id,
@@ -79,7 +78,6 @@ class BotCommandMethod
                   );
                }
             } else {
-               Log::info('adsasd');
                (new BotCore())->filterMessage(
                   $this->messageText,
                   $this->user_id,
