@@ -14,6 +14,7 @@ use App\Models\User\UserWarns;
 use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Telegraph\Method\UserTelegramMethod;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class AdminChatCommandServices
 {
@@ -148,8 +149,14 @@ class AdminChatCommandServices
    public function words(string $chat_id, int $message_id, array $parameters, int $user_id, string $text): void
    {
       if (empty($parameters[0])) {
-         $words = ChatWords::query()->count();
-         (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Количество заблокированных слов - " . $words, $message_id);
+         $result = array_map(fn($chunk) => implode(',', $chunk), array_chunk(ChatWords::query()->pluck('word')->toArray(), 300));
+         (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Заблокированные слова", $message_id);
+
+         foreach ($result as $index => $wordsGroup) {
+//            echo "Group " . ($index + 1) . ": " . $wordsGroup . PHP_EOL;
+            (new UserMessageTelegramMethod())->replyWallComment($chat_id, $wordsGroup . PHP_EOL, $message_id);
+
+         }
       } else {
          ChatWords::query()->create(['word' => $parameters[0]]);
          (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Вы успешно запретили слово", $message_id);
