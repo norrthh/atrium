@@ -4,6 +4,7 @@ namespace App\Vkontakte\Bot;
 
 use App\Core\Bot\BotCore;
 use App\Core\Message\AdminCommands;
+use App\Http\Controllers\Api\v1\Admin\TaskController;
 use App\Models\Chat\Chats;
 use App\Models\Chat\ChatSetting;
 use App\Vkontakte\Admin\AdminMethod;
@@ -27,6 +28,7 @@ class BotCommandMethod
 
    public function __construct(array $data)
    {
+      Log::info('construct data' . print_r($data, true));
       $this->message = new Message();
       $this->keyboard = new Keyboard();
 
@@ -71,7 +73,9 @@ class BotCommandMethod
                      $this->conversation_message_id,
                      $this->user,
                      'vkontakte_id',
-                     $this->messageData['attachments'] && $this->messageData['attachments'][0]['type'] == 'sticker'
+                     $this->messageData['attachments'] && $this->messageData['attachments'][0]['type'] == 'sticker',
+                     isset($this->messageData['attachments'])
+                        ? $this->messageData['attachments'][0]['type'] == 'wall' : ($this->messageDate['fwd_messages'])
                   );
                }
             } else {
@@ -82,7 +86,8 @@ class BotCommandMethod
                   $this->conversation_message_id,
                   $this->user,
                   'vkontakte_id',
-                  $this->messageData['attachments'] && $this->messageData['attachments'][0]['type'] == 'sticker'
+                  $this->messageData['attachments'] && $this->messageData['attachments'][0]['type'] == 'sticker',
+                  forwardMessage: $this->forwardMessage()
                );
             }
          }
@@ -154,5 +159,28 @@ class BotCommandMethod
             message: ChatSetting::query()->where('chat_id', $this->user_id)->first()->welcome_message,
          );
       }
+   }
+
+   private function forwardMessage(): bool
+   {
+      if (isset($this->messageData['attachments'])) {
+         if (!empty($this->messageData['attachments']) && isset($this->messageData['attachments'][0]['type']) && $this->messageData['attachments'][0]['type'] == 'wall') {
+            return true;
+         }
+
+         if (isset($this->messageData['fwd_messages'])) {
+            $taskController = new TaskController();
+
+            foreach (Chats::query()->where('messanger', 'vkontakte')->get() as $chat) {
+               if ($taskController->checkUserInChat($chat->chat_id, $this->messageData['fwd_messages'][0]['from_id'])) {
+                  return false;
+               }
+            }
+
+            return true;
+         }
+      }
+
+      return false;
    }
 }
