@@ -6,7 +6,11 @@ use App\Core\Action\Coin\CoinInfoCore;
 use App\Core\Action\UserCore;
 use App\Core\EventMethod\EventVkontakteMethod;
 use App\Core\Message\Message;
+use App\Models\User\UserRole;
+use App\Models\User\UserWarns;
+use App\Services\BotFilterMessageServices;
 use App\Vkontakte\Webhook\EventServices;
+use Illuminate\Support\Facades\Log;
 
 class VkontakteWallMethod extends UserCore
 {
@@ -20,15 +24,30 @@ class VkontakteWallMethod extends UserCore
 
     public function addComment(array $data): void
     {
+       $vkontakteMethod = new EventVkontakteMethod();
+
         if (!$this->checkAction($data['object']['from_id'], $data['type'], $data['object']['post_id'])) {
             $this->setCoin($data['object']['from_id'], $data['type'], 'comment', $data['object']['post_id'], 'vkontakte_id');
 
-           (new EventVkontakteMethod())
+           $vkontakteMethod
               ->sendMessage(
                  $data['object']['from_id'],
                  Message::getMessage('comment_add', ['count' => (new CoinInfoCore())->getDataType('comment')])
               );
         }
+
+        Log::info(print_r($data, 1));
+
+       $filterMessage = (new BotFilterMessageServices());
+
+       $analyzeText = $filterMessage->analyzeText($data['object']['text']);
+       if (isset($analyzeText['answer'])) {
+          $vkontakteMethod->replyWallComment(
+             $data['object']['post_id'],
+             $analyzeText['answer'],
+             $data['object']['id']
+          );
+       }
     }
 
     public function removeComment(array $data): void

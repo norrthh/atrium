@@ -127,7 +127,7 @@ class BotFilterMessageServices
       ];
    }
 
-   protected function getUserInfo(int $user_ID, string $column): string
+   public function getUserInfo(int $user_ID, string $column): string
    {
       $string = '';
 
@@ -153,7 +153,7 @@ class BotFilterMessageServices
       }
       return true;
    }
-   private function updateUserViolations(int $user_id, string $column): UserWarns
+   public function updateUserViolations(int $user_id, string $column): UserWarns
    {
       $violation = UserWarns::query()->where($column, $user_id)->first();
       if ($violation) {
@@ -169,7 +169,7 @@ class BotFilterMessageServices
 
       return UserWarns::query()->where('id', $violation->id)->first();
    }
-   private function deleteMessage(int $message_id, string $chat_id, string $column): void
+   public function deleteMessage(int $message_id, string $chat_id, string $column): void
    {
       if ($column === 'telegram_id') {
          (new UserMessageTelegramMethod())->deleteMessage($chat_id, $message_id);
@@ -177,7 +177,7 @@ class BotFilterMessageServices
          (new Message())->deleteMessage($message_id, $chat_id);
       }
    }
-   private function sendMessage(string $chat_id, string $message, string $column): void
+   public function sendMessage(string $chat_id, string $message, string $column): void
    {
       if ($column === 'telegram_id') {
          (new UserMessageTelegramMethod())->replyWallComment($chat_id, $message);
@@ -185,7 +185,7 @@ class BotFilterMessageServices
          (new Message())->sendAPIMessage(userId: $chat_id, message: $message);
       }
    }
-   private function kickUser(int $user_id, string $column): void
+   public function kickUser(int $user_id, string $column): void
    {
       if (!UserRole::query()->where($column, $user_id)->exists()) {
          (new BotCore())->akick(User::query()->where($column, $user_id)->first(), ($column == 'telegram_id' ? 'telegram' : 'vkontakte'), $user_id);
