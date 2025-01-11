@@ -11,6 +11,7 @@ use App\Models\User\UserRole;
 use App\Services\BotFilterMessageServices;
 use App\Telegraph\Method\UserTelegramMethod;
 use App\Vkontakte\Method\Message;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class BotCore

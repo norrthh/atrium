@@ -5,13 +5,15 @@ namespace App\Vkontakte\Bot;
 use App\Core\Bot\BotCore;
 use App\Core\Message\AdminCommands;
 use App\Http\Controllers\Api\v1\Admin\TaskController;
+use App\Models\Chat\ChatQuestion;
 use App\Models\Chat\Chats;
-use App\Models\Chat\ChatSetting;
+use App\Models\User\UserRole;
 use App\Vkontakte\Admin\AdminMethod;
 use App\Vkontakte\Method\Keyboard;
 use App\Vkontakte\Method\Message;
 use App\Vkontakte\Method\User;
 use App\Vkontakte\UserCommandVkontakte;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class BotCommandMethod
@@ -21,25 +23,24 @@ class BotCommandMethod
    protected User $userMethod;
    protected array $vkData;
    protected int $user = 0;
-   protected int $user_id = 0; // chatID
-   protected string $messageText;
-   protected int $conversation_message_id;
-   protected array $messageData;
+   protected int $user_id = 0;
+   protected string $messageText = '';
+   protected int $conversation_message_id = 0;
+   protected array $messageData = [];
 
    public function __construct(array $data)
    {
-      Log::info('construct data' . print_r($data, true));
       $this->message = new Message();
       $this->keyboard = new Keyboard();
-
       $this->vkData = $data;
 
       if (isset($data['object']['message'])) {
-         $this->messageText = $data['object']['message']['text'] ?? '';
-         $this->user_id = $data['object']['message']['peer_id'];
-         $this->user = $data['object']['message']['from_id'];
-         $this->conversation_message_id = $data['object']['message']['conversation_message_id'];
-         $this->messageData = $data['object']['message'];
+         $message = $data['object']['message'];
+         $this->messageText = $message['text'] ?? '';
+         $this->user_id = $message['peer_id'];
+         $this->user = $message['from_id'];
+         $this->conversation_message_id = $message['conversation_message_id'] ?? 0;
+         $this->messageData = $message;
       }
 
       $this->userMethod = new User(user_id: $this->user, chat_id: $this->user_id);
@@ -47,99 +48,112 @@ class BotCommandMethod
 
    public function command(): void
    {
-      Log::info('command≈');
-      if (!Chats::query()->where([['messanger', 'vkontakte'], ['chat_id', $this->user_id]])->exists()) {
-         Log::info('filterMessageText');
-         $this->filterMessageText();
-      } else {
-          if (Chats::query()->where([['messanger', 'vkontakte'], ['chat_id', $this->user_id]])->exists()) {
-            $adminCommand = new AdminCommands();
-            $checkCommand = $adminCommand->checkCommandVK($this->messageText);
+      Log::info('Processing command...');
 
-            if (isset($this->vkData['object']['message']['action'])) {
-               $this->welcomeInviteMessageUser();
-            } elseif ($this->messageText) {
-               if (isset($checkCommand['command'])) {
-                  if (in_array('/' . $checkCommand['command'], $adminCommand->commandList)) {
-                     (new AdminMethod($this->vkData))->method();
-                  } else {
-                     (new UserCommandVkontakte($this->vkData))->filter($checkCommand['command']);
-                  }
-               } else {
-                  (new BotCore())->filterMessage(
-                     $this->messageText,
-                     $this->user_id,
-                     $this->conversation_message_id,
-                     $this->user,
-                     'vkontakte_id',
-                     $this->messageData['attachments'] && $this->messageData['attachments'][0]['type'] == 'sticker',
-                     isset($this->messageData['attachments'])
-                        ? $this->messageData['attachments'][0]['type'] == 'wall' : ($this->messageDate['fwd_messages'])
-                  );
-               }
-            } else {
-               (new BotCore())->filterMessage(
-                  $this->messageText,
-                  $this->user_id,
-                  $this->conversation_message_id,
-                  $this->user,
-                  'vkontakte_id',
-                  $this->messageData['attachments'] && $this->messageData['attachments'][0]['type'] == 'sticker',
-                  forwardMessage: $this->forwardMessage()
-               );
-            }
+      if (!$this->isChatRegistered()) {
+         $this->filterMessageText();
+         return;
+      }
+
+      if ($this->isCommand()) {
+         $this->processCommand();
+      } else {
+         $this->processMessage();
+      }
+   }
+
+   protected function isChatRegistered(): bool
+   {
+      return Chats::query()
+         ->where('messanger', 'vkontakte')
+         ->where('chat_id', $this->user_id)
+         ->exists();
+   }
+
+   protected function isCommand(): bool
+   {
+      return (new AdminCommands())->checkCommandVK($this->messageText)['command'] ?? false;
+   }
+
+   protected function processCommand(): void
+   {
+      $adminCommands = new AdminCommands();
+      $commandData = $adminCommands->checkCommandVK($this->messageText);
+
+      if (isset($commandData['command'])) {
+         $command = '/' . $commandData['command'];
+         if (in_array($command, $adminCommands->commandList)) {
+            (new AdminMethod($this->vkData))->method();
+         } else {
+            (new UserCommandVkontakte($this->vkData))->filter($commandData['command']);
          }
+      }
+   }
+
+   protected function processMessage(): void
+   {
+      $cache = Cache::get('admin_' . $this->user);
+      if ($cache) {
+         ChatQuestion::query()->create([
+            'question' => $cache['question'],
+            'answer' => $this->messageText
+         ]);
+
+         Cache::delete('admin_' . $this->user);
+
+         $this->message->sendAPIMessage(
+            userId: $this->user_id,
+            message: "Вы успешно добавили вопрос",
+            conversation_message_id: $this->conversation_message_id
+         );
+      } else {
+         $botCore = new BotCore();
+         $botCore->filterMessage(
+            $this->messageText,
+            $this->user_id,
+            $this->conversation_message_id,
+            $this->user,
+            'vkontakte_id',
+            sticker: $this->isSticker(),
+            forwardMessage: $this->shouldForwardMessage()
+         );
       }
    }
 
    protected function filterMessageText(): void
    {
-      switch ($this->messageText) {
-         case in_array($this->messageText, ['/start', 'Начать', 'меню', 'Меню', 'начать', 'старт']):
-            (new BotCommandMainMethod($this->vkData))->start();
-            break;
-         case 'СКАЧАТЬ ИГРУ':
-            (new BotCommandMainMethod($this->vkData))->download();;
-            break;
-         case 'ПОМОЩЬ ПО ПРИЛОЖЕНИЮ';
-            (new BotCommandSupportMethod($this->vkData))->support();
-            break;
-         case '🙄 Как получать монетки и билеты?':
-            (new BotCommandSupportMethod($this->vkData))->howGet();
-            break;
-         case '👾 Не могу привязать аккаунт TG или VK':
-            (new BotCommandSupportMethod($this->vkData))->connectSocial();
-            break;
-         case 'Привязываю в VK':
-            (new BotCommandSupportMethod($this->vkData))->connectVK();
-            break;
-         case 'Привязываю в Telegram':
-            (new BotCommandSupportMethod($this->vkData))->connectTG();
-            break;
-         case '🌟 Как попасть в ТОП игроков?':
-            (new BotCommandSupportMethod($this->vkData))->sendTopPlayersInfo();
-            break;
-         case 'Аукционы и магазин пустые':
-            (new BotCommandSupportMethod($this->vkData))->explainAuctionsAndShop();
-            break;
-         case 'Получать новости и подарки 💓':
-            (new BotCommandPrizeMethod($this->vkData))->sendThankYouMessage();
-            break;
-         case in_array($this->messageText, ['1000 монет', 'BMW M5 F90 АСХАБА', 'MERCEDES GTS ВЕНГАЛБИ', 'BMW M4 ЛИТВИНА']):
-            (new BotCommandPrizeMethod($this->vkData))->sendBonusInfo();
-            break;
-         case in_array($this->messageText, ["free", "freecar"]):
-            (new BotCommandPrizeMethod($this->vkData))->sendCarChoiceMessage();
-            break;
-         case 'Актуальные вакансии':
-            (new BotCommandVacancyMethod($this->vkData))->sendVacancyInfo();
-            break;
-//            case
-         default:
-            (new BotCommandOtherMethod($this->vkData))->other();
-            break;
+      $mainCommands = [
+         '/start', 'Начать', 'меню', 'Меню', 'начать', 'старт'
+      ];
+
+      $supportCommands = [
+         'ПОМОЩЬ ПО ПРИЛОЖЕНИЮ' => 'support',
+         '🙄 Как получать монетки и билеты?' => 'howGet',
+         '👾 Не могу привязать аккаунт TG или VK' => 'connectSocial',
+         'Привязываю в VK' => 'connectVK',
+         'Привязываю в Telegram' => 'connectTG',
+         '🌟 Как попасть в ТОП игроков?' => 'sendTopPlayersInfo',
+         'Аукционы и магазин пустые' => 'explainAuctionsAndShop',
+      ];
+
+      $prizeCommands = [
+         'Получать новости и подарки 💓' => 'sendThankYouMessage',
+         '1000 монет' => 'sendBonusInfo',
+         'BMW M5 F90 АСХАБА' => 'sendBonusInfo',
+         'free' => 'sendCarChoiceMessage',
+      ];
+
+      if (in_array($this->messageText, $mainCommands)) {
+         (new BotCommandMainMethod($this->vkData))->start();
+      } elseif (isset($supportCommands[$this->messageText])) {
+         (new BotCommandSupportMethod($this->vkData))->{$supportCommands[$this->messageText]}();
+      } elseif (isset($prizeCommands[$this->messageText])) {
+         (new BotCommandPrizeMethod($this->vkData))->{$prizeCommands[$this->messageText]}();
+      } else {
+         $this->notFoundCommand();
       }
    }
+
    protected function notFoundCommand(): void
    {
       $this->message->sendAPIMessage(
@@ -148,37 +162,33 @@ class BotCommandMethod
       );
       (new BotCommandMainMethod($this->vkData))->start();
    }
-   protected function welcomeInviteMessageUser(): void
-   {
-      $actionMessage = $this->vkData['object']['message']['action'];
-      if ($actionMessage['type'] == 'chat_invite_user' or $actionMessage['type'] == 'chat_invite_user_by_link' and $actionMessage['member_id']) {
-         $this->message->sendAPIMessage(
-            userId: $this->user_id,
-            message: ChatSetting::query()->where('chat_id', $this->user_id)->first()->welcome_message,
-         );
-      }
-   }
 
-   private function forwardMessage(): bool
+   protected function shouldForwardMessage(): bool
    {
       if (isset($this->messageData['attachments'])) {
-         if (!empty($this->messageData['attachments']) && isset($this->messageData['attachments'][0]['type']) && $this->messageData['attachments'][0]['type'] == 'wall') {
-            return true;
-         }
-
-         if (isset($this->messageData['fwd_messages'])) {
-            $taskController = new TaskController();
-
-            foreach (Chats::query()->where('messanger', 'vkontakte')->get() as $chat) {
-               if ($taskController->checkUserInChat($chat->chat_id, $this->messageData['fwd_messages'][0]['from_id'])) {
-                  return false;
-               }
+         foreach ($this->messageData['attachments'] as $attachment) {
+            if ($attachment['type'] === 'wall') {
+               return true;
             }
-
-            return true;
          }
+      }
+
+      if (isset($this->messageData['fwd_messages'])) {
+         $taskController = new TaskController();
+         foreach (Chats::query()->where('messanger', 'vkontakte')->get() as $chat) {
+            if ($taskController->checkUserInChat($chat->chat_id, $this->messageData['fwd_messages'][0]['from_id'])) {
+               return false;
+            }
+         }
+         return true;
       }
 
       return false;
+   }
+
+   protected function isSticker(): bool
+   {
+      return isset($this->messageData['attachments'][0]['type']) &&
+         $this->messageData['attachments'][0]['type'] === 'sticker';
    }
 }

@@ -134,47 +134,6 @@ class AdminChatCommandServices
    {
       (new EventTelegramMethod())->replyWallComment($chat_id, (new BotCore())->addInfo($parameters['param']), $message_id);
    }
-   public function links(string $chat_id, int $message_id, array $parameters, int $user_id, string $text): void
-   {
-      $args = explode(' ', $text);
-
-      if (empty($args[1])) {
-         $links = ChatLink::query()->get()->pluck('text')->implode("\n");
-         (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Доступные ссылки:\n$links", $message_id);
-      } else {
-         ChatLink::query()->create(['text' => $args[1]]);
-         (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Вы успешно добавили ссылку", $message_id);
-      }
-   }
-   public function words(string $chat_id, int $message_id, array $parameters, int $user_id, string $text): void
-   {
-      if (empty($parameters[0])) {
-         $result = array_map(fn($chunk) => implode(',', $chunk), array_chunk(ChatWords::query()->pluck('word')->toArray(), 300));
-         (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Заблокированные слова", $message_id);
-
-         foreach ($result as $index => $wordsGroup) {
-//            echo "Group " . ($index + 1) . ": " . $wordsGroup . PHP_EOL;
-            (new UserMessageTelegramMethod())->replyWallComment($chat_id, $wordsGroup . PHP_EOL, $message_id);
-
-         }
-      } else {
-         ChatWords::query()->create(['word' => $parameters[0]]);
-         (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Вы успешно запретили слово", $message_id);
-      }
-   }
-   public function questions(string $chat_id, int $message_id, array $parameters, int $user_id, string $text): void
-   {
-      if (empty($parameters[0])) {
-         $questions = ChatQuestion::query()->get()->map(function ($q) {
-            return "Вопрос: {$q->question}\nОтвет: {$q->answer}";
-         })->implode("\n\n");
-         (new UserMessageTelegramMethod())->replyWallComment($chat_id, $questions ?: 'Не заполнено', $message_id);
-      } else {
-         $text = preg_replace('~/questions\s?~', '', $text);
-         Cache::put("admin_{$user_id}", ['step' => 1, 'question' => $text]);
-         (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Введите ответ на вопрос", $message_id);
-      }
-   }
    public function newm(string $chat_id, int $message_id, string $parameters, int $user_id, string $text): void
    {
       (new EventTelegramMethod())->replyWallComment($chat_id, (new BotCore())->newm($chat_id, $parameters), $message_id);

@@ -4,10 +4,15 @@ namespace App\Vkontakte\Admin;
 
 use App\Core\Bot\BotCore;
 use App\Core\Message\AdminCommands;
+use App\Models\Chat\ChatLink;
+use App\Models\Chat\ChatQuestion;
+use App\Models\Chat\ChatWords;
 use App\Models\User\User;
 use App\Models\User\UserRole;
 use App\Models\User\UserWarns;
+use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Vkontakte\Bot\BotCommandMethod;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class AdminMethod extends BotCommandMethod
@@ -159,4 +164,71 @@ class AdminMethod extends BotCommandMethod
          conversation_message_id: $this->conversation_message_id
       );
    }
+
+   public function links(array $args): void
+   {
+      if (empty($args['other'])) {
+         $links = ChatLink::query()->pluck('text')->implode("\n");
+         $message = "Доступные ссылки:\n" . ($links ?: "Нет доступных ссылок");
+      } else {
+         ChatLink::query()->create(['text' => $args['other']]);
+         $message = "Вы успешно добавили ссылку";
+      }
+
+      $this->message->sendAPIMessage(
+         userId: $this->user_id,
+         message: $message,
+         conversation_message_id: $this->conversation_message_id
+      );
+   }
+
+   public function words(array $args): void
+   {
+      if (empty($args['other'])) {
+         $words = ChatWords::query()->pluck('word')->toArray();
+         $result = array_map(fn($chunk) => implode(',', $chunk), array_chunk($words, 100));
+
+         $this->message->sendAPIMessage(
+            userId: $this->user_id,
+            message: "Заблокированные слова:\n",
+            conversation_message_id: $this->conversation_message_id
+         );
+
+         foreach ($result as $wordsGroup) {
+            $this->message->sendAPIMessage(
+               userId: $this->user_id,
+               message: $wordsGroup,
+               conversation_message_id: $this->conversation_message_id
+            );
+         }
+      } else {
+         ChatWords::query()->create(['word' => $args['other']]);
+         $this->message->sendAPIMessage(
+            userId: $this->user_id,
+            message: "Вы успешно запретили слово: {$args['other']}",
+            conversation_message_id: $this->conversation_message_id
+         );
+      }
+   }
+
+   public function questions(array $args): void
+   {
+      if (empty($args['other'])) {
+         $questions = ChatQuestion::query()->get()->map(function ($q) {
+            return "Вопрос: {$q->question}\nОтвет: {$q->answer}";
+         })->implode("\n\n");
+
+         $message = $questions ?: "Список вопросов пуст.";
+      } else {
+         Cache::put("admin_{$this->user}", ['step' => 1, 'question' => $args['other']]);
+         $message = "Введите ответ на вопрос: {$args['other']}";
+      }
+
+      $this->message->sendAPIMessage(
+         userId: $this->user_id,
+         message: $message,
+         conversation_message_id: $this->conversation_message_id
+      );
+   }
+
 }
