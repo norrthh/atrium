@@ -20,9 +20,6 @@ class BotFilterMessageServices
 {
    public function filterMessage(string $text, string $chat_id, int $message_id, int $user_id, string $column, bool $sticker = false, bool $forwardMessage = false): void
    {
-      Log::info('forward:' . $forwardMessage);
-      Log::info('sticker:' . $sticker);
-
       $columnTable = $column == 'telegram_id' ? 'telegram' : 'vkontakte';
 
       if ($this->checkMute($user_id, $column)) {
@@ -34,6 +31,8 @@ class BotFilterMessageServices
                'type' => $sticker ? 'sticker' : ($forwardMessage ? 'forward' : null),
             ];
          }
+
+         Log::info('analyzeText: ' . print_r($analyzeText, true));
 
          if ($analyzeText['status']) {
             if (!UserRole::query()->where($column, $user_id)->exists()) {

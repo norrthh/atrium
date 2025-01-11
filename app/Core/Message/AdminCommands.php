@@ -36,8 +36,6 @@ class AdminCommands
          ];
       }
 
-      Log::info('checkCommandVK:' . print_r($result, true));
-
       return $result;
    }
 
