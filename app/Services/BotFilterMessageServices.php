@@ -36,20 +36,22 @@ class BotFilterMessageServices
 
          if ($analyzeText['status']) {
             if (!UserRole::query()->where($column, $user_id)->exists()) {
-               if (in_array($analyzeText['type'], ['sticker', 'links', 'words', 'forward'])) {
-                  $violations = $this->updateUserViolations($user_id, $column);
+               if (isset($analyzeText['type'])) {
+                  if (in_array($analyzeText['type'], ['sticker', 'links', 'words', 'forward'])) {
+                     $violations = $this->updateUserViolations($user_id, $column);
 
-                  $userUpom = $this->getUserInfo($user_id, $columnTable);
+                     $userUpom = $this->getUserInfo($user_id, $columnTable);
 
-                  if ($violations->count <= 3) {
-                     $this->sendMessage($chat_id, $this->getViolationError($analyzeText['type'], $userUpom, $violations->count), $column);
-                  }  elseif ($violations->count > 3) {
-                     $this->sendMessage($chat_id, "Пользователь {$userUpom} был исключён за нарушение правила чата", $column);
-                     $this->kickUser($user_id, $column);
-                     UserWarns::query()->where('id', $violations->id)->delete();
+                     if ($violations->count <= 3) {
+                        $this->sendMessage($chat_id, $this->getViolationError($analyzeText['type'], $userUpom, $violations->count), $column);
+                     }  elseif ($violations->count > 3) {
+                        $this->sendMessage($chat_id, "Пользователь {$userUpom} был исключён за нарушение правила чата", $column);
+                        $this->kickUser($user_id, $column);
+                        UserWarns::query()->where('id', $violations->id)->delete();
+                     }
+
+                     $this->deleteMessage($message_id, $chat_id, $column);
                   }
-
-                  $this->deleteMessage($message_id, $chat_id, $column);
                }
             }
             if (isset($analyzeText['answer'])) {
