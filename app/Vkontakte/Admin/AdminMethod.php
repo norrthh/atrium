@@ -41,9 +41,7 @@ class AdminMethod extends BotCommandMethod
 
       $result = $userRoles->groupBy('role')->map(function ($users, $role) {
          $names = '';
-         Log::info('users ' . $users);
          foreach ($users as $userZ) {
-            Log::info('user ' . $userZ);
             $userAccount = User::query()->where('vkontakte_id', $userZ->vkontakte_id)->first();
 
             if ($userAccount) {

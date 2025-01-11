@@ -63,7 +63,6 @@ class UserTelegramMethod
 
          $data = json_decode($response->getBody(), true);
 
-         Log::info('getUserId' . print_r($data, 1));
          return $data['result'];
       } catch (\GuzzleHttp\Exception\ClientException $e) {
          Log::info('getUserIdFail' . $e->getMessage());
@@ -86,8 +85,6 @@ class UserTelegramMethod
             ]);
 
             $data = json_decode($response->getBody(), true);
-
-            Log::info('data ' . print_r($data, 1));
 
             if (isset($data['ok']) && $data['ok'] === true) {
                $status = $data['result']['status'] ?? null;

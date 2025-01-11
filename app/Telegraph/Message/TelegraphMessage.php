@@ -110,8 +110,6 @@ class TelegraphMessage extends WebhookHandler
          $this->handlePromocodeActivation($text, $userTelegram, $userTelegraph);
       }
 
-      Log::info('telegraph ' . print_r($data, true));
-
       (new TelegramChatCommandServices())->commands(
          $text,
          $this->handler->message->chat()->id(),
@@ -218,8 +216,6 @@ class TelegraphMessage extends WebhookHandler
       if ($forwardMessage['type'] == 'user' and !(new UserTelegramMethod())->getChatMember($forwardMessage['sender_user']['id'])) {
          return true;
       }
-
-      Log::info('test');
 
       return false;
    }

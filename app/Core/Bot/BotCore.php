@@ -32,14 +32,8 @@ class BotCore
 
    public function akick(?User $user, string $methodCall, int $user_id): void
    {
-      Log::info(
-         'methodCall: ' . $methodCall . ' user_id: ' . $user_id
-      );
       foreach (Chats::query()->get() as $item) {
          if ($item->messanger == $methodCall) {
-            Log::info(
-               'methodCall: ' . $methodCall . ' chat_id: ' . $item->chat_id . "interation: " . $item->messanger
-            );
             if ($methodCall == 'telegram') {
                (new UserTelegramMethod())->kickUserFromChat($item->chat_id, $user_id);
             } else {
@@ -81,8 +75,6 @@ class BotCore
    public function addInfo(string $message): ?string
    {
       $info = $this->parseFirstArg($message);
-
-      Log::info('addInfo: ' . print_r($info, 1));
 
       if ($info['first_arg'] != '' and $info['remaining'] != '') {
          $text = $info['remaining'];

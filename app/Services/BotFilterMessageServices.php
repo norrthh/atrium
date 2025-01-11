@@ -32,11 +32,13 @@ class BotFilterMessageServices
             ];
          }
 
+         $analyzeText['column'] = $column;
+
          Log::info('analyzeText: ' . print_r($analyzeText, true));
 
          if ($analyzeText['status']) {
-            if (!UserRole::query()->where($column, $user_id)->exists()) {
-               if (isset($analyzeText['type'])) {
+            if (isset($analyzeText['type'])) {
+               if (!UserRole::query()->where($column, $user_id)->exists()) {
                   if (in_array($analyzeText['type'], ['sticker', 'links', 'words', 'forward'])) {
                      $violations = $this->updateUserViolations($user_id, $column);
 
@@ -52,10 +54,10 @@ class BotFilterMessageServices
 
                      $this->deleteMessage($message_id, $chat_id, $column);
                   }
-               } else {
-                  if (isset($analyzeText['answer'])) {
-                     $this->sendMessage($chat_id, $analyzeText['answer'], $message_id);
-                  }
+               }
+            } else {
+               if (isset($analyzeText['answer'])) {
+                  $this->sendMessage($chat_id, $analyzeText['answer'], $column, $message_id);
                }
             }
          }
@@ -179,12 +181,13 @@ class BotFilterMessageServices
          (new Message())->deleteMessage($message_id, $chat_id);
       }
    }
-   public function sendMessage(string $chat_id, string $message, string $column): void
+   public function sendMessage(string $chat_id, string $message, string $column, ?int $message_id = null): void
    {
+      Log::info($column);
       if ($column === 'telegram_id') {
-         (new UserMessageTelegramMethod())->replyWallComment($chat_id, $message);
+         (new UserMessageTelegramMethod())->replyWallComment($chat_id, $message, commentId: $message_id);
       } else {
-         (new Message())->sendAPIMessage(userId: $chat_id, message: $message);
+         (new Message())->sendAPIMessage(userId: $chat_id, message: $message, conversation_message_id: $message_id);
       }
    }
    public function kickUser(int $user_id, string $column): void
