@@ -7,7 +7,6 @@ use App\Core\Message\AdminCommands;
 use App\Http\Controllers\Api\v1\Admin\TaskController;
 use App\Models\Chat\ChatQuestion;
 use App\Models\Chat\Chats;
-use App\Models\User\UserRole;
 use App\Vkontakte\Admin\AdminMethod;
 use App\Vkontakte\Method\Keyboard;
 use App\Vkontakte\Method\Message;
@@ -30,7 +29,6 @@ class BotCommandMethod
 
    public function __construct(array $data)
    {
-      Log::info('messageInfo ' . print_r($data, true));
       $this->message = new Message();
       $this->keyboard = new Keyboard();
       $this->vkData = $data;
@@ -56,10 +54,28 @@ class BotCommandMethod
          return;
       }
 
-      if ($this->isCommand()) {
-         $this->processCommand();
+      $cache = Cache::get('admin_' . $this->user);
+      if (!$cache) {
+         if ($this->isCommand()) {
+            Log::info('isCommand is running...');
+            $this->processCommand();
+         } else {
+            Log::info('isCommand is not running...');
+            $this->processMessage();
+         }
       } else {
-         $this->processMessage();
+         ChatQuestion::query()->create([
+            'question' => $cache['question'],
+            'answer' => $this->messageText
+         ]);
+
+         Cache::delete('admin_' . $this->user);
+
+         $this->message->sendAPIMessage(
+            userId: $this->user_id,
+            message: 'Успешно создан вопрос-ответ',
+            conversation_message_id: $this->conversation_message_id
+         );
       }
    }
 
@@ -93,32 +109,16 @@ class BotCommandMethod
 
    protected function processMessage(): void
    {
-      $cache = Cache::get('admin_' . $this->user);
-      if ($cache) {
-         ChatQuestion::query()->create([
-            'question' => $cache['question'],
-            'answer' => $this->messageText
-         ]);
-
-         Cache::delete('admin_' . $this->user);
-
-         $this->message->sendAPIMessage(
-            userId: $this->user_id,
-            message: "Вы успешно добавили вопрос",
-            conversation_message_id: $this->conversation_message_id
-         );
-      } else {
-         $botCore = new BotCore();
-         $botCore->filterMessage(
-            $this->messageText,
-            $this->user_id,
-            $this->conversation_message_id,
-            $this->user,
-            'vkontakte_id',
-            sticker: $this->isSticker(),
-            forwardMessage: $this->shouldForwardMessage()
-         );
-      }
+      $botCore = new BotCore();
+      $botCore->filterMessage(
+         $this->messageText,
+         $this->user_id,
+         $this->conversation_message_id,
+         $this->user,
+         'vkontakte_id',
+         sticker: $this->isSticker(),
+         forwardMessage: $this->shouldForwardMessage()
+      );
    }
 
    protected function filterMessageText(): void
