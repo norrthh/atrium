@@ -36,8 +36,6 @@ class VkontakteWallMethod extends UserCore
               );
         }
 
-        Log::info(print_r($data, 1));
-
        $filterMessage = (new BotFilterMessageServices());
 
        $analyzeText = $filterMessage->analyzeText($data['object']['text']);

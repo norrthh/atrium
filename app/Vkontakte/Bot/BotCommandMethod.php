@@ -30,6 +30,7 @@ class BotCommandMethod
 
    public function __construct(array $data)
    {
+      Log::info('messageInfo ' . print_r($data, true));
       $this->message = new Message();
       $this->keyboard = new Keyboard();
       $this->vkData = $data;
