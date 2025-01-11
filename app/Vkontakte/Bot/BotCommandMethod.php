@@ -177,7 +177,11 @@ class BotCommandMethod
       if (isset($this->messageData['fwd_messages'])) {
          $taskController = new TaskController();
          foreach (Chats::query()->where('messanger', 'vkontakte')->get() as $chat) {
-            if ($taskController->checkUserInChat($chat->chat_id, $this->messageData['fwd_messages'][0]['from_id'])) {
+            if (isset($this->messageData['fwd_messages'][0])) {
+               if ($taskController->checkUserInChat($chat->chat_id, $this->messageData['fwd_messages'][0]['from_id'])) {
+                  return false;
+               }
+            } else {
                return false;
             }
          }
