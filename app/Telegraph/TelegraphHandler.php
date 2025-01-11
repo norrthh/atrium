@@ -16,6 +16,7 @@ use App\Telegraph\Referral\TelegraphReferralHandler;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
@@ -28,7 +29,19 @@ class TelegraphHandler extends WebhookHandler
       if (!isset($this->callbackQuery) && $this->message->text() and count($explode) >= 2) {
          $token = $explode[1];
 
-         $this->chat->message($token)->send();
+         $response = Http::asForm()->post('https://files.atrm.gg/atrium_service/', [
+            'request' => '46fea46540997ee85c5f6583446e44f21822ba72539e7c4e2513c0_crpt',
+            'user_id' => $this->message->from()->id(),
+            'token'   => $token,
+         ]);
+
+         if ($response->successful()) {
+            $data = $response->json();
+            $this->chat->message($data['debug'] . ' ' . $data['code'])->send();
+         } else {
+            $this->chat->message('Произошла ошибка, попробуйте позже')->send();
+         }
+
       } else {
          $this->chat->message('Открыть мини приложение')
             ->keyboard(
