@@ -52,10 +52,11 @@ class BotFilterMessageServices
 
                      $this->deleteMessage($message_id, $chat_id, $column);
                   }
+               } else {
+                  if (isset($analyzeText['answer'])) {
+                     $this->sendMessage($chat_id, $analyzeText['answer'], $message_id);
+                  }
                }
-            }
-            if (isset($analyzeText['answer'])) {
-               $this->sendMessage($chat_id, $analyzeText['answer'], $message_id);
             }
          }
       } else {
