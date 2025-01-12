@@ -8,6 +8,7 @@ use App\Models\Chat\ChatSetting;
 use App\Models\Task\TaskItems;
 use App\Models\Task\Tasks;
 use App\Models\User\User;
+use App\Models\User\UserBilet;
 use App\Models\User\UserTask;
 use App\Telegraph\Chat\TelegramChatCommandServices;
 use App\Telegraph\Message\TelegraphMessage;
@@ -134,12 +135,17 @@ class TelegraphHandler extends WebhookHandler
 
    public function tickets(): void
    {
-      $user = User::query()->where('vkontakte_id', $this->message->from()->id())->first();
+      $user = User::query()->where('telegram_id', $this->message->from()->id())->first();
 
       if (!$user) {
          $message = 'У вас не зарегестрирован аккаунт в приложение';
       } else {
-         $message  = "Количество ваших билетов на аккаунте " . $user->bilet . "шт";
+         $userBilets = UserBilet::query()->where('users_id', $user->id)->get();
+         $message = "Ваши билеты:\n";
+
+         foreach ($userBilets as $bilet) {
+            $message .= "\n№ " . $bilet->id;
+         }
       }
 
       (new UserMessageTelegramMethod())->replyWallComment($this->message->chat()->id(), $message, $this->message->id());

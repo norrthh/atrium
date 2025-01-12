@@ -165,4 +165,19 @@ class AdminChatCommandServices
 
       (new UserMessageTelegramMethod())->replyWallComment($chat_id, "Вы успешно сняли одно предупреждение", $message_id, parseMode: 'html');
    }
+
+   public function unmute(string $chat_id, int $message_id, array $parameters, ?User $user, int $admin_id, int $user_id): void
+   {
+      (new UserMessageTelegramMethod())->replyWallComment($chat_id, (new BotCore())->unmute($user_id, 'telegram_id'), $message_id, parseMode: 'html');
+   }
+
+   public function unban(string $chat_id, int $message_id, array $parameters, ?User $user, int $admin_id, int $user_id)
+   {
+      (new UserMessageTelegramMethod())->replyWallComment($chat_id, (new BotCore())->unban($user_id, 'telegram_id'), $message_id, parseMode: 'html');
+   }
+
+   public function delstaff(string $chat_id, int $message_id, array $parameters, ?User $user, int $admin_id, int $user_id)
+   {
+      (new UserMessageTelegramMethod())->replyWallComment($chat_id, (new BotCore())->delstaff($user_id, 'telegram_id', $admin_id), $message_id, parseMode: 'html');
+   }
 }

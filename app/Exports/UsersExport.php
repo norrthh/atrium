@@ -14,8 +14,7 @@ class UsersExport implements FromCollection, WithHeadings
    public function collection()
    {
       $users = User::query()
-         ->select('id', 'username_vkontakte', 'username_telegram', 'vkontakte_id', 'telegram_id', 'bilet')
-         ->where('bilet', '>', 0)
+         ->with('user')
          ->get();
 
       $data = [];
@@ -23,10 +22,10 @@ class UsersExport implements FromCollection, WithHeadings
          for ($i = 0; $i < $user->bilet; $i++) { // Условие на количество билетов
             $data[] = [
                'counter' => null, // Временное значение, позже заменим на корректный
-               'username_vkontakte' => $user->username_vkontakte,
-               'username_telegram' => $user->username_telegram,
-               'vkontakte_id' => $user->vkontakte_id,
-               'telegram_id' => $user->telegram_id,
+               'username_vkontakte' => $user->user->username_vkontakte,
+               'username_telegram' => $user->user->username_telegram,
+               'vkontakte_id' => $user->user->vkontakte_id,
+               'telegram_id' => $user->user->telegram_id,
             ];
          }
       }

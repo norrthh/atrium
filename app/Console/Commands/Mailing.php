@@ -31,18 +31,18 @@ class Mailing extends Command
 
       foreach ($mailings as $mailing) {
          $this->info('Mailings ' . $mailing->id . ' send start');
-         $telegraphs = TelegraphChat::query()->where('chat_id', '>', 0)->get()->filter(function ($user) use ($mailing) {
-            return !(UserMailingLogs::query()->where([['telegraph_id', $user->id], ['mailing_id', $mailing->id]])->first());
-         });
+         $telegraphs = TelegraphChat::query()->where('chat_id', '>', 0)->get();
 
          foreach ($telegraphs as $telegraph) {
-            $response = TelegraphChat::query()->where('id', $telegraph->id)->first()->message($mailing->text)->send();
+            if (!UserMailingLogs::query()->where([['telegraph_id', $telegraph->id], ['mailing_id', $mailing->id]])->first()) {
+               $response = TelegraphChat::query()->where('id', $telegraph->id)->first()->message($mailing->text)->send();
 
-            UserMailingLogs::query()->create([
-               'mailing_id' => $mailing->id,
-               'telegraph_id' => $telegraph->id,
-               'response' => $response->json(),
-            ]);
+               UserMailingLogs::query()->create([
+                  'mailing_id' => $mailing->id,
+                  'telegraph_id' => $telegraph->id,
+                  'response' => $response->json(),
+               ]);
+            }
          }
 
          \App\Models\Mailing::query()->where('id', $mailing->id)->update([

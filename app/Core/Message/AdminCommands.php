@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 
 class AdminCommands
 {
-   public array $commandList = ['/addmoder', '/addadmin', '/warn', '/mute', '/kick', '/akick', '/addInfo', '/newm', '/links', '/words', '/questions', '/staff', '/unwarn'];
+   public array $commandList = ['/addmoder', '/addadmin', '/warn', '/mute', '/kick', '/akick', '/addInfo', '/newm', '/links', '/words', '/questions', '/staff', '/unwarn', '/unban', '/unmute', '/delstaff'];
    public array $commandNotArg = ['addInfo', 'newm', 'links', 'words', 'questions', 'staff'];
 
    public function checkCommand(string $input): bool

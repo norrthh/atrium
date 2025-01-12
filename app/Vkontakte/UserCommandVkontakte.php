@@ -4,6 +4,7 @@ namespace App\Vkontakte;
 
 use App\Core\Bot\BotCore;
 use App\Models\User\User;
+use App\Models\User\UserBilet;
 use App\Vkontakte\Bot\BotCommandMethod;
 use Illuminate\Support\Facades\Log;
 
@@ -16,12 +17,16 @@ class UserCommandVkontakte extends BotCommandMethod
          switch ($command) {
             case 'tickets':
                $user = User::query()->where('vkontakte_id', $this->user)->first();
-               $message = '';
 
                if (!$user) {
                   $message = 'У вас не зарегестрирован аккаунт в приложение';
                } else {
-                  $message  = "Количество ваших билетов на аккаунте " . $user->bilet . "шт";
+                  $userBilets = UserBilet::query()->where('users_id', $user->id)->get();
+                  $message = "Ваши билеты:\n";
+
+                  foreach ($userBilets as $bilet) {
+                     $message .= "\n№ " . $bilet->id;
+                  }
                }
 
                $this->message->sendAPIMessage(

@@ -6,6 +6,7 @@ use App\Core\EventMethod\EventTelegramMethod;
 use App\Models\Chat\Chats;
 use App\Models\Chat\ChatSetting;
 use App\Models\User\User;
+use App\Models\User\UserBan;
 use App\Models\User\UserMute;
 use App\Models\User\UserRole;
 use App\Services\BotFilterMessageServices;
@@ -39,7 +40,7 @@ class BotCore
             } else {
                (new \App\Vkontakte\Method\User(chat_id: $item->chat_id))->kickUserFromChat($user_id);
             }
-         } elseif ($user) {
+         } if ($user) {
             if ($item->messanger == 'vkontakte' and $user->vkontakte_id) {
                (new \App\Vkontakte\Method\User(chat_id: $item->chat_id))->kickUserFromChat($user->vkontakte_id);
             }
@@ -49,13 +50,26 @@ class BotCore
             }
          }
       }
-   }
 
+      $users = [];
+      if ($methodCall == 'telegram') {
+         $users['telegram_id'] = $user_id;
+         if ($user and $user->vkontakte_id) {
+            $users['vkontakte_id'] = $user->vkontakte_id;
+         }
+      } elseif ($methodCall == 'vkontakte') {
+         $users['vkontakte_id'] = $user_id;
+         if ($user and $user->telegram_id) {
+            $users['vkontakte_id'] = $user->vkontakte_id;
+         }
+      }
+
+      UserBan::query()->create($users);
+   }
    public function filterMessage(string $text, string $chat_id, int $message_id, int $user_id, string $column, bool $sticker = false, bool $forwardMessage = false): void
    {
       (new BotFilterMessageServices())->filterMessage($text, $chat_id, $message_id, $user_id, $column, $sticker, $forwardMessage);
    }
-
    public function addRole(int $user_id, int $role, string $table): void
    {
       $user = User::query()->where($table, $user_id)->first();
@@ -71,7 +85,6 @@ class BotCore
 
       UserRole::query()->updateOrCreate([$table => $user_id], $roleData);
    }
-
    public function addInfo(string $message): ?string
    {
       $info = $this->parseFirstArg($message);
@@ -146,7 +159,6 @@ class BotCore
          \n{type}:\n1.1 - Первая беседа вконтакте (и тд)\n2 - Все беседы ВК\n3 - Одна беседа Telegram\n3.1 - Первая беседа Telegram (и тд)\n4 - Все беседы Telegram\n5 - Все беседы
       ";
    }
-
    public function newm(int $chat_id, ?string $welcomeMessage = null): string
    {
       if (!$welcomeMessage) {
@@ -160,7 +172,6 @@ class BotCore
       ChatSetting::query()->updateOrCreate(['chat_id' => $chat_id], ['welcome_message' => $welcomeMessage]);
       return "Вы успешно обновили приветственное сообщение";
    }
-
    protected function parseFirstArg(string $input = ''): array
    {
       $result = [
@@ -174,5 +185,45 @@ class BotCore
       }
 
       return $result;
+   }
+
+   public function unban(int $user_id, string $column): string
+   {
+      if (UserBan::query()->where($column, $user_id)->exists()) {
+         UserBan::query()->where($column, $user_id)->delete();
+         $message = 'Пользователь успешно разблокирован';
+      } else {
+         $message = 'Пользователь не заблокирован';
+      }
+
+      return $message;
+   }
+
+   public function unmute(int $user_id, string $column): string
+   {
+      if (UserMute::query()->where($column, $user_id)->exists()) {
+         UserMute::query()->where($column, $user_id)->delete();
+         $message = 'Пользователь успешно размучен';
+      } else {
+         $message = 'Пользователь не заблокирован';
+      }
+
+      return $message;
+   }
+
+   public function delstaff(int $user_id, string $column, int $adminID): string
+   {
+      if (UserRole::query()->where($column, $adminID)->first()->role == 2 and !in_array($user_id, ['614242745', '217199523', '582127671'])) {
+         if (UserRole::query()->where($column, $user_id)->exists()) {
+            UserRole::query()->where($column, $user_id)->delete();
+            $message = 'С пользователя успешно снята роль';
+         } else {
+            $message = 'Пользователь не заблокирован';
+         }
+      } else {
+         $message = 'Ваша роль не позволяет снимать с ролей';
+      }
+
+      return $message;
    }
 }
