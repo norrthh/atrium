@@ -98,7 +98,7 @@ class AdminMethod extends BotCommandMethod
    }
    public function akick(int $user_id, array $args): void
    {
-      Log::info('call akick');
+//      Log::info('call akick');
       (new BotCore())->akick(
          User::query()->where('vkontakte_id', $user_id)->first(),
          'vkontakte',

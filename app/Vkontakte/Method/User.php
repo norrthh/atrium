@@ -43,7 +43,7 @@ class User
       } catch (RequestException $e) {
          return "Request failed: " . $e->getMessage();
       } catch (GuzzleException $e) {
-          Log::info('Error in kickChatMember Telegram: '. $e->getMessage());
+//          Log::info('Error in kickChatMember Telegram: '. $e->getMessage());
           return $e->getMessage();
       }
    }

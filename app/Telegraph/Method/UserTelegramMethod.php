@@ -24,7 +24,7 @@ class UserTelegramMethod
             ],
          ]);
       } catch (GuzzleException $e) {
-         Log::info('Error in kickChatMember Telegram: ' . $e->getMessage());
+//         Log::info('Error in kickChatMember Telegram: ' . $e->getMessage());
          return $e->getMessage();
       }
 
@@ -65,7 +65,7 @@ class UserTelegramMethod
 
          return $data['result'];
       } catch (\GuzzleHttp\Exception\ClientException $e) {
-         Log::info('getUserIdFail' . $e->getMessage());
+//         Log::info('getUserIdFail' . $e->getMessage());
          return null;
       }
    }
@@ -94,7 +94,7 @@ class UserTelegramMethod
             }
          }
       } catch (GuzzleException $e) {
-         Log::info('getChatMemberFail' . $e->getMessage());
+//         Log::info('getChatMemberFail' . $e->getMessage());
          return false;
       }
 

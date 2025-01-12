@@ -34,7 +34,7 @@ class BotFilterMessageServices
 
          $analyzeText['column'] = $column;
 
-         Log::info('analyzeText: ' . print_r($analyzeText, true));
+//         Log::info('analyzeText: ' . print_r($analyzeText, true));
 
          if ($analyzeText['status']) {
             if (isset($analyzeText['type'])) {
@@ -183,7 +183,7 @@ class BotFilterMessageServices
    }
    public function sendMessage(string $chat_id, string $message, string $column, ?int $message_id = null): void
    {
-      Log::info($column);
+//      Log::info($column);
       if ($column === 'telegram_id') {
          (new UserMessageTelegramMethod())->replyWallComment($chat_id, $message, commentId: $message_id);
       } else {

@@ -25,7 +25,7 @@ class Message
       $this->vkVersion = env('VKONTAKTE_VERSION');
    }
 
-   public function sendAPIMessage(int $userId = 0, string|bool $message = false, $keyboard = false, string|bool $attachment = false, int $conversation_message_id = 0): Response
+   public function sendAPIMessage(int $userId = 0, string|bool $message = false, $keyboard = false, string|bool $attachment = false, ?int $conversation_message_id = null): Response
    {
       $params = [
          'access_token' => $this->vkKey,
@@ -52,7 +52,7 @@ class Message
 
       $request = Http::get(self::VK_API_URL, $params);
 
-      Log::info('request send message vk' . print_r($request->body(), true));
+//      Log::info('request send message vk' . print_r($request->body(), true));
 
       return $request;
    }

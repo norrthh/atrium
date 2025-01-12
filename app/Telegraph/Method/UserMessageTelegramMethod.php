@@ -10,10 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class UserMessageTelegramMethod
 {
-   /**
-    * @throws ConnectionException
-    * @throws \Exception
-    */
    public function replyWallComment(int $postId, string $message, ?int $commentId = null, $image = null, string $parseMode = null): void
    {
       $telegramBotToken = env('TELEGRAM_TOKEN');

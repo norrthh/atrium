@@ -31,7 +31,7 @@ class UserCommandVkontakte extends BotCommandMethod
                );
                break;
             default:
-               Log::info('not found command');
+//               Log::info('not found command');
                break;
          }
       } else {

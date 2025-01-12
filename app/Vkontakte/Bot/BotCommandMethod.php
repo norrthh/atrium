@@ -47,7 +47,7 @@ class BotCommandMethod
 
    public function command(): void
    {
-      Log::info('Processing command...');
+//      Log::info('Processing command...');
 
       if (!$this->isChatRegistered()) {
          $this->filterMessageText();
@@ -57,10 +57,10 @@ class BotCommandMethod
       $cache = Cache::get('admin_' . $this->user);
       if (!$cache) {
          if ($this->isCommand()) {
-            Log::info('isCommand is running...');
+//            Log::info('isCommand is running...');
             $this->processCommand();
          } else {
-            Log::info('isCommand is not running...');
+//            Log::info('isCommand is not running...');
             $this->processMessage();
          }
       } else {
