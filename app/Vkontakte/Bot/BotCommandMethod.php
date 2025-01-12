@@ -114,7 +114,7 @@ class BotCommandMethod
                message: 'Такой команды не существует.',
                keyboard: $this->keyboard->keyboard(
                   buttons: [
-                     [$this->keyboard->openApp('ПОЛУЧИТЬ ПОДАРОК')]
+                     [$this->keyboard->openApp('Открыть мини-приложение')]
                   ],
                   inline: true
                )
@@ -126,7 +126,7 @@ class BotCommandMethod
             message: 'Такой команды не существует.',
             keyboard: $this->keyboard->keyboard(
                buttons: [
-                  [$this->keyboard->openApp('ПОЛУЧИТЬ ПОДАРОК')]
+                  [$this->keyboard->openApp('Открыть мини-приложение')]
                ],
                inline: true
             )
