@@ -36,6 +36,8 @@ class AdminCommands
          ];
       }
 
+      Log::info('command' . print_r($result, 1));
+
       return $result;
    }
 
