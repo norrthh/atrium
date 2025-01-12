@@ -9,14 +9,11 @@ use App\Models\Chat\ChatQuestion;
 use App\Models\Chat\Chats;
 use App\Models\Chat\ChatSetting;
 use App\Models\User\UserBan;
-use App\Telegraph\Method\UserTelegramMethod;
 use App\Vkontakte\Admin\AdminMethod;
 use App\Vkontakte\Method\Keyboard;
 use App\Vkontakte\Method\Message;
 use App\Vkontakte\Method\User;
-use App\Vkontakte\UserCommandVkontakte;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class BotCommandMethod
 {
@@ -109,8 +106,6 @@ class BotCommandMethod
          $command = '/' . $commandData['command'];
          if (in_array($command, $adminCommands->commandList)) {
             (new AdminMethod($this->vkData))->method();
-         } else {
-            (new UserCommandVkontakte($this->vkData))->filter($commandData['command']);
          }
       }
    }
@@ -143,6 +138,7 @@ class BotCommandMethod
          'Привязываю в Telegram' => 'connectTG',
          '🌟 Как попасть в ТОП игроков?' => 'sendTopPlayersInfo',
          'Аукционы и магазин пустые' => 'explainAuctionsAndShop',
+         '/tickets' => 'tickets',
       ];
 
       $prizeCommands = [

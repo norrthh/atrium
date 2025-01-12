@@ -2,7 +2,8 @@
 
 namespace App\Vkontakte\Bot;
 
-use Illuminate\Support\Facades\Log;
+use App\Models\User\User;
+use App\Models\User\UserBilet;
 
 class BotCommandSupportMethod extends BotCommandMethod
 {
@@ -109,5 +110,40 @@ class BotCommandSupportMethod extends BotCommandMethod
       );
    }
 
+   public function tickets()
+   {
+      $user = User::query()->where('vkontakte_id', $this->user)->first();
 
+      if (!$user) {
+         $message = 'У вас не зарегестрирован аккаунт в приложение';
+
+         $this->message->sendAPIMessage(
+            userId: $this->user_id,
+            message: $message,
+            keyboard: $this->keyboard->keyboard([
+               [$this->keyboard->openApp('Приложение в VK')],
+            ],
+               inline: true
+            ),
+            conversation_message_id: $this->conversation_message_id
+         );
+      } else {
+         $userBilets = UserBilet::query()->where('users_id', $user->id)->get();
+         if (count($userBilets) == 0) {
+            $message = 'У вас отсутствуют билеты';
+         } else {
+            $message = "Ваши билеты:\n";
+
+            foreach ($userBilets as $bilet) {
+               $message .= "\n№ " . $bilet->id;
+            }
+         }
+
+         $this->message->sendAPIMessage(
+            userId: $this->user_id,
+            message: $message,
+            conversation_message_id: $this->conversation_message_id
+         );
+      }
+   }
 }

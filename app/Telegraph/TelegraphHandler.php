@@ -4,6 +4,7 @@ namespace App\Telegraph;
 
 use App\Core\Message\AdminCommands;
 use App\Facades\WithdrawUser;
+use App\Models\Chat\Chats;
 use App\Models\Chat\ChatSetting;
 use App\Models\Task\TaskItems;
 use App\Models\Task\Tasks;
@@ -143,23 +144,25 @@ class TelegraphHandler extends WebhookHandler
 
    public function tickets(): void
    {
-      $user = User::query()->where('telegram_id', $this->message->from()->id())->first();
+      if (!Chats::query()->where('chat_id', $this->message->chat()->id())->exists()) {
+         $user = User::query()->where('telegram_id', $this->message->from()->id())->first();
 
-      if (!$user) {
-         $message = "У вас не зарегестрирован аккаунт в приложение. \n\nНапишите /start в личном сообщение бота - @atriumappbot";
-      } else {
-         $userBilets = UserBilet::query()->where('users_id', $user->id)->get();
-         if (count($userBilets) == 0) {
-            $message = 'У вас отсутствуют билеты';
+         if (!$user) {
+            $message = "У вас не зарегестрирован аккаунт в приложение. \n\nНапишите /start в личном сообщение бота - @atriumappbot";
          } else {
-            $message = "Ваши билеты:\n";
+            $userBilets = UserBilet::query()->where('users_id', $user->id)->get();
+            if (count($userBilets) == 0) {
+               $message = 'У вас отсутствуют билеты';
+            } else {
+               $message = "Ваши билеты:\n";
 
-            foreach ($userBilets as $bilet) {
-               $message .= "\n№ " . $bilet->id;
+               foreach ($userBilets as $bilet) {
+                  $message .= "\n№ " . $bilet->id;
+               }
             }
          }
-      }
 
-      (new UserMessageTelegramMethod())->replyWallComment($this->message->chat()->id(), $message, $this->message->id());
+         (new UserMessageTelegramMethod())->replyWallComment($this->message->chat()->id(), $message, $this->message->id());
+      }
    }
 }
