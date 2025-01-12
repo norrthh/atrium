@@ -8,17 +8,18 @@ use App\Models\Chat\ChatSetting;
 use App\Models\Task\TaskItems;
 use App\Models\Task\Tasks;
 use App\Models\User\User;
+use App\Models\User\UserBan;
 use App\Models\User\UserBilet;
 use App\Models\User\UserTask;
 use App\Telegraph\Chat\TelegramChatCommandServices;
 use App\Telegraph\Message\TelegraphMessage;
 use App\Telegraph\Method\UserMessageTelegramMethod;
+use App\Telegraph\Method\UserTelegramMethod;
 use App\Telegraph\Referral\TelegraphReferralHandler;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TelegraphHandler extends WebhookHandler
@@ -83,29 +84,36 @@ class TelegraphHandler extends WebhookHandler
 
    public function handleChatMemberJoined(\DefStudio\Telegraph\DTO\User $member): void
    {
-      $welcomeMessage = ChatSetting::query()->where('chat_id', $this->message->chat()->id())->first();
+      $userBan = UserBan::query()->where('telegram_id', $this->message->from()->id())->first();
+      $userMessageTelegram = new UserMessageTelegramMethod();
 
-      if ($welcomeMessage) {
-         $userMessageTelegram = new UserMessageTelegramMethod();
-         $userMessageTelegram->replyWallComment($this->message->chat()->id(), $welcomeMessage->welcome_message);
-         $userMessageTelegram->deleteMessage($this->message->chat()->id(), $this->message->id());
-      }
+      if ($userBan) {
+         (new UserTelegramMethod())->kickUserFromChat($this->message->chat()->id(), $this->message->from()->id());
+         $userMessageTelegram->replyWallComment($this->message->chat()->id(), 'Этот пользователь заблокирован');
+      } else {
+         $welcomeMessage = ChatSetting::query()->where('chat_id', $this->message->chat()->id())->first();
 
-      $user = User::query()->where('telegram_id', $member->id())->first();
-      if ($user) {
-         $task = Tasks::query()->where([['social_id', $this->message->chat()->id()], ['status', 0], ['typeSocial', 2], ['typeTask', '2']])->first();
-         if ($task) {
-            if ($task->access['type'] == 1 and Carbon::parse($task->created_at)->diffInMinutes(now()) >= $task->access['value']) {
-               return;
-            } else {
-               if (!UserTask::query()->where([['task_id', $task->id], ['user_id', $member->id()]])->exists()) {
-                  UserTask::query()->create([
-                     'task_id' => $task->id,
-                     'user_id' => $user->id,
-                  ]);
+         if ($welcomeMessage) {
+            $userMessageTelegram->replyWallComment($this->message->chat()->id(), $welcomeMessage->welcome_message);
+            $userMessageTelegram->deleteMessage($this->message->chat()->id(), $this->message->id());
+         }
 
-                  $taskItem = TaskItems::query()->where('task_id', $task->id)->first();
-                  WithdrawUser::store($taskItem->item_id, $taskItem->count, $user->id);
+         $user = User::query()->where('telegram_id', $member->id())->first();
+         if ($user) {
+            $task = Tasks::query()->where([['social_id', $this->message->chat()->id()], ['status', 0], ['typeSocial', 2], ['typeTask', '2']])->first();
+            if ($task) {
+               if ($task->access['type'] == 1 and Carbon::parse($task->created_at)->diffInMinutes(now()) >= $task->access['value']) {
+                  return;
+               } else {
+                  if (!UserTask::query()->where([['task_id', $task->id], ['user_id', $member->id()]])->exists()) {
+                     UserTask::query()->create([
+                        'task_id' => $task->id,
+                        'user_id' => $user->id,
+                     ]);
+
+                     $taskItem = TaskItems::query()->where('task_id', $task->id)->first();
+                     WithdrawUser::store($taskItem->item_id, $taskItem->count, $user->id);
+                  }
                }
             }
          }

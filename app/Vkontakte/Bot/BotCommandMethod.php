@@ -7,6 +7,9 @@ use App\Core\Message\AdminCommands;
 use App\Http\Controllers\Api\v1\Admin\TaskController;
 use App\Models\Chat\ChatQuestion;
 use App\Models\Chat\Chats;
+use App\Models\Chat\ChatSetting;
+use App\Models\User\UserBan;
+use App\Telegraph\Method\UserTelegramMethod;
 use App\Vkontakte\Admin\AdminMethod;
 use App\Vkontakte\Method\Keyboard;
 use App\Vkontakte\Method\Message;
@@ -56,12 +59,16 @@ class BotCommandMethod
 
       $cache = Cache::get('admin_' . $this->user);
       if (!$cache) {
-         if ($this->isCommand()) {
+         if (!isset($this->vkData['object']['message']['action'])) {
+            if ($this->isCommand()) {
 //            Log::info('isCommand is running...');
-            $this->processCommand();
-         } else {
+               $this->processCommand();
+            } else {
 //            Log::info('isCommand is not running...');
-            $this->processMessage();
+               $this->processMessage();
+            }
+         } else {
+            $this->welcomeInviteMessageUser();
          }
       } else {
          ChatQuestion::query()->create([
@@ -195,5 +202,24 @@ class BotCommandMethod
    {
       return isset($this->messageData['attachments'][0]['type']) &&
          $this->messageData['attachments'][0]['type'] === 'sticker';
+   }
+
+   protected function welcomeInviteMessageUser(): void
+   {
+      $actionMessage = $this->vkData['object']['message']['action'];
+      if ($actionMessage['type'] == 'chat_invite_user' or $actionMessage['type'] == 'chat_invite_user_by_link' and $actionMessage['member_id']) {
+         $userBan = UserBan::query()->where('vkontakte_id', $this->user)->first();
+         if ($userBan) {
+            $this->userMethod->kickUserFromChat($this->user);
+            $message = 'Этот пользователь заблокирован';
+         } else {
+            $message = ChatSetting::query()->where('chat_id', $this->user_id)->first()->welcome_message;
+         }
+
+         $this->message->sendAPIMessage(
+            userId: $this->user_id,
+            message: $message,
+         );
+      }
    }
 }
