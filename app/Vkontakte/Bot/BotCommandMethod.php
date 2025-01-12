@@ -117,7 +117,8 @@ class BotCommandMethod
                      [$this->keyboard->openApp('Открыть мини-приложение')]
                   ],
                   inline: true
-               )
+               ),
+               conversation_message_id: $this->conversation_message_id
             );
          }
       } else {
@@ -129,7 +130,8 @@ class BotCommandMethod
                   [$this->keyboard->openApp('Открыть мини-приложение')]
                ],
                inline: true
-            )
+            ),
+            conversation_message_id: $this->conversation_message_id
          );
       }
    }
