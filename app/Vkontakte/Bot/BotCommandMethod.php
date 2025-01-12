@@ -14,6 +14,7 @@ use App\Vkontakte\Method\Keyboard;
 use App\Vkontakte\Method\Message;
 use App\Vkontakte\Method\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class BotCommandMethod
 {
@@ -99,6 +100,8 @@ class BotCommandMethod
    {
       $adminCommands = new AdminCommands();
       $commandData = $adminCommands->checkCommandVK($this->messageText);
+
+      Log::info('processCommand:' . print_r($commandData, true));
 
       if (isset($commandData['command'])) {
          $command = '/' . $commandData['command'];
