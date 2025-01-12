@@ -163,6 +163,12 @@ class TelegraphHandler extends WebhookHandler
          }
 
          (new UserMessageTelegramMethod())->replyWallComment($this->message->chat()->id(), $message, $this->message->id());
+      } else {
+         (new UserMessageTelegramMethod())->replyWallComment(
+            $this->message->chat()->id(),
+            'Командной можно воспользоваться только в личном сообщение бота',
+            $this->message->id()
+         );
       }
    }
 }
