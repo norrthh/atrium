@@ -141,10 +141,14 @@ class TelegraphHandler extends WebhookHandler
          $message = 'У вас не зарегестрирован аккаунт в приложение';
       } else {
          $userBilets = UserBilet::query()->where('users_id', $user->id)->get();
-         $message = "Ваши билеты:\n";
+         if (count($userBilets) == 0) {
+            $message = 'У вас отсутствуют билеты';
+         } else {
+            $message = "Ваши билеты:\n";
 
-         foreach ($userBilets as $bilet) {
-            $message .= "\n№ " . $bilet->id;
+            foreach ($userBilets as $bilet) {
+               $message .= "\n№ " . $bilet->id;
+            }
          }
       }
 
