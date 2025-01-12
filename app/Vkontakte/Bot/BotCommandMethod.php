@@ -104,10 +104,15 @@ class BotCommandMethod
       Log::info('processCommand:' . print_r($commandData, true));
 
       if (isset($commandData['command'])) {
+         Log::debug('process1');
          $command = '/' . $commandData['command'];
          if (in_array($command, $adminCommands->commandList)) {
+            Log::debug('process3');
+
             (new AdminMethod($this->vkData))->method();
          } else {
+            Log::debug('process4');
+
             $this->message->sendAPIMessage(
                userId: $this->user_id,
                message: 'Такой команды не существует.',
@@ -117,6 +122,8 @@ class BotCommandMethod
             );
          }
       } else {
+         Log::debug('process2');
+
          $this->message->sendAPIMessage(
             userId: $this->user_id,
             message: 'Такой команды не существует.',
