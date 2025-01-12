@@ -13,6 +13,7 @@ use App\Models\User\UserRole;
 use App\Models\User\UserWarns;
 use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Telegraph\Method\UserTelegramMethod;
+use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -34,6 +35,8 @@ class AdminChatCommandServices
       $getInfoCommand = $adminCommand->getCommand($text);
       $command = $getInfoCommand['command'] ?? null;
       $parameters = $getInfoCommand['parameters'] ?? [];
+
+//      TelegraphChat::query()->where('chat_id', 891954506)->first()->message(print_r($getInfoCommand, true))->send();
 
       if (!$command || !method_exists($this, $command)) {
          return;
@@ -134,9 +137,9 @@ class AdminChatCommandServices
    {
       (new EventTelegramMethod())->replyWallComment($chat_id, (new BotCore())->addInfo($parameters['param']), $message_id);
    }
-   public function newm(string $chat_id, int $message_id, string $parameters, int $user_id, string $text): void
+   public function newm(string $chat_id, int $message_id, array $parameters, int $user_id, string $text): void
    {
-      (new EventTelegramMethod())->replyWallComment($chat_id, (new BotCore())->newm($chat_id, $parameters), $message_id);
+      (new EventTelegramMethod())->replyWallComment($chat_id, (new BotCore())->newm($chat_id, explode('/newm', $text)[1]), $message_id);
    }
    public function staff(string $chat_id, int $message_id): void
    {

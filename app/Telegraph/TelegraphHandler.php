@@ -146,7 +146,7 @@ class TelegraphHandler extends WebhookHandler
       $user = User::query()->where('telegram_id', $this->message->from()->id())->first();
 
       if (!$user) {
-         $message = 'У вас не зарегестрирован аккаунт в приложение';
+         $message = "У вас не зарегестрирован аккаунт в приложение. \n\nНапишите /start в личном сообщение бота - @atriumappbot";
       } else {
          $userBilets = UserBilet::query()->where('users_id', $user->id)->get();
          if (count($userBilets) == 0) {

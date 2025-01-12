@@ -20,6 +20,17 @@ class UserCommandVkontakte extends BotCommandMethod
 
                if (!$user) {
                   $message = 'У вас не зарегестрирован аккаунт в приложение';
+
+                  $this->message->sendAPIMessage(
+                     userId: $this->user_id,
+                     message: $message,
+                     keyboard: $this->keyboard->keyboard([
+                        [$this->keyboard->openApp('Приложение в VK')],
+                     ],
+                        inline: true
+                     ),
+                     conversation_message_id: $this->conversation_message_id
+                  );
                } else {
                   $userBilets = UserBilet::query()->where('users_id', $user->id)->get();
                   if (count($userBilets) == 0) {
@@ -31,13 +42,13 @@ class UserCommandVkontakte extends BotCommandMethod
                         $message .= "\n№ " . $bilet->id;
                      }
                   }
-               }
 
-               $this->message->sendAPIMessage(
-                  userId: $this->user_id,
-                  message: $message,
-                  conversation_message_id: $this->conversation_message_id
-               );
+                  $this->message->sendAPIMessage(
+                     userId: $this->user_id,
+                     message: $message,
+                     conversation_message_id: $this->conversation_message_id
+                  );
+               }
                break;
             default:
 //               Log::info('not found command');

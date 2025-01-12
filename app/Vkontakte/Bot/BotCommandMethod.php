@@ -71,6 +71,7 @@ class BotCommandMethod
             $this->welcomeInviteMessageUser();
          }
       } else {
+         Chats::query()->where('question', $cache['question'])->delete();
          ChatQuestion::query()->create([
             'question' => $cache['question'],
             'answer' => $this->messageText

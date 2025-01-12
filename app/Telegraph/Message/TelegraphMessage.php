@@ -56,7 +56,7 @@ class TelegraphMessage extends WebhookHandler
          if ($chatId !== null) {
              $telegraphChat = TelegraphChat::query()->updateOrCreate(
                  ['chat_id' => $chatId],
-                 ['name' => '[private] ' . $this->handler->message->from()->username()]
+                 ['name' => '[private] ' . $this->handler->message->from()->username() ?? ($this->handler->message->from()->firstName() . ' ' . $this->handler->message->from()->lastName())]
              );
              $telegraphChat->forceFill(['telegraph_bot_id' => TelegraphBot::query()->first()->id])->save();
          }
@@ -67,7 +67,7 @@ class TelegraphMessage extends WebhookHandler
          if ($chatId !== null) {
              $telegraphChat = TelegraphChat::query()->updateOrCreate(
                  ['chat_id' => $chatId],
-                 ['name' => '[private] ' . $this->handler->callbackQuery->from()->username()]
+                 ['name' => '[private] ' . $this->handler->callbackQuery->from()->username() ?? ($this->handler->callbackQuery->from()->firstName() . ' ' . $this->handler->callbackQuery->from()->lastName())]
              );
              $telegraphChat->forceFill(['telegraph_bot_id' => TelegraphBot::query()->first()->id])->save();
          }

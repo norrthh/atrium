@@ -12,6 +12,8 @@ use App\Models\User\UserRole;
 use App\Models\User\UserWarns;
 use App\Telegraph\Method\UserMessageTelegramMethod;
 use App\Vkontakte\Bot\BotCommandMethod;
+use DefStudio\Telegraph\Models\TelegraphChat;
+use DefStudio\Telegraph\Telegraph;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -144,7 +146,7 @@ class AdminMethod extends BotCommandMethod
    {
       $this->message->sendAPIMessage(
          userId: $this->user_id,
-         message: (new BotCore())->newm($this->user_id, $args['other']),
+         message: (new BotCore())->newm($this->user_id, explode('/newm', $this->messageText)[1]),
          conversation_message_id: $this->conversation_message_id
       );
    }
