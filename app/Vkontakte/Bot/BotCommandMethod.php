@@ -113,6 +113,14 @@ class BotCommandMethod
                ]
             );
          }
+      } else {
+         $this->message->sendAPIMessage(
+            userId: $this->user_id,
+            message: 'Такой команды не существует.',
+            keyboard: [
+               [$this->keyboard->openApp('Приложение в VK')],
+            ]
+         );
       }
    }
 
