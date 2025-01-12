@@ -32,14 +32,10 @@ class BotFilterMessageServices
             ];
          }
 
-         $analyzeText['column'] = $column;
-
-//         Log::info('analyzeText: ' . print_r($analyzeText, true));
-
          if ($analyzeText['status']) {
             if (isset($analyzeText['type'])) {
                if (!UserRole::query()->where($column, $user_id)->exists()) {
-                  if (in_array($analyzeText['type'], ['sticker', 'links', 'words', 'forward'])) {
+                  if (in_array($analyzeText['type'], ['links', 'words', 'forward'])) {
                      $violations = $this->updateUserViolations($user_id, $column);
 
                      $userUpom = $this->getUserInfo($user_id, $columnTable);
@@ -52,6 +48,10 @@ class BotFilterMessageServices
                         UserWarns::query()->where('id', $violations->id)->delete();
                      }
 
+                     $this->deleteMessage($message_id, $chat_id, $column);
+                  }
+
+                  if ($analyzeText['type'] == 'sticker') {
                      $this->deleteMessage($message_id, $chat_id, $column);
                   }
                }
