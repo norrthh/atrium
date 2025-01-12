@@ -24,7 +24,8 @@ class BotCommandSupportMethod extends BotCommandMethod
       $this->message->sendAPIMessage(
          userId: $this->user_id,
          message: "👉 Выбери свой вопрос: \n\nНайди нужную информацию и получи ответы на свои вопросы! 😊",
-         keyboard: $this->keyboard->keyboard([
+         keyboard: $this->keyboard->keyboard(
+            buttons: [
                [$this->keyboard->openApp('Приложение в VK')],
                [$this->keyboard->openLink('Приложение в Telegram', 'https://t.me/atriumappbot')],
             ],
@@ -120,9 +121,10 @@ class BotCommandSupportMethod extends BotCommandMethod
          $this->message->sendAPIMessage(
             userId: $this->user_id,
             message: $message,
-            keyboard: $this->keyboard->keyboard([
-               [$this->keyboard->openApp('Приложение в VK')],
-            ],
+            keyboard: $this->keyboard->keyboard(
+               buttons: [
+                  [$this->keyboard->openApp('Приложение в VK')],
+               ],
                inline: true
             ),
             conversation_message_id: $this->conversation_message_id
