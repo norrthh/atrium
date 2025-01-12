@@ -35,6 +35,8 @@ class AdminMethod extends BotCommandMethod
          } else {
             $this->message->sendAPIMessage(userId: $this->user_id, message: 'Перепроверьте все аргументы, они должны быть валидными. Пример: /'. $command .' @username', conversation_message_id: $this->conversation_message_id);
          }
+      } else {
+         $this->message->sendAPIMessage(userId: $this->user_id, message: 'Эти команды доступны только модераторам и выше', conversation_message_id: $this->conversation_message_id);
       }
    }
    public function staff($args): void

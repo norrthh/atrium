@@ -58,10 +58,8 @@ class BotCommandMethod
       if (!$cache) {
          if (!isset($this->vkData['object']['message']['action'])) {
             if ($this->isCommand()) {
-//            Log::info('isCommand is running...');
                $this->processCommand();
             } else {
-//            Log::info('isCommand is not running...');
                $this->processMessage();
             }
          } else {
@@ -106,6 +104,14 @@ class BotCommandMethod
          $command = '/' . $commandData['command'];
          if (in_array($command, $adminCommands->commandList)) {
             (new AdminMethod($this->vkData))->method();
+         } else {
+            $this->message->sendAPIMessage(
+               userId: $this->user_id,
+               message: 'Такой команды не существует.',
+               keyboard: [
+                  [$this->keyboard->openApp('Приложение в VK')],
+               ]
+            );
          }
       }
    }

@@ -133,7 +133,7 @@ class TelegraphHandler extends WebhookHandler
          $chatCommand->commands($text, $this->message->chat()->id(), $this->message->id(), $this->message->from()->id());
       } else {
          if (!$this->canHandle($command)) {
-            $this->handleUnknownCommand($text);
+            $this->chat->message('Команда не найдена, но вы можете открыть приложение в телеграмме :)')->send();
 
             return;
          } else {
