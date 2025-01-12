@@ -163,6 +163,33 @@ class AdminMethod extends BotCommandMethod
       );
    }
 
+   public function unmute(int $user_id, array $args): void
+   {
+      $this->message->sendAPIMessage(
+         userId: $this->user_id,
+         message: (new BotCore())->unmute($args['id'], 'vkontakte_id'),
+         conversation_message_id: $this->conversation_message_id
+      );
+   }
+
+   public function unban(int $user_id, array $args): void
+   {
+      $this->message->sendAPIMessage(
+         userId: $this->user_id,
+         message: (new BotCore())->unban($args['id'], 'vkontakte_id'),
+         conversation_message_id: $this->conversation_message_id
+      );
+   }
+
+   public function delstaff(int $user_id, array $args): void
+   {
+      $this->message->sendAPIMessage(
+         userId: $this->user_id,
+         message: (new BotCore())->delstaff($args['id'], 'vkontakte_id', $this->user),
+         conversation_message_id: $this->conversation_message_id
+      );
+   }
+
    public function links(array $args): void
    {
       if (empty($args['other'])) {

@@ -17,7 +17,6 @@ use App\Http\Controllers\Api\v1\Vkontakte\VkontakteController;
 use App\Http\Controllers\Api\v1\WithdrawController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function (Request $request) {
    return (new \App\Vkontakte\Method\Message())->uploadAPIPhoto('bot/bg.jpg');
