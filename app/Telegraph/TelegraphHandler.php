@@ -2,6 +2,7 @@
 
 namespace App\Telegraph;
 
+use App\Core\Bot\BotCore;
 use App\Core\Message\AdminCommands;
 use App\Facades\WithdrawUser;
 use App\Models\Chat\Chats;
@@ -12,6 +13,7 @@ use App\Models\User\User;
 use App\Models\User\UserBan;
 use App\Models\User\UserBilet;
 use App\Models\User\UserTask;
+use App\Services\BotFilterMessageServices;
 use App\Telegraph\Chat\TelegramChatCommandServices;
 use App\Telegraph\Message\TelegraphMessage;
 use App\Telegraph\Method\UserMessageTelegramMethod;
@@ -128,17 +130,22 @@ class TelegraphHandler extends WebhookHandler
    {
       [$command, $parameter] = $this->parseCommand($text);
 
-      $chatCommand = (new TelegramChatCommandServices());
-      if ((new AdminCommands())->checkCommand($text)) {
-         $chatCommand->commands($text, $this->message->chat()->id(), $this->message->id(), $this->message->from()->id());
-      } else {
-         if (!$this->canHandle($command)) {
-            $this->chat->message("Команда не найдена, но вы можете открыть приложение в личном сообщение бота - @atriumappbot :)")->send();
+      if ((new BotFilterMessageServices())->checkMute($this->message->from()->id(), 'telegram_id')) {
+         $chatCommand = (new TelegramChatCommandServices());
 
-            return;
+         if ((new AdminCommands())->checkCommand($text)) {
+            $chatCommand->commands($text, $this->message->chat()->id(), $this->message->id(), $this->message->from()->id());
          } else {
-            $this->$command($parameter);
+            if (!$this->canHandle($command)) {
+               $this->chat->message("Команда не найдена, но вы можете открыть приложение в личном сообщение бота - @atriumappbot :)")->send();
+
+               return;
+            } else {
+               $this->$command($parameter);
+            }
          }
+      } else {
+         (new BotFilterMessageServices())->deleteMessage($this->message->id(), $this->message->chat()->id(), 'telegram_id');
       }
    }
 

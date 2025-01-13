@@ -9,6 +9,7 @@ use App\Models\Chat\ChatQuestion;
 use App\Models\Chat\Chats;
 use App\Models\Chat\ChatSetting;
 use App\Models\User\UserBan;
+use App\Services\BotFilterMessageServices;
 use App\Vkontakte\Admin\AdminMethod;
 use App\Vkontakte\Method\Keyboard;
 use App\Vkontakte\Method\Message;
@@ -55,34 +56,38 @@ class BotCommandMethod
          return;
       }
 
-      $cache = Cache::get('admin_' . $this->user);
-      if (!$cache) {
-         if (!isset($this->vkData['object']['message']['action'])) {
-            if ($this->isCommand()) {
-               $this->processCommand();
+      if ((new BotFilterMessageServices())->checkMute($this->user, 'vkontakte_id')) {
+         $cache = Cache::get('admin_' . $this->user);
+         if (!$cache) {
+            if (!isset($this->vkData['object']['message']['action'])) {
+               if ($this->isCommand()) {
+                  $this->processCommand();
+               } else {
+                  $this->processMessage();
+               }
             } else {
-               $this->processMessage();
+               $this->welcomeInviteMessageUser();
             }
          } else {
-            $this->welcomeInviteMessageUser();
+            if (ChatQuestion::query()->where('question', $cache['question'])->exists()) {
+               ChatQuestion::query()->where('question', $cache['question'])->delete();
+            }
+
+            ChatQuestion::query()->create([
+               'question' => $cache['question'],
+               'answer' => $this->messageText
+            ]);
+
+            Cache::delete('admin_' . $this->user);
+
+            $this->message->sendAPIMessage(
+               userId: $this->user_id,
+               message: 'Успешно создан вопрос-ответ',
+               conversation_message_id: $this->conversation_message_id
+            );
          }
       } else {
-         if (ChatQuestion::query()->where('question', $cache['question'])->exists()) {
-            ChatQuestion::query()->where('question', $cache['question'])->delete();
-         }
-
-         ChatQuestion::query()->create([
-            'question' => $cache['question'],
-            'answer' => $this->messageText
-         ]);
-
-         Cache::delete('admin_' . $this->user);
-
-         $this->message->sendAPIMessage(
-            userId: $this->user_id,
-            message: 'Успешно создан вопрос-ответ',
-            conversation_message_id: $this->conversation_message_id
-         );
+         (new BotFilterMessageServices())->deleteMessage($this->conversation_message_id, $this->user_id, 'vkontakte_id');
       }
    }
 
