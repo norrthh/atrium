@@ -67,8 +67,8 @@ class BotCommandMethod
             $this->welcomeInviteMessageUser();
          }
       } else {
-         if (Chats::query()->where('question', $cache['question'])->exists()) {
-            Chats::query()->where('question', $cache['question'])->delete();
+         if (ChatQuestion::query()->where('question', $cache['question'])->exists()) {
+            ChatQuestion::query()->where('question', $cache['question'])->delete();
          }
 
          ChatQuestion::query()->create([
