@@ -27,12 +27,13 @@ class AdminCommands
    {
       $result = [];
 
-      if (preg_match('/^\/(\w+)(?:\s+\[id(\d+)\|@?([\w.]+)\])?\s*(.+)?/u', $input, $matches)) {
+
+      if (preg_match('/^\/(\w+)(?:\s+\[id(\d+)\|@?([\w.]+)\])?\s*(.+)?/us', $input, $matches)) {
          $result = [
             'command' => $matches[1], // Название команды
             'id' => $matches[2] ?? null, // ID пользователя (если есть)
             'nickname' => $matches[3] ?? null,
-            'other' => $matches[4] ?? null,
+            'other' => $matches[4] ?? null, // Остальная часть строки, включая переносы
          ];
       }
 

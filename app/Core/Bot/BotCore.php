@@ -88,7 +88,7 @@ class BotCore
    public function addInfo(string $message): ?string
    {
       $info = $this->parseFirstArg($message);
-
+      Log::info('addInfo', [$message]);
       if ($info['first_arg'] != '' and $info['remaining'] != '') {
          $text = $info['remaining'];
          $type = $info['first_arg'];
@@ -179,9 +179,9 @@ class BotCore
          'remaining' => null,
       ];
 
-      if ($input and preg_match('/^\s*(\S+)\s+(.*)$/', $input, $matches)) {
-         $result['first_arg'] = $matches[1]; // Первый аргумент (до первого пробела)
-         $result['remaining'] = $matches[2]; // Остальная часть строки
+      if ($input && preg_match('/^\s*(\S+)\s*(.*)$/s', $input, $matches)) {
+         $result['first_arg'] = $matches[1]; // Первый аргумент (до пробела)
+         $result['remaining'] = $matches[2]; // Остальная часть строки, включая переносы строк
       }
 
       return $result;
