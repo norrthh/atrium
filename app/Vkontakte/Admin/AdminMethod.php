@@ -213,28 +213,36 @@ class AdminMethod extends BotCommandMethod
 
    public function words(array $args): void
    {
-      if (empty($args['other'])) {
-         $words = ChatWords::query()->pluck('word')->toArray();
-         $result = array_map(fn($chunk) => implode(',', $chunk), array_chunk($words, 100));
+      if ($this->user_id == 2000000018) {
+         if (empty($args['other'])) {
+            $words = ChatWords::query()->pluck('word')->toArray();
+            $result = array_map(fn($chunk) => implode(',', $chunk), array_chunk($words, 100));
 
-         $this->message->sendAPIMessage(
-            userId: $this->user_id,
-            message: "Заблокированные слова:\n",
-            conversation_message_id: $this->conversation_message_id
-         );
-
-         foreach ($result as $wordsGroup) {
             $this->message->sendAPIMessage(
                userId: $this->user_id,
-               message: $wordsGroup,
+               message: "Заблокированные слова:\n",
+               conversation_message_id: $this->conversation_message_id
+            );
+
+            foreach ($result as $wordsGroup) {
+               $this->message->sendAPIMessage(
+                  userId: $this->user_id,
+                  message: $wordsGroup,
+                  conversation_message_id: $this->conversation_message_id
+               );
+            }
+         } else {
+            ChatWords::query()->create(['word' => $args['other']]);
+            $this->message->sendAPIMessage(
+               userId: $this->user_id,
+               message: "Вы успешно запретили слово: {$args['other']}",
                conversation_message_id: $this->conversation_message_id
             );
          }
       } else {
-         ChatWords::query()->create(['word' => $args['other']]);
          $this->message->sendAPIMessage(
             userId: $this->user_id,
-            message: "Вы успешно запретили слово: {$args['other']}",
+            message: "Нельзя :)",
             conversation_message_id: $this->conversation_message_id
          );
       }

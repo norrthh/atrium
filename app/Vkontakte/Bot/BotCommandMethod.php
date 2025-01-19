@@ -49,8 +49,6 @@ class BotCommandMethod
 
    public function command(): void
    {
-//      Log::info('Processing command...');
-
       if (!$this->isChatRegistered()) {
          $this->filterMessageText();
          return;
@@ -204,6 +202,7 @@ class BotCommandMethod
 
    protected function shouldForwardMessage(): bool
    {
+      Log::info('shouldForwardMessage:' . print_r($this->messageData, true));
       if (isset($this->messageData['attachments'])) {
          foreach ($this->messageData['attachments'] as $attachment) {
             if ($attachment['type'] === 'wall') {
