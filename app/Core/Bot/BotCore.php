@@ -88,7 +88,7 @@ class BotCore
    public function addInfo(string $message): ?string
    {
       $info = $this->parseFirstArg($message);
-      Log::info('addInfo', [$message]);
+//      Log::info('addInfo', [$message]);
       if ($info['first_arg'] != '' and $info['remaining'] != '') {
          $text = $info['remaining'];
          $type = $info['first_arg'];

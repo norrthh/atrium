@@ -35,6 +35,8 @@ class BotCommandMethod
       $this->keyboard = new Keyboard();
       $this->vkData = $data;
 
+      Log::info('vk request:' . print_r($data, true));
+
       if (isset($data['object']['message'])) {
          $message = $data['object']['message'];
          $this->messageText = $message['text'] ?? '';
@@ -107,7 +109,7 @@ class BotCommandMethod
       $adminCommands = new AdminCommands();
       $commandData = $adminCommands->checkCommandVK($this->messageText);
 
-      Log::info('processCommand:' . print_r($commandData, true));
+//      Log::info('processCommand:' . print_r($commandData, true));
 
       if (isset($commandData['command'])) {
          Log::debug('process1');
@@ -202,7 +204,7 @@ class BotCommandMethod
 
    protected function shouldForwardMessage(): bool
    {
-      Log::info('shouldForwardMessage:' . print_r($this->messageData, true));
+//      Log::info('shouldForwardMessage:' . print_r($this->messageData, true));
       if (isset($this->messageData['attachments'])) {
          foreach ($this->messageData['attachments'] as $attachment) {
             if ($attachment['type'] === 'wall') {
