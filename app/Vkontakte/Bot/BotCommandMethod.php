@@ -35,8 +35,6 @@ class BotCommandMethod
       $this->keyboard = new Keyboard();
       $this->vkData = $data;
 
-      Log::info('vk request:' . print_r($data, true));
-
       if (isset($data['object']['message'])) {
          $message = $data['object']['message'];
          $this->messageText = $message['text'] ?? '';
@@ -52,7 +50,10 @@ class BotCommandMethod
    public function command(): void
    {
       if (!$this->isChatRegistered()) {
-         $this->filterMessageText();
+         if ($this->user_id < 100000000) {
+            $this->filterMessageText();
+         }
+
          return;
       }
 
@@ -96,7 +97,7 @@ class BotCommandMethod
       return Chats::query()
          ->where('messanger', 'vkontakte')
          ->where('chat_id', $this->user_id)
-         ->exists();
+         ->exists() ;
    }
 
    protected function isCommand(): bool

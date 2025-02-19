@@ -73,7 +73,6 @@ class BotFilterMessageServices
 
       $normalizedText = mb_strtolower(trim($text), 'UTF-8');
 
-      Log::debug('text: ' . $normalizedText);
       if (str_contains($normalizedText, '@')) {
          return [
             'status' => true,

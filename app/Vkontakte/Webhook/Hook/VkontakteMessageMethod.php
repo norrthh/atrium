@@ -9,6 +9,10 @@ class VkontakteMessageMethod
 {
    public function message(array $data): void
    {
-      (new BotCommandMethod($data))->command();
+      if(isset($data['object']['message']['action']) and $data['object']['message']['action']['type'] == 'chat_invite_user') {
+         (new VkontakteChatInviteMethod())->chatInvite($data);
+      } else {
+         (new BotCommandMethod($data))->command();
+      }
    }
 }
