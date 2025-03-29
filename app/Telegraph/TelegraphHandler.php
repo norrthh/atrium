@@ -44,7 +44,20 @@ class TelegraphHandler extends WebhookHandler
 
          if ($response->successful()) {
             $data = $response->json();
-            $this->chat->message(print_r($data, 1))->send();
+            switch ($data['code']) {
+               case 201:
+                  $this->chat->message('создан')->send();
+                  break;
+               case 200:
+                  $this->chat->message('токен обновлен')->send();
+                  break;
+               case 400:
+                  $this->chat->message('ошибка 404')->send();
+                  break;
+               default:
+                  $this->chat->message('ошибка')->send();
+                  break;
+            }
          } else {
             $this->chat->message('Произошла ошибка, попробуйте позже')->send();
          }
