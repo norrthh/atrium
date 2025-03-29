@@ -52,10 +52,10 @@ class TelegraphHandler extends WebhookHandler
                   $this->chat->message('токен обновлен')->send();
                   break;
                case 400:
-                  $this->chat->message('ошибка 404')->send();
+                  $this->chat->message('ошибка 400')->send();
                   break;
                default:
-                  $this->chat->message('ошибка')->send();
+                  $this->chat->message('ошибка default')->send();
                   break;
             }
          } else {
