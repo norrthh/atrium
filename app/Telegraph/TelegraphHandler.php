@@ -34,7 +34,9 @@ class TelegraphHandler extends WebhookHandler
       if (!isset($this->callbackQuery) && $this->message->text() and count($explode) >= 2) {
          $token = $explode[1];
 
-         $response = Http::asForm()->post('https://files.atrm.gg/atrium_service/', [
+         $response = Http::withHeaders([
+            'User-Agent' => 'AtriumLauncher', // Your custom User-Agent
+         ])->post('https://files.atrm.gg/atrium_service/', [
             'request' => '46fea46540997ee85c5f6583446e44f21822ba72539e7c4e2513c0_crpt',
             'user_id' => $this->message->from()->id(),
             'token'   => $token,
