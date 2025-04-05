@@ -50,9 +50,9 @@ class BotCommandMethod
    public function command(): void
    {
       if (!$this->isChatRegistered()) {
-         if ($this->user_id < 100000000) {
+//         if ($this->user_id < 100000000) {
             $this->filterMessageText();
-         }
+//         }
 
          return;
       }
